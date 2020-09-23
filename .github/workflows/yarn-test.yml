@@ -1,4 +1,4 @@
-name: Yarn Test CI
+name: Node CI
 
 on:
   push:
@@ -20,3 +20,4 @@ jobs:
         node-version: ${{ matrix.node-version }}
     - run: yarn install
     - run: yarn test
+    - run: yarn build
