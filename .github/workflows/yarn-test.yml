@@ -1,4 +1,4 @@
-name: Yarn Build CI
+name: Yarn Test CI
 
 on:
   push:
