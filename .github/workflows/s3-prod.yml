@@ -2,7 +2,7 @@ name: Production Environment S3 Deploy
 on:
   push:
     branches:
-      chore/deploy
+      main
 
 jobs:
   run:
