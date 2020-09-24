@@ -1,9 +1,8 @@
 name: Development Environment S3 Deploy
 on:
-  pull_request:
   push:
     branches:
-      chore/deploy
+      develop
 
 jobs:
   dev-deploy:
