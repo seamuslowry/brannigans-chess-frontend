@@ -19,12 +19,8 @@ jobs:
         - name: Build
           run: REACT_APP_ENV=development yarn build
 
-        - name: Deploy
-          uses: reggionick/s3-deploy@v2
-          with:
-            folder: build
-            bucket: brannigans-chess-dev
-            bucket-region: us-east-2
-            dist-id: EK4KIXP60KA8L
-            invalidation: /
-            delete-removed: true
+        - name: deploy
+          run: aws s3 sync ./build/ s3://brannigans-chess-dev/
+          env:
+            AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+            AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
