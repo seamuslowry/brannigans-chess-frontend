@@ -25,6 +25,6 @@ jobs:
             folder: build
             bucket: brannigans-chess-dev
             bucket-region: us-east-2
-            dist-id: E3I1THFDIC3HSD
+            dist-id: EK4KIXP60KA8L
             invalidation: /
             delete-removed: true
