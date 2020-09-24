@@ -2,7 +2,7 @@ name: Development Environment S3 Deploy
 on:
   push:
     branches:
-      chore/deploy
+      develop
 
 jobs:
   run:
