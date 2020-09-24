@@ -3,6 +3,7 @@ FROM node:alpine as build
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 ENV PATH /usr/src/app/node_modules/.bin:$PATH
+ENV REACT_APP_ENV=docker
 COPY package.json /usr/src/app/package.json
 COPY yarn.lock /usr/src/app/yarn.lock
 RUN yarn
