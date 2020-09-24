@@ -22,5 +22,5 @@ jobs:
         - name: deploy
           run: aws s3 sync ./build/ s3://brannigans-chess-dev/
         
-        - name: deploy
+        - name: invalidate
           run: aws cloudfront create-invalidation --distribution-id EK4KIXP60KA8L --paths "/*"
