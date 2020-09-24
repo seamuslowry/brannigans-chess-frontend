@@ -17,7 +17,7 @@ jobs:
           run: yarn
 
         - name: Build
-          run: REACT_APP_ENV=development yarn build
+          run: REACT_APP_ENV=production yarn build
 
         - name: deploy
           run: aws s3 sync ./build/ s3://brannigans-chess/
