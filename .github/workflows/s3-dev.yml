@@ -1,5 +1,6 @@
 name: Development Environment S3 Deploy
 on:
+  pull_request:
   push:
     branches:
       develop
