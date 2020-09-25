@@ -1,11 +1,11 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
-import chessService from './services/chessService';
+import ChessService from './services/ChessService';
 
 function App() {
 
-  chessService.getGames()
+  ChessService.getGames()
   .then(l => l.data.forEach(console.log))
   .catch(e => console.error(e))
 
