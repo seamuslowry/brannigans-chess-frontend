@@ -4,6 +4,7 @@ import ChessService, { Game } from '../../services/ChessService';
 
 const GamesList: React.FC = () => {
   const [games, setGames] = React.useState<Game[]>([]);
+  const [error, setError] = React.useState<string>('');
 
   React.useEffect(() => {
     ChessService.getGames(true)
@@ -11,15 +12,16 @@ const GamesList: React.FC = () => {
         setGames(data);
       })
       .catch(e => {
-        console.error('Could not load games: ', e.message);
+        setError(`Could not load games: ${e.message}`);
       });
-  });
+  }, []);
 
   return (
     <>
       {games.map(game => (
-        <Typography>{game.uuid}</Typography>
+        <Typography key={`game-item-${game.id}`}>Game Id: {game.uuid}</Typography>
       ))}
+      {error && <Typography>{error}</Typography>}
     </>
   );
 };

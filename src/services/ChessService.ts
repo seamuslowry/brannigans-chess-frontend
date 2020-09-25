@@ -2,6 +2,7 @@ import { chessApi } from './Api';
 
 export interface Game {
   uuid: string;
+  id: number;
 }
 
 export interface PageRequest {
