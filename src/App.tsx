@@ -1,12 +1,16 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
-import config from './config';
+import chessService from './services/chessService';
 
 function App() {
+
+  chessService.getGames()
+  .then(l => l.data.forEach(console.log))
+  .catch(e => console.error(e))
+
   return (
     <div className="App">
-      {console.log(config.serviceUrl)}
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>
