@@ -1,27 +1,19 @@
 import React from 'react';
-import { Typography } from '@material-ui/core';
-import ChessService, { Game } from '../../services/ChessService';
+import { CircularProgress, Typography } from '@material-ui/core';
+import ChessService from '../../services/ChessService';
+import { useServiceCall } from '../../utils/hooks';
 
 const GamesList: React.FC = () => {
-  const [games, setGames] = React.useState<Game[]>([]);
-  const [error, setError] = React.useState<string>('');
-
-  React.useEffect(() => {
-    ChessService.getGames(true)
-      .then(({ data }) => {
-        setGames(data);
-      })
-      .catch(e => {
-        setError(`Could not load games: ${e.message}`);
-      });
-  }, []);
+  const memoizedCall = React.useMemo(() => ChessService.getGames(true), []);
+  const { loading, response: games = [], error } = useServiceCall(memoizedCall);
 
   return (
     <>
+      {loading && <CircularProgress />}
       {games.map(game => (
         <Typography key={`game-item-${game.id}`}>Game Id: {game.uuid}</Typography>
       ))}
-      {error && <Typography>{error}</Typography>}
+      {error && <Typography>Could not load games: {error}</Typography>}
     </>
   );
 };
