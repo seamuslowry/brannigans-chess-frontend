@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  Box,
   CircularProgress,
   IconButton,
   List,
@@ -17,7 +18,7 @@ import { Help } from '@material-ui/icons';
 
 const useStyles = makeStyles(theme => ({
   list: {
-    width: '60%',
+    width: '100%',
     backgroundColor: theme.palette.background.paper,
     borderRadius: '1rem'
   }
@@ -30,7 +31,7 @@ const GamesList: React.FC = () => {
   const { loading, response: games = [], error } = useServiceCall(memoizedCall);
 
   return (
-    <>
+    <Box display="flex" flexDirection="column" width="60%" alignItems="center">
       {loading && <CircularProgress />}
       <List className={classes.list}>
         {games.map(game => (
@@ -70,7 +71,7 @@ const GamesList: React.FC = () => {
         ))}
       </List>
       {error && <Typography>Could not load games: {error}</Typography>}
-    </>
+    </Box>
   );
 };
 
