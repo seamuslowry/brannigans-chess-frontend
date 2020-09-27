@@ -50,41 +50,6 @@ test('handles error when getting lists', async () => {
   expect(error).toBeInTheDocument();
 });
 
-test('allows users to join as white or black when available', async () => {
-  render(<GamesList />);
-
-  const joinNodes = await waitFor(() => screen.getAllByTitle(/join as/i));
-
-  expect(joinNodes).toHaveLength(gamesResponse.length * 2);
-});
-
-test('disallows joining when both colors are unavailable', async () => {
-  server.use(
-    rest.get(`${config.serviceUrl}/games`, (req, res, ctx) => {
-      return res(
-        ctx.json<PageResponse<Game>>({
-          content: [
-            {
-              uuid: 'uuid filled',
-              id: 3,
-              whitePlayer: { username: 'test', email: 'test', id: 1 },
-              blackPlayer: { username: 'test2', email: 'test2', id: 2 },
-              winner: null
-            }
-          ],
-          totalElements: 1,
-          totalPages: 1
-        })
-      );
-    })
-  );
-  render(<GamesList />);
-
-  const joinNodes = await waitFor(() => screen.getAllByTitle(/is playing/i));
-
-  expect(joinNodes).toHaveLength(2);
-});
-
 test('handles a page change', async () => {
   const { getByText } = render(<GamesList />);
 

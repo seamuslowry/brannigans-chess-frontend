@@ -1,20 +1,17 @@
 import React from 'react';
 import {
   Box,
+  Button,
   CircularProgress,
-  IconButton,
   List,
   ListItem,
-  ListItemIcon,
   ListItemSecondaryAction,
   ListItemText,
   makeStyles,
-  Tooltip,
   Typography
 } from '@material-ui/core';
 import ChessService from '../../services/ChessService';
 import { useServiceCall } from '../../utils/hooks';
-import { Help } from '@material-ui/icons';
 import { Pagination } from '@material-ui/lab';
 
 const useStyles = makeStyles(theme => ({
@@ -44,41 +41,14 @@ const GamesList: React.FC = () => {
   const handlePageChange = (e: React.ChangeEvent<unknown>, newPage: number) => setPage(newPage);
 
   return (
-    <Box display="flex" flexDirection="column" width="60%" alignItems="center">
+    <Box display="flex" flexDirection="column" width="40%" alignItems="center">
       {loading && <CircularProgress />}
       <List className={classes.list}>
         {response.content.map(game => (
           <ListItem data-testid="game-list-item" key={`game-item-${game.id}`}>
-            <ListItemIcon>
-              <Tooltip
-                title={
-                  game.whitePlayer
-                    ? `${game.whitePlayer.username} is playing white in this game`
-                    : 'Join as white'
-                }
-              >
-                <span>
-                  <IconButton disabled={!!game.whitePlayer}>
-                    <Help />
-                  </IconButton>
-                </span>
-              </Tooltip>
-            </ListItemIcon>
-            <ListItemText primaryTypographyProps={{ align: 'center' }} primary={game.uuid} />
+            <ListItemText primary={game.uuid} />
             <ListItemSecondaryAction>
-              <Tooltip
-                title={
-                  game.blackPlayer
-                    ? `${game.blackPlayer.username} is playing black in this game`
-                    : 'Join as black'
-                }
-              >
-                <span>
-                  <IconButton disabled={!!game.blackPlayer}>
-                    <Help />
-                  </IconButton>
-                </span>
-              </Tooltip>
+              <Button color="primary">Join</Button>
             </ListItemSecondaryAction>
           </ListItem>
         ))}

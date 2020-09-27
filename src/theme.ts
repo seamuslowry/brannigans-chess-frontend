@@ -1,6 +1,11 @@
 import { createMuiTheme } from '@material-ui/core';
 
 const theme = createMuiTheme({
+  props: {
+    MuiButton: {
+      variant: 'contained'
+    }
+  },
   palette: {
     type: 'dark',
     primary: {
