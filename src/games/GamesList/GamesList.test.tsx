@@ -3,7 +3,7 @@ import { render, waitFor, screen } from '@testing-library/react';
 import { rest } from 'msw';
 import { setupServer } from 'msw/node';
 import GamesList from './GamesList';
-import { Game } from '../../services/ChessService';
+import { Game, PageResponse } from '../../services/ChessService';
 import config from '../../config';
 
 const gamesResponse: Game[] = [
@@ -13,7 +13,13 @@ const gamesResponse: Game[] = [
 
 const server = setupServer(
   rest.get(`${config.serviceUrl}/games?active=true`, (req, res, ctx) => {
-    return res(ctx.json<Game[]>(gamesResponse));
+    return res(
+      ctx.json<PageResponse<Game>>({
+        content: gamesResponse,
+        totalPages: 1,
+        totalElements: gamesResponse.length
+      })
+    );
   })
 );
 
@@ -55,15 +61,19 @@ test('disallows joining when both colors are unavailable', async () => {
   server.use(
     rest.get(`${config.serviceUrl}/games?active=true`, (req, res, ctx) => {
       return res(
-        ctx.json<Game[]>([
-          {
-            uuid: 'uuid filled',
-            id: 3,
-            whitePlayer: { username: 'test', email: 'test', id: 1 },
-            blackPlayer: { username: 'test2', email: 'test2', id: 2 },
-            winner: null
-          }
-        ])
+        ctx.json<PageResponse<Game>>({
+          content: [
+            {
+              uuid: 'uuid filled',
+              id: 3,
+              whitePlayer: { username: 'test', email: 'test', id: 1 },
+              blackPlayer: { username: 'test2', email: 'test2', id: 2 },
+              winner: null
+            }
+          ],
+          totalElements: 1,
+          totalPages: 1
+        })
       );
     })
   );

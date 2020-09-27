@@ -21,6 +21,12 @@ export interface PageRequest {
   order: 'asc' | 'desc';
 }
 
+export interface PageResponse<T> {
+  content: T[];
+  totalPages: number;
+  totalElements: number;
+}
+
 const getGames = (active?: boolean, pageRequest: Partial<PageRequest> = {}) => {
   const { page, size, order, orderBy } = pageRequest;
 
@@ -33,7 +39,7 @@ const getGames = (active?: boolean, pageRequest: Partial<PageRequest> = {}) => {
   order && args.push(`active=${order}`);
   orderBy && args.push(`orderBy=${orderBy}`);
 
-  return chessApi.get<Game[]>(`/games?${args.join('&')}`);
+  return chessApi.get<PageResponse<Game>>(`/games?${args.join('&')}`);
 };
 
 export default {

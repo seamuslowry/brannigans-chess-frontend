@@ -15,6 +15,7 @@ import {
 import ChessService from '../../services/ChessService';
 import { useServiceCall } from '../../utils/hooks';
 import { Help } from '@material-ui/icons';
+import { Pagination } from '@material-ui/lab';
 
 const useStyles = makeStyles(theme => ({
   list: {
@@ -27,14 +28,26 @@ const useStyles = makeStyles(theme => ({
 const GamesList: React.FC = () => {
   const classes = useStyles();
 
-  const memoizedCall = React.useMemo(() => ChessService.getGames(true), []);
-  const { loading, response: games = [], error } = useServiceCall(memoizedCall);
+  const [page, setPage] = React.useState(1);
+
+  const memoizedCall = React.useMemo(() => ChessService.getGames(true, { page: page - 1 }), [page]);
+  const {
+    loading,
+    response = {
+      content: [],
+      totalElements: 0,
+      totalPages: 0
+    },
+    error
+  } = useServiceCall(memoizedCall);
+
+  const handlePageChange = (e: React.ChangeEvent<unknown>, newPage: number) => setPage(newPage);
 
   return (
     <Box display="flex" flexDirection="column" width="60%" alignItems="center">
       {loading && <CircularProgress />}
       <List className={classes.list}>
-        {games.map(game => (
+        {response.content.map(game => (
           <ListItem data-testid="game-list-item" key={`game-item-${game.id}`}>
             <ListItemIcon>
               <Tooltip
@@ -70,6 +83,14 @@ const GamesList: React.FC = () => {
           </ListItem>
         ))}
       </List>
+      <Box m={1}>
+        <Pagination
+          count={response.totalPages}
+          page={page}
+          onChange={handlePageChange}
+          size="large"
+        />
+      </Box>
       {error && <Typography>Could not load games: {error}</Typography>}
     </Box>
   );
