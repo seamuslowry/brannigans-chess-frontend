@@ -13,6 +13,7 @@ import {
 import ChessService from '../../services/ChessService';
 import { useServiceCall } from '../../utils/hooks';
 import { Pagination } from '@material-ui/lab';
+import CreateGameButton from '../CreateGameButton/CreateGameButton';
 
 const useStyles = makeStyles(theme => ({
   list: {
@@ -62,6 +63,7 @@ const GamesList: React.FC = () => {
         />
       </Box>
       {error && <Typography>Could not load games: {error}</Typography>}
+      <CreateGameButton />
     </Box>
   );
 };

@@ -6,11 +6,9 @@ import GamesList from './GamesList';
 import { Game, PageResponse } from '../../services/ChessService';
 import config from '../../config';
 import { act } from 'react-test-renderer';
+import { emptyGame } from '../../utils/testData';
 
-const gamesResponse: Game[] = [
-  { id: 1, uuid: 'uuid1', whitePlayer: null, blackPlayer: null, winner: null },
-  { id: 2, uuid: 'uuid2', whitePlayer: null, blackPlayer: null, winner: null }
-];
+const gamesResponse: Game[] = [emptyGame, { ...emptyGame, id: 2 }];
 
 const server = setupServer(
   rest.get(`${config.serviceUrl}/games`, (req, res, ctx) => {
