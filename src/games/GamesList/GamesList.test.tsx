@@ -44,8 +44,10 @@ test('handles error when getting lists', async () => {
   render(<GamesList />);
 
   const error = await waitFor(() => screen.getByText(/Could not load game/i));
+  const games = screen.queryAllByTestId(/game-list-item/i);
 
   expect(error).toBeInTheDocument();
+  expect(games).toHaveLength(0);
 });
 
 test('handles a page change', async () => {

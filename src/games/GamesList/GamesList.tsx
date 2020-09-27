@@ -44,25 +44,30 @@ const GamesList: React.FC = () => {
   return (
     <Box display="flex" flexDirection="column" width="40%" alignItems="center">
       {loading && <CircularProgress />}
-      <List className={classes.list}>
-        {response.content.map(game => (
-          <ListItem data-testid="game-list-item" key={`game-item-${game.id}`}>
-            <ListItemText primary={game.uuid} />
-            <ListItemSecondaryAction>
-              <Button color="primary">Join</Button>
-            </ListItemSecondaryAction>
-          </ListItem>
-        ))}
-      </List>
-      <Box m={1}>
-        <Pagination
-          count={response.totalPages}
-          page={page}
-          onChange={handlePageChange}
-          size="large"
-        />
-      </Box>
-      {error && <Typography>Could not load games: {error}</Typography>}
+      {!error && (
+        <>
+          <List className={classes.list}>
+            {response.content.map(game => (
+              <ListItem data-testid="game-list-item" key={`game-item-${game.id}`}>
+                <ListItemText primary={game.uuid} />
+                <ListItemSecondaryAction>
+                  <Button color="primary">Join</Button>
+                </ListItemSecondaryAction>
+              </ListItem>
+            ))}
+            S
+          </List>
+          <Box m={1}>
+            <Pagination
+              count={response.totalPages}
+              page={page}
+              onChange={handlePageChange}
+              size="large"
+            />
+          </Box>
+        </>
+      )}
+      {error && <Typography color="error">Could not load games: {error}</Typography>}
       <CreateGameButton />
     </Box>
   );
