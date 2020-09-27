@@ -55,7 +55,6 @@ const GamesList: React.FC = () => {
                 </ListItemSecondaryAction>
               </ListItem>
             ))}
-            S
           </List>
           <Box m={1}>
             <Pagination
