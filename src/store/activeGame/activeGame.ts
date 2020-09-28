@@ -1,7 +1,7 @@
 import { PieceColor, PieceType } from '../../services/ChessService';
 import { immutableUpdate } from '../../utils/arrayHelpers';
 
-const SELECT_TILE = 'chess/activeGame/SELECT_TILE';
+export const SELECT_TILE = 'chess/activeGame/SELECT_TILE';
 
 interface TileInfo {
   color?: PieceColor;
@@ -22,7 +22,7 @@ const blankTile: TileInfo = {
 const blankRow = new Array<TileInfo>(8).fill(blankTile);
 const blankBoard = new Array<TileInfo[]>(8).fill(blankRow);
 
-const initialState: ActiveGameState = {
+export const initialState: ActiveGameState = {
   tiles: blankBoard
 };
 

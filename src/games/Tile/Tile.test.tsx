@@ -1,17 +1,29 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { fireEvent, render } from '@testing-library/react';
 import Tile from './Tile';
+import { Provider } from 'react-redux';
+import createMockStore from 'redux-mock-store';
+import { testStore } from '../../utils/testData';
+import { SELECT_TILE } from '../../store/activeGame/activeGame';
 
-test('renders different colors', async () => {
+const mockStore = createMockStore();
+const mockedStore = mockStore(testStore);
+
+beforeEach(() => mockedStore.clearActions());
+
+test('selects on click', async () => {
   const { getByTestId } = render(
-    <>
+    <Provider store={mockedStore}>
       <Tile row={0} col={0} />
-      <Tile row={0} col={1} />
-    </>
+    </Provider>
   );
 
-  const red = getByTestId('tile-0-0');
-  const yellow = getByTestId('tile-0-1');
+  const tile = getByTestId('tile-0-0');
+  fireEvent.click(tile);
 
-  expect(red.style).not.toEqual(yellow.style); // TODO test always passes; remove when more behavior is added
+  expect(mockedStore.getActions()).toContainEqual(
+    expect.objectContaining({
+      type: SELECT_TILE
+    })
+  );
 });

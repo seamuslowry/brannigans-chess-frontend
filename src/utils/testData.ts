@@ -1,4 +1,6 @@
 import { Game, Player } from '../services/ChessService';
+import { initialState } from '../store/activeGame/activeGame';
+import { AppState } from '../store/store';
 
 export const playerOne: Player = {
   id: 1,
@@ -26,4 +28,8 @@ export const fullGame: Game = {
   whitePlayer: playerOne,
   blackPlayer: playerTwo,
   winner: playerOne
+};
+
+export const testStore: AppState = {
+  activeGame: initialState
 };
