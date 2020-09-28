@@ -1,4 +1,4 @@
-import { Game, Player } from '../services/ChessService';
+import { Game, Piece, Player } from '../services/ChessService';
 import { initialState } from '../store/activeGame/activeGame';
 import { AppState } from '../store/store';
 
@@ -12,6 +12,14 @@ export const playerTwo: Player = {
   id: 2,
   username: 'playerTwo',
   email: 'test2@test.com'
+};
+
+export const blackRook: Piece = {
+  color: 'BLACK',
+  type: 'ROOK',
+  positionCol: 0,
+  positionRow: 0,
+  taken: false
 };
 
 export const emptyGame: Game = {
