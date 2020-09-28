@@ -17,7 +17,7 @@ const Board: React.FC<Props> = ({ gameId }) => {
     return () => {
       dispatch(clearBoard());
     };
-  }, [gameId]);
+  }, [gameId, dispatch]);
 
   return (
     <Box
