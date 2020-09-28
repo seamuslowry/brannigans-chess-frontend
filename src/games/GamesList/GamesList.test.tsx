@@ -50,6 +50,22 @@ test('handles error when getting lists', async () => {
   expect(games).toHaveLength(0);
 });
 
+test('shows a message when there are no available games', async () => {
+  server.use(
+    rest.get(`${config.serviceUrl}/games`, (req, res, ctx) => {
+      return res(
+        ctx.json<PageResponse<Game>>({ content: [], totalElements: 0, totalPages: 0 })
+      );
+    })
+  );
+
+  render(<GamesList />);
+
+  const message = await waitFor(() => screen.getByText('No available games'));
+
+  expect(message).toBeInTheDocument();
+});
+
 test('handles a page change', async () => {
   const { getByText } = render(<GamesList />);
 
