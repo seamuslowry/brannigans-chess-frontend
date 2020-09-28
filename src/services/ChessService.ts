@@ -2,14 +2,7 @@ import { chessApi } from './Api';
 
 export type PieceColor = 'BLACK' | 'WHITE';
 
-export enum PieceType {
-  KNIGHT = 1,
-  BISHOP,
-  PAWN,
-  ROOK,
-  QUEEN,
-  KING
-}
+export type PieceType = 'KNIGHT' | 'BISHOP' | 'PAWN' | 'ROOK' | 'QUEEN' | 'KING';
 
 export interface Piece {
   color: PieceColor;
@@ -30,6 +23,16 @@ export interface Game {
   whitePlayer: Player | null;
   blackPlayer: Player | null;
   winner: Player | null;
+  id: number;
+}
+
+export interface Move {
+  movingPiece: Piece;
+  takenPiece: Piece | null;
+  srcRow: number;
+  srcCol: number;
+  dstRow: number;
+  dstCol: number;
   id: number;
 }
 
@@ -61,6 +64,26 @@ const getGames = (active?: boolean, pageRequest: Partial<PageRequest> = {}) => {
   return chessApi.get<PageResponse<Game>>(`/games?${args.join('&')}`);
 };
 
+const getPieces = (gameId: number, color?: PieceColor, taken?: boolean) => {
+  const args = [];
+
+  taken !== undefined && args.push(`taken=${taken}`);
+
+  color && args.push(`color=${color}`);
+
+  return chessApi.get<Piece[]>(`pieces/${gameId}?${args.join('&')}`);
+};
+
+const move = (gameId: number, srcRow: number, srcCol: number, dstRow: number, dstCol: number) =>
+  chessApi.post<Move>(`moves/${gameId}`, {
+    srcRow,
+    srcCol,
+    dstRow,
+    dstCol
+  });
+
 export default {
-  getGames
+  getGames,
+  getPieces,
+  move
 };
