@@ -51,7 +51,9 @@ const GamesList: React.FC = () => {
               <ListItem data-testid="game-list-item" key={`game-item-${game.id}`}>
                 <ListItemText primary={game.uuid} />
                 <ListItemSecondaryAction>
-                  <Button color="primary">Join</Button>
+                  <Button href={`/game/${game.id}`} color="primary">
+                    Join
+                  </Button>
                 </ListItemSecondaryAction>
               </ListItem>
             ))}

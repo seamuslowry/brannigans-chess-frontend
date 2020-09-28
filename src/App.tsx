@@ -1,6 +1,7 @@
 import { Box, Typography } from '@material-ui/core';
 import React from 'react';
 import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-dom';
+import ActiveGame from './games/ActiveGame/ActiveGame';
 import GamesList from './games/GamesList/GamesList';
 
 const App = () => {
@@ -15,6 +16,9 @@ const App = () => {
         </Box>
         <Box pt={2} display="flex" justifyContent="center">
           <Switch>
+            <Route path="/game/:id">
+              <ActiveGame />
+            </Route>
             <Route path="/">
               <GamesList />
             </Route>
