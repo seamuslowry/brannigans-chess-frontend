@@ -1,5 +1,24 @@
 import { chessApi } from './Api';
 
+export type PieceColor = 'BLACK' | 'WHITE';
+
+export enum PieceType {
+  KNIGHT = 1,
+  BISHOP,
+  PAWN,
+  ROOK,
+  QUEEN,
+  KING
+}
+
+export interface Piece {
+  color: PieceColor;
+  type: PieceType;
+  positionRow: number;
+  positionCol: number;
+  taken: boolean;
+}
+
 export interface Player {
   username: string;
   email: string;
