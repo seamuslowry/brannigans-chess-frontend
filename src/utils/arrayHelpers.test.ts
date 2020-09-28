@@ -1,5 +1,5 @@
 import { Game } from '../services/ChessService';
-import { immutableUpdate } from './arrayHelpers';
+import { flatten, immutableUpdate } from './arrayHelpers';
 import { emptyGame } from './testData';
 
 test('updates a specific row / column in a 2D array of objects', () => {
@@ -17,5 +17,14 @@ test('updates a specific row / column in a 2D array of objects', () => {
     ]
   ];
 
+  expect(result).toMatchObject(expectedArray);
+});
+
+test('flattens an array', () => {
+  const array: Game[][] = [[emptyGame, emptyGame]];
+
+  const result = flatten(array);
+
+  const expectedArray: Game[] = [emptyGame, emptyGame];
   expect(result).toMatchObject(expectedArray);
 });

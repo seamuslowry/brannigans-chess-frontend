@@ -16,3 +16,5 @@ export const immutableUpdate = <T extends object, TKey extends keyof T>(
   ],
   ...array.slice(row + 1)
 ];
+
+export const flatten = <T>(array: T[][]): T[] => array.reduce((acc, val) => acc.concat(val), []);

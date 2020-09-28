@@ -5,8 +5,11 @@ import { Provider } from 'react-redux';
 import createMockStore from 'redux-mock-store';
 import { testStore } from '../../utils/testData';
 import { SELECT_TILE } from '../../store/activeGame/activeGame';
+import { ActionCreator } from 'redux';
+import thunk from 'redux-thunk';
+import { AppState } from '../../store/store';
 
-const mockStore = createMockStore();
+const mockStore = createMockStore<AppState, ActionCreator<any>>([thunk]);
 const mockedStore = mockStore(testStore);
 
 beforeEach(() => mockedStore.clearActions());

@@ -1,7 +1,7 @@
 import { Box, Theme, useTheme } from '@material-ui/core';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectTile } from '../../store/activeGame/activeGame';
+import { clickTile } from '../../store/activeGame/activeGame';
 import { AppState } from '../../store/store';
 
 interface Props {
@@ -30,7 +30,7 @@ const Tile: React.FC<Props> = ({ row, col }) => {
   const bgColor = getBgColor(theme, row, col, selected);
 
   const handleClick = () => {
-    dispatch(selectTile(row, col, !selected));
+    dispatch(clickTile(row, col));
   };
 
   return (

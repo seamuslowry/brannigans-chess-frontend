@@ -1,5 +1,6 @@
 import { PieceColor, PieceType } from '../../services/ChessService';
-import { immutableUpdate } from '../../utils/arrayHelpers';
+import { flatten, immutableUpdate } from '../../utils/arrayHelpers';
+import { ThunkResult } from '../store';
 
 export const SELECT_TILE = 'chess/activeGame/SELECT_TILE';
 
@@ -55,6 +56,17 @@ export const reducer = (
       };
     default:
       return initialState;
+  }
+};
+
+export const clickTile = (row: number, col: number): ThunkResult<void> => (dispatch, getState) => {
+  const selectedTile = flatten(getState().activeGame.tiles).find(r => r.selected);
+
+  if (selectedTile) {
+    // TODO attempt to move to selected tile
+    dispatch(selectTile(row, col, false));
+  } else {
+    dispatch(selectTile(row, col, true));
   }
 };
 
