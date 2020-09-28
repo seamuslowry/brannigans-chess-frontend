@@ -5,7 +5,7 @@ import { emptyGame } from './testData';
 test('updates a specific row / column in a 2D array of objects', () => {
   const array: Game[][] = [[emptyGame, emptyGame]];
 
-  const result = immutableUpdate(array, 0, 1, 'uuid', 'updated');
+  const result = immutableUpdate(array, 0, 1, { uuid: 'updated' });
 
   const expectedArray: Game[][] = [
     [

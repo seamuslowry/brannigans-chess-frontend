@@ -1,16 +1,15 @@
-export const immutableUpdate = <T extends object, TKey extends keyof T>(
+export const immutableUpdate = <T extends object>(
   array: T[][],
   row: number,
   col: number,
-  key: TKey,
-  value: T[TKey]
+  map: Partial<T>
 ): T[][] => [
   ...array.slice(0, row),
   [
     ...array[row].slice(0, col),
     {
       ...array[row][col],
-      [key]: value
+      ...map
     },
     ...array[row].slice(col + 1)
   ],
