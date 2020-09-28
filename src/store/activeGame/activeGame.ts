@@ -4,6 +4,7 @@ import { ThunkResult } from '../store';
 
 export const SELECT_TILE = 'chess/activeGame/SELECT_TILE';
 export const SET_TILE = 'chess/activeGame/SET_TILE';
+export const CLEAR_BOARD = 'chess/activeGame/CLEAR_BOARD';
 
 interface TileInfo {
   color?: PieceColor;
@@ -46,7 +47,11 @@ interface SetTile {
   };
 }
 
-type ActiveGameAction = SelectTile | SetTile;
+interface ClearBoard {
+  type: typeof CLEAR_BOARD;
+}
+
+type ActiveGameAction = SelectTile | SetTile | ClearBoard;
 
 export const reducer = (
   state: ActiveGameState = initialState,
@@ -69,6 +74,7 @@ export const reducer = (
           type: setToPiece && setToPiece.type
         })
       };
+    case CLEAR_BOARD:
     default:
       return initialState;
   }
@@ -114,4 +120,8 @@ export const selectTile = (row: number, col: number, selected: boolean): SelectT
     col,
     selected
   }
+});
+
+export const clearBoard = (): ClearBoard => ({
+  type: CLEAR_BOARD
 });

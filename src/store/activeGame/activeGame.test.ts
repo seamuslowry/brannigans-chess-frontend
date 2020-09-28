@@ -1,4 +1,12 @@
-import { reducer, clickTile, selectTile, setTile, getPieces } from './activeGame';
+import {
+  reducer,
+  clickTile,
+  selectTile,
+  setTile,
+  getPieces,
+  clearBoard,
+  initialState
+} from './activeGame';
 import createMockStore from 'redux-mock-store';
 import { blackRook, testStore } from '../../utils/testData';
 import { rest } from 'msw';
@@ -37,6 +45,12 @@ test('sets a tile', () => {
 
   expect(result.tiles[0][0].color).toEqual(blackRook.color);
   expect(result.tiles[0][0].type).toEqual(blackRook.type);
+});
+
+test('clears the board', () => {
+  const result = reducer(undefined, clearBoard());
+
+  expect(result).toEqual(initialState);
 });
 
 test('clicks an unselected tile', async () => {
