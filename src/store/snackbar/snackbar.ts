@@ -1,7 +1,7 @@
 import { Color } from '@material-ui/lab';
 
-export const SEND_ALERT = 'chess/snackbars/SEND_ALERT';
-export const REMOVE_ALERT = 'chess/snackbars/REMOVE_ALERT';
+export const SEND_ALERT = 'chess/snackbar/SEND_ALERT';
+export const REMOVE_ALERT = 'chess/snackbar/REMOVE_ALERT';
 
 export interface AlertInfo {
   message: string;
