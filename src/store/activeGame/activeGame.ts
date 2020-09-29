@@ -8,7 +8,7 @@ export const SELECT_TILE = 'chess/activeGame/SELECT_TILE';
 export const SET_TILE = 'chess/activeGame/SET_TILE';
 export const CLEAR_BOARD = 'chess/activeGame/CLEAR_BOARD';
 export const CLEAR_GAME = 'chess/activeGame/CLEAR_GAME';
-export const TAKE_PIECE = 'chess/activeGame/TAKE_PIECE';
+export const TAKE_PIECES = 'chess/activeGame/TAKE_PIECES';
 export const CLEAR_TAKEN = 'chess/activeGame/CLEAR_TAKEN';
 
 interface TileInfo {
@@ -70,9 +70,9 @@ interface SetGameId {
   payload: number;
 }
 
-interface TakePiece {
-  type: typeof TAKE_PIECE;
-  payload: Piece;
+interface TakePieces {
+  type: typeof TAKE_PIECES;
+  payload: Piece[];
 }
 
 interface ClearTaken {
@@ -86,7 +86,7 @@ type ActiveGameAction =
   | ClearBoard
   | SetGameId
   | ClearGame
-  | TakePiece
+  | TakePieces
   | ClearTaken;
 
 export const reducer = (
@@ -118,10 +118,10 @@ export const reducer = (
           type: setToPiece && setToPiece.type
         })
       };
-    case TAKE_PIECE:
+    case TAKE_PIECES:
       return {
         ...state,
-        takenPieces: [...state.takenPieces, action.payload]
+        takenPieces: [...state.takenPieces, ...action.payload]
       };
     case CLEAR_BOARD:
       return {
@@ -157,6 +157,7 @@ export const clickTile = (row: number, col: number): ThunkResult<void> => (dispa
         dispatch(selectTile(selectedPosition[0], selectedPosition[1], false));
         dispatch(setTile(move.srcRow, move.srcCol, undefined));
         dispatch(setTile(move.dstRow, move.dstCol, move.movingPiece));
+        move.takenPiece && dispatch(takePiece(move.takenPiece));
       })
       .catch(e => {
         dispatch(sendAlert(e.response.data));
@@ -201,8 +202,13 @@ export const selectTile = (row: number, col: number, selected: boolean): SelectT
   }
 });
 
-export const takePiece = (piece: Piece): TakePiece => ({
-  type: TAKE_PIECE,
+export const takePiece = (piece: Piece): TakePieces => ({
+  type: TAKE_PIECES,
+  payload: [piece]
+});
+
+export const takePieces = (piece: Piece[]): TakePieces => ({
+  type: TAKE_PIECES,
   payload: piece
 });
 

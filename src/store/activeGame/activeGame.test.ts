@@ -9,10 +9,12 @@ import {
   clearGame,
   ActiveGameState,
   clearTaken,
-  takePiece
+  takePiece,
+  takePieces,
+  TAKE_PIECES
 } from './activeGame';
 import createMockStore from 'redux-mock-store';
-import { blackRook, makePiece, testStore, whiteMove } from '../../utils/testData';
+import { blackRook, makePiece, testStore, whiteMove, whiteTake } from '../../utils/testData';
 import { rest } from 'msw';
 import { setupServer } from 'msw/node';
 import thunk from 'redux-thunk';
@@ -57,6 +59,12 @@ test('sets a tile', () => {
 
 test('takes a piece', () => {
   const result = reducer(undefined, takePiece(blackRook));
+
+  expect(result.takenPieces).toContainEqual(blackRook);
+});
+
+test('take a pieces', () => {
+  const result = reducer(undefined, takePieces([blackRook]));
 
   expect(result.takenPieces).toContainEqual(blackRook);
 });
@@ -140,6 +148,45 @@ test('moves a piece', async () => {
   expect(selectedStore.getActions()).toContainEqual(
     setTile(whiteMove.dstRow, whiteMove.dstCol, whiteMove.movingPiece)
   );
+  expect(selectedStore.getActions()).not.toContainEqual(
+    expect.objectContaining({
+      type: TAKE_PIECES
+    })
+  );
+});
+
+test('moves to take a piece', async () => {
+  server.use(
+    rest.post(`${config.serviceUrl}/moves/0`, (req, res, ctx) => {
+      return res(ctx.json(whiteTake));
+    })
+  );
+
+  const selectedStore = mockStore({
+    ...testStore,
+    activeGame: {
+      ...testStore.activeGame,
+      selectedPosition: [whiteTake.srcRow, whiteTake.srcCol],
+      tiles: immutableUpdate(testStore.activeGame.tiles, whiteTake.srcRow, whiteTake.srcCol, {
+        type: whiteTake.movingPiece.type,
+        color: whiteTake.movingPiece.color,
+        selected: true
+      })
+    }
+  });
+
+  await selectedStore.dispatch(clickTile(whiteTake.dstRow, whiteTake.dstCol));
+
+  expect(selectedStore.getActions()).toContainEqual(
+    selectTile(whiteTake.srcRow, whiteTake.srcCol, false)
+  );
+  expect(selectedStore.getActions()).toContainEqual(
+    setTile(whiteTake.srcRow, whiteTake.srcCol, undefined)
+  );
+  expect(selectedStore.getActions()).toContainEqual(
+    setTile(whiteTake.dstRow, whiteTake.dstCol, whiteTake.movingPiece)
+  );
+  expect(selectedStore.getActions()).toContainEqual(takePiece(whiteTake.takenPiece!));
 });
 
 test('fails to move a piece', async () => {
