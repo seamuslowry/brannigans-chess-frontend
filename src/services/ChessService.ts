@@ -82,8 +82,11 @@ const move = (gameId: number, srcRow: number, srcCol: number, dstRow: number, ds
     dstCol
   });
 
+const createGame = () => chessApi.post<Game>('games/create');
+
 export default {
   getGames,
   getPieces,
+  createGame,
   move
 };
