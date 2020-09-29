@@ -3,7 +3,7 @@ import { fireEvent, render } from '@testing-library/react';
 import Tile from './Tile';
 import { Provider } from 'react-redux';
 import createMockStore from 'redux-mock-store';
-import { blackRook, makePiece, testStore } from '../../utils/testData';
+import { makePiece, testStore } from '../../utils/testData';
 import { SELECT_TILE } from '../../store/activeGame/activeGame';
 import { ActionCreator } from 'redux';
 import thunk from 'redux-thunk';

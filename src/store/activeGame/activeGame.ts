@@ -1,5 +1,6 @@
 import ChessService, { Piece, PieceColor, PieceType } from '../../services/ChessService';
 import { flatten, immutableUpdate } from '../../utils/arrayHelpers';
+import { sendAlert } from '../notifications/notifications';
 import { ThunkResult } from '../store';
 
 export const SELECT_TILE = 'chess/activeGame/SELECT_TILE';
@@ -98,9 +99,8 @@ export const getPieces = (gameId: number): ThunkResult<void> => async dispatch =
         dispatch(setTile(piece.positionRow, piece.positionCol, piece));
       });
     })
-    .catch(error => {
-      // TODO update to use better error framework
-      console.error('could not get pieces for game');
+    .catch(e => {
+      dispatch(sendAlert(`Could not get pieces for game: ${e.message}`));
     });
 };
 

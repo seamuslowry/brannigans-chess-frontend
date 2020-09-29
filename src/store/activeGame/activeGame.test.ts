@@ -17,6 +17,7 @@ import { ActionCreator } from 'redux';
 import { immutableUpdate } from '../../utils/arrayHelpers';
 import config from '../../config';
 import { Piece } from '../../services/ChessService';
+import { SEND_ALERT } from '../notifications/notifications';
 
 const server = setupServer(
   rest.get(`${config.serviceUrl}/pieces/0`, (req, res, ctx) => {
@@ -88,4 +89,9 @@ test('handles an error when getting pieces', async () => {
   await mockedStore.dispatch(getPieces(0));
 
   expect(mockedStore.getActions()).not.toContainEqual(setTile(0, 0, blackRook));
+  expect(mockedStore.getActions()).toContainEqual(
+    expect.objectContaining({
+      type: SEND_ALERT
+    })
+  );
 });

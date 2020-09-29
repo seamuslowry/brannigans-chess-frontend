@@ -3,6 +3,7 @@ import React from 'react';
 import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-dom';
 import ActiveGame from './games/ActiveGame/ActiveGame';
 import GamesList from './games/GamesList/GamesList';
+import Notifications from './notifications/Notifications/Notifications';
 
 const App = () => {
   return (
@@ -25,6 +26,7 @@ const App = () => {
             <Redirect to="/" />
           </Switch>
         </Box>
+        <Notifications />
       </Box>
     </Router>
   );
