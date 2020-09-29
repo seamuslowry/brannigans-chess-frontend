@@ -1,6 +1,17 @@
 import { Game, Piece, PieceColor, PieceType, Player } from '../services/ChessService';
 import { initialState } from '../store/activeGame/activeGame';
+import { AlertInfo } from '../store/snackbars/snackbars';
 import { AppState } from '../store/store';
+
+export const successAlertInfo: AlertInfo = {
+  message: 'test success',
+  severity: 'success'
+};
+
+export const errorAlertInfo: AlertInfo = {
+  message: 'test error',
+  severity: 'error'
+};
 
 export const playerOne: Player = {
   id: 1,
