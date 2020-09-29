@@ -8,6 +8,8 @@ export const SELECT_TILE = 'chess/activeGame/SELECT_TILE';
 export const SET_TILE = 'chess/activeGame/SET_TILE';
 export const CLEAR_BOARD = 'chess/activeGame/CLEAR_BOARD';
 export const CLEAR_GAME = 'chess/activeGame/CLEAR_GAME';
+export const TAKE_PIECE = 'chess/activeGame/TAKE_PIECE';
+export const CLEAR_TAKEN = 'chess/activeGame/CLEAR_TAKEN';
 
 interface TileInfo {
   color?: PieceColor;
@@ -68,7 +70,24 @@ interface SetGameId {
   payload: number;
 }
 
-type ActiveGameAction = SelectTile | SetTile | ClearBoard | SetGameId | ClearGame;
+interface TakePiece {
+  type: typeof TAKE_PIECE;
+  payload: Piece;
+}
+
+interface ClearTaken {
+  type: typeof CLEAR_TAKEN;
+  payload: PieceColor;
+}
+
+type ActiveGameAction =
+  | SelectTile
+  | SetTile
+  | ClearBoard
+  | SetGameId
+  | ClearGame
+  | TakePiece
+  | ClearTaken;
 
 export const reducer = (
   state: ActiveGameState = initialState,
@@ -99,11 +118,21 @@ export const reducer = (
           type: setToPiece && setToPiece.type
         })
       };
+    case TAKE_PIECE:
+      return {
+        ...state,
+        takenPieces: [...state.takenPieces, action.payload]
+      };
     case CLEAR_BOARD:
       return {
         ...state,
         tiles: initialState.tiles,
         selectedPosition: initialState.selectedPosition
+      };
+    case CLEAR_TAKEN:
+      return {
+        ...state,
+        takenPieces: state.takenPieces.filter(p => p.color !== action.payload)
       };
     case CLEAR_GAME:
       return initialState;
@@ -172,10 +201,20 @@ export const selectTile = (row: number, col: number, selected: boolean): SelectT
   }
 });
 
+export const takePiece = (piece: Piece): TakePiece => ({
+  type: TAKE_PIECE,
+  payload: piece
+});
+
 export const clearBoard = (): ClearBoard => ({
   type: CLEAR_BOARD
 });
 
 export const clearGame = (): ClearGame => ({
   type: CLEAR_GAME
+});
+
+export const clearTaken = (color: PieceColor): ClearTaken => ({
+  type: CLEAR_TAKEN,
+  payload: color
 });

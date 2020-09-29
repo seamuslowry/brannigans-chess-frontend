@@ -6,10 +6,13 @@ import {
   getPieces,
   clearBoard,
   initialState,
-  clearGame
+  clearGame,
+  ActiveGameState,
+  clearTaken,
+  takePiece
 } from './activeGame';
 import createMockStore from 'redux-mock-store';
-import { blackRook, testStore, whiteMove } from '../../utils/testData';
+import { blackRook, makePiece, testStore, whiteMove } from '../../utils/testData';
 import { rest } from 'msw';
 import { setupServer } from 'msw/node';
 import thunk from 'redux-thunk';
@@ -52,6 +55,12 @@ test('sets a tile', () => {
   expect(result.tiles[0][0].type).toEqual(blackRook.type);
 });
 
+test('takes a piece', () => {
+  const result = reducer(undefined, takePiece(blackRook));
+
+  expect(result.takenPieces).toContainEqual(blackRook);
+});
+
 test('clears the board', () => {
   const result = reducer(undefined, clearBoard());
 
@@ -63,6 +72,18 @@ test('clears the game', () => {
   const result = reducer(undefined, clearGame());
 
   expect(result).toEqual(initialState);
+});
+
+test('clears taken pieces', () => {
+  const whiteRook = makePiece('ROOK', 'WHITE');
+  const stateWithTakenPieces: ActiveGameState = {
+    ...testStore.activeGame,
+    takenPieces: [blackRook, whiteRook]
+  };
+  const result = reducer(stateWithTakenPieces, clearTaken('WHITE'));
+
+  expect(result.takenPieces).toContainEqual(blackRook);
+  expect(result.takenPieces).not.toContainEqual(whiteRook);
 });
 
 test('clicks an unselected tile', async () => {
