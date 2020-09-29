@@ -1,4 +1,4 @@
-import { Box, Theme, Typography, useTheme } from '@material-ui/core';
+import { Box, Theme, useTheme } from '@material-ui/core';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { PieceColor, PieceType } from '../../services/ChessService';

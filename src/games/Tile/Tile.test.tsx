@@ -3,12 +3,11 @@ import { fireEvent, render } from '@testing-library/react';
 import Tile from './Tile';
 import { Provider } from 'react-redux';
 import createMockStore from 'redux-mock-store';
-import { makePiece, testStore } from '../../utils/testData';
+import { testStore } from '../../utils/testData';
 import { SELECT_TILE } from '../../store/activeGame/activeGame';
 import { ActionCreator } from 'redux';
 import thunk from 'redux-thunk';
 import { AppState } from '../../store/store';
-import { immutableUpdate } from '../../utils/arrayHelpers';
 
 const mockStore = createMockStore<AppState, ActionCreator<any>>([thunk]);
 const mockedStore = mockStore(testStore);
