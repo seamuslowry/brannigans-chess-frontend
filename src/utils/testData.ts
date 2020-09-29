@@ -31,7 +31,8 @@ export const makePiece = (type: PieceType, color: PieceColor): Piece => ({
   type,
   positionCol: 0,
   positionRow: 0,
-  taken: false
+  taken: false,
+  id: Number(Math.random() * 1000)
 });
 
 export const blackRook: Piece = makePiece('ROOK', 'BLACK');

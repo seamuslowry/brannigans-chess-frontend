@@ -33,7 +33,7 @@ const TakenPieces: React.FC<Props> = ({ gameId, color }) => {
     return () => {
       dispatch(clearTaken(color));
     };
-  }, [gameId, color]);
+  }, [gameId, color, dispatch]);
 
   const pieces = useSelector<AppState, PieceType[]>(state =>
     state.activeGame.takenPieces.filter(p => p.color === color)
