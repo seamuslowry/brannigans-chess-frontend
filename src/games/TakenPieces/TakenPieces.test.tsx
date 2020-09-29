@@ -35,14 +35,16 @@ afterEach(() => server.resetHandlers());
 afterAll(() => server.close());
 
 test('gets pieces on mount', async () => {
-  const { getByRole } = render(
+  const { getByRole, queryByRole } = render(
     <Provider store={mockedStore}>
       <TakenPieces gameId={0} color="BLACK" />
     </Provider>
   );
 
-  await waitFor(() => getByRole('progressbar')); // wait for service call to complete
-  await waitForElementToBeRemoved(() => getByRole('progressbar')); // wait for service call to complete
+  const progress = queryByRole('progressbar');
+  if (!!progress) {
+    await waitForElementToBeRemoved(() => getByRole('progressbar')); // wait for service call to complete
+  }
 
   expect(mockedStore.getActions()).toContainEqual(
     expect.objectContaining({
@@ -58,14 +60,16 @@ test('handles an error getting pieces on mount', async () => {
     })
   );
 
-  const { getByRole } = render(
+  const { getByRole, queryByRole } = render(
     <Provider store={mockedStore}>
       <TakenPieces gameId={0} color="BLACK" />
     </Provider>
   );
 
-  await waitFor(() => getByRole('progressbar')); // wait for service call to complete
-  await waitForElementToBeRemoved(() => getByRole('progressbar')); // wait for service call to complete
+  const progress = queryByRole('progressbar');
+  if (!!progress) {
+    await waitForElementToBeRemoved(() => getByRole('progressbar')); // wait for service call to complete
+  }
 
   expect(mockedStore.getActions()).toContainEqual(
     expect.objectContaining({
@@ -75,14 +79,16 @@ test('handles an error getting pieces on mount', async () => {
 });
 
 test('clears pieces on unmount', async () => {
-  const { getByRole, unmount } = render(
+  const { getByRole, queryByRole, unmount } = render(
     <Provider store={mockedStore}>
       <TakenPieces gameId={0} color="BLACK" />
     </Provider>
   );
 
-  await waitFor(() => getByRole('progressbar')); // wait for service call to complete
-  await waitForElementToBeRemoved(() => getByRole('progressbar')); // wait for service call to complete
+  const progress = queryByRole('progressbar');
+  if (!!progress) {
+    await waitForElementToBeRemoved(() => getByRole('progressbar')); // wait for service call to complete
+  }
 
   unmount();
 
