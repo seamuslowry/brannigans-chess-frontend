@@ -5,7 +5,7 @@ import createMockStore from 'redux-mock-store';
 import { testStore } from '../../utils/testData';
 import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router-dom';
-import { SET_GAME_ID } from '../../store/activeGame/activeGame';
+import { CLEAR_GAME, SET_GAME_ID } from '../../store/activeGame/activeGame';
 import thunk from 'redux-thunk';
 
 const mockStore = createMockStore([thunk]);
@@ -36,8 +36,7 @@ test('sets and unsets the game id', async () => {
 
   expect(mockedStore.getActions()).toContainEqual(
     expect.objectContaining({
-      type: SET_GAME_ID,
-      payload: 0
+      type: CLEAR_GAME
     })
   );
 });

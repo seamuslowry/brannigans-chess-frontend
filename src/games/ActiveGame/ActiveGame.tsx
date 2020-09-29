@@ -1,7 +1,7 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { setGameId } from '../../store/activeGame/activeGame';
+import { clearGame, setGameId } from '../../store/activeGame/activeGame';
 import Board from '../Board/Board';
 
 interface ExpectedRouteParams {
@@ -18,7 +18,7 @@ const ActiveGame: React.FC = () => {
     dispatch(setGameId(gameId));
 
     return () => {
-      dispatch(setGameId(0));
+      dispatch(clearGame());
     };
   }, [gameId, dispatch]);
 

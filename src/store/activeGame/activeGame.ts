@@ -7,6 +7,7 @@ export const SET_GAME_ID = 'chess/activeGame/SET_GAME_ID';
 export const SELECT_TILE = 'chess/activeGame/SELECT_TILE';
 export const SET_TILE = 'chess/activeGame/SET_TILE';
 export const CLEAR_BOARD = 'chess/activeGame/CLEAR_BOARD';
+export const CLEAR_GAME = 'chess/activeGame/CLEAR_GAME';
 
 interface TileInfo {
   color?: PieceColor;
@@ -18,6 +19,7 @@ interface TileInfo {
 export interface ActiveGameState {
   tiles: TileInfo[][];
   selectedPosition?: [number, number];
+  takenPieces: Piece[];
   id: number;
 }
 
@@ -31,6 +33,7 @@ const blankBoard = new Array<TileInfo[]>(8).fill(blankRow);
 
 export const initialState: ActiveGameState = {
   tiles: blankBoard,
+  takenPieces: [],
   id: 0
 };
 
@@ -56,12 +59,16 @@ interface ClearBoard {
   type: typeof CLEAR_BOARD;
 }
 
+interface ClearGame {
+  type: typeof CLEAR_GAME;
+}
+
 interface SetGameId {
   type: typeof SET_GAME_ID;
   payload: number;
 }
 
-type ActiveGameAction = SelectTile | SetTile | ClearBoard | SetGameId;
+type ActiveGameAction = SelectTile | SetTile | ClearBoard | SetGameId | ClearGame;
 
 export const reducer = (
   state: ActiveGameState = initialState,
@@ -93,6 +100,12 @@ export const reducer = (
         })
       };
     case CLEAR_BOARD:
+      return {
+        ...state,
+        tiles: initialState.tiles,
+        selectedPosition: initialState.selectedPosition
+      };
+    case CLEAR_GAME:
       return initialState;
     default:
       return state;
@@ -161,4 +174,8 @@ export const selectTile = (row: number, col: number, selected: boolean): SelectT
 
 export const clearBoard = (): ClearBoard => ({
   type: CLEAR_BOARD
+});
+
+export const clearGame = (): ClearGame => ({
+  type: CLEAR_GAME
 });

@@ -5,7 +5,8 @@ import {
   setTile,
   getPieces,
   clearBoard,
-  initialState
+  initialState,
+  clearGame
 } from './activeGame';
 import createMockStore from 'redux-mock-store';
 import { blackRook, testStore, whiteMove } from '../../utils/testData';
@@ -53,6 +54,13 @@ test('sets a tile', () => {
 
 test('clears the board', () => {
   const result = reducer(undefined, clearBoard());
+
+  expect(result.tiles).toEqual(initialState.tiles);
+  expect(result.selectedPosition).toEqual(initialState.selectedPosition);
+});
+
+test('clears the game', () => {
+  const result = reducer(undefined, clearGame());
 
   expect(result).toEqual(initialState);
 });
