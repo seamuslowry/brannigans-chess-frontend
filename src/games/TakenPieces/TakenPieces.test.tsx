@@ -1,5 +1,5 @@
 import React from 'react';
-import { getByRole, render, waitFor, waitForElementToBeRemoved } from '@testing-library/react';
+import { render, waitForElementToBeRemoved } from '@testing-library/react';
 import TakenPieces from './TakenPieces';
 import { Provider } from 'react-redux';
 import createMockStore from 'redux-mock-store';
@@ -35,16 +35,13 @@ afterEach(() => server.resetHandlers());
 afterAll(() => server.close());
 
 test('gets pieces on mount', async () => {
-  const { getByRole, queryByRole } = render(
+  const { getByRole } = render(
     <Provider store={mockedStore}>
       <TakenPieces gameId={0} color="BLACK" />
     </Provider>
   );
 
-  const progress = queryByRole('progressbar');
-  if (!!progress) {
-    await waitForElementToBeRemoved(() => getByRole('progressbar')); // wait for service call to complete
-  }
+  await waitForElementToBeRemoved(() => getByRole('progressbar')); // wait for service call to complete
 
   expect(mockedStore.getActions()).toContainEqual(
     expect.objectContaining({
@@ -60,16 +57,13 @@ test('handles an error getting pieces on mount', async () => {
     })
   );
 
-  const { getByRole, queryByRole } = render(
+  const { getByRole } = render(
     <Provider store={mockedStore}>
       <TakenPieces gameId={0} color="BLACK" />
     </Provider>
   );
 
-  const progress = queryByRole('progressbar');
-  if (!!progress) {
-    await waitForElementToBeRemoved(() => getByRole('progressbar')); // wait for service call to complete
-  }
+  await waitForElementToBeRemoved(() => getByRole('progressbar')); // wait for service call to complete
 
   expect(mockedStore.getActions()).toContainEqual(
     expect.objectContaining({
@@ -79,16 +73,13 @@ test('handles an error getting pieces on mount', async () => {
 });
 
 test('clears pieces on unmount', async () => {
-  const { getByRole, queryByRole, unmount } = render(
+  const { getByRole, unmount } = render(
     <Provider store={mockedStore}>
       <TakenPieces gameId={0} color="BLACK" />
     </Provider>
   );
 
-  const progress = queryByRole('progressbar');
-  if (!!progress) {
-    await waitForElementToBeRemoved(() => getByRole('progressbar')); // wait for service call to complete
-  }
+  await waitForElementToBeRemoved(() => getByRole('progressbar')); // wait for service call to complete
 
   unmount();
 
