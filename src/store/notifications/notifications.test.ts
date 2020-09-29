@@ -4,7 +4,7 @@ import { reducer, initialState, sendAlert, AlertInfo, removeAlert } from './noti
 test('sends an alert', () => {
   const result = reducer(undefined, sendAlert(successAlertInfo.message, successAlertInfo.severity));
 
-  expect(result.alerts).toContainEqual(successAlertInfo);
+  expect(result.pendingAlerts).toContainEqual(successAlertInfo);
 });
 
 test('removes an alert', () => {
@@ -23,11 +23,11 @@ test('removes an alert', () => {
   const result = reducer(
     {
       ...initialState,
-      alerts
+      pendingAlerts: alerts
     },
     removeAlert(errorAlertInfo)
   );
 
-  expect(result.alerts).toHaveLength(alerts.length - 1);
-  expect(result.alerts).not.toContainEqual(errorAlertInfo);
+  expect(result.pendingAlerts).toHaveLength(alerts.length - 1);
+  expect(result.pendingAlerts).not.toContainEqual(errorAlertInfo);
 });

@@ -34,7 +34,7 @@ test('renders one notification when only one provided', async () => {
     ...testStore,
     notifications: {
       ...testStore.notifications,
-      alerts: [errorAlertInfo]
+      pendingAlerts: [errorAlertInfo]
     }
   });
 
@@ -56,7 +56,7 @@ test('renders one notification when multiple are provided', async () => {
     ...testStore,
     notifications: {
       ...testStore.notifications,
-      alerts: [errorAlertInfo, successAlertInfo]
+      pendingAlerts: [errorAlertInfo, successAlertInfo]
     }
   });
 
@@ -78,7 +78,7 @@ test('closes the alert', async () => {
     ...testStore,
     notifications: {
       ...testStore.notifications,
-      alerts: [successAlertInfo]
+      pendingAlerts: [successAlertInfo]
     }
   });
 

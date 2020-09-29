@@ -9,11 +9,11 @@ export interface AlertInfo {
 }
 
 export interface NotificationsState {
-  alerts: AlertInfo[];
+  pendingAlerts: AlertInfo[];
 }
 
 export const initialState: NotificationsState = {
-  alerts: []
+  pendingAlerts: []
 };
 
 interface SendAlert {
@@ -36,12 +36,12 @@ export const reducer = (
     case SEND_ALERT:
       return {
         ...state,
-        alerts: [...state.alerts, action.payload]
+        pendingAlerts: [...state.pendingAlerts, action.payload]
       };
     case REMOVE_ALERT:
       return {
         ...state,
-        alerts: state.alerts.filter(
+        pendingAlerts: state.pendingAlerts.filter(
           a => !(a.message === action.payload.message && a.severity === action.payload.severity)
         )
       };

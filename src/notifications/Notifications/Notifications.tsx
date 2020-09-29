@@ -10,7 +10,7 @@ const Notifications: React.FC = () => {
   const [displayAlert, setDisplayAlert] = React.useState<AlertInfo | undefined>(undefined);
   const [open, setOpen] = React.useState<boolean>(false);
 
-  const alerts = useSelector<AppState, AlertInfo[]>(state => state.notifications.alerts);
+  const alerts = useSelector<AppState, AlertInfo[]>(state => state.notifications.pendingAlerts);
 
   React.useEffect(() => {
     if (alerts.length && !displayAlert) {
@@ -22,7 +22,7 @@ const Notifications: React.FC = () => {
       // Close an active snack when a new one is added
       setOpen(false);
     }
-  }, [alerts, displayAlert, open]);
+  }, [alerts, displayAlert, open, dispatch]);
 
   const handleClose = (event: React.SyntheticEvent | MouseEvent, reason?: string) => {
     if (reason === 'clickaway') {
