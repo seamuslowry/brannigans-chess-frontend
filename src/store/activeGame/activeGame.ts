@@ -1,8 +1,9 @@
 import ChessService, { Piece, PieceColor, PieceType } from '../../services/ChessService';
-import { flatten, immutableUpdate } from '../../utils/arrayHelpers';
+import { immutableUpdate } from '../../utils/arrayHelpers';
 import { sendAlert } from '../notifications/notifications';
 import { ThunkResult } from '../store';
 
+export const SET_GAME_ID = 'chess/activeGame/SET_GAME_ID';
 export const SELECT_TILE = 'chess/activeGame/SELECT_TILE';
 export const SET_TILE = 'chess/activeGame/SET_TILE';
 export const CLEAR_BOARD = 'chess/activeGame/CLEAR_BOARD';
@@ -16,6 +17,8 @@ interface TileInfo {
 
 export interface ActiveGameState {
   tiles: TileInfo[][];
+  selectedPosition?: [number, number];
+  id: number;
 }
 
 const blankTile: TileInfo = {
@@ -27,7 +30,8 @@ const blankRow = new Array<TileInfo>(8).fill(blankTile);
 const blankBoard = new Array<TileInfo[]>(8).fill(blankRow);
 
 export const initialState: ActiveGameState = {
-  tiles: blankBoard
+  tiles: blankBoard,
+  id: 0
 };
 
 interface SelectTile {
@@ -52,19 +56,32 @@ interface ClearBoard {
   type: typeof CLEAR_BOARD;
 }
 
-type ActiveGameAction = SelectTile | SetTile | ClearBoard;
+interface SetGameId {
+  type: typeof SET_GAME_ID;
+  payload: number;
+}
+
+type ActiveGameAction = SelectTile | SetTile | ClearBoard | SetGameId;
 
 export const reducer = (
   state: ActiveGameState = initialState,
   action: ActiveGameAction
 ): ActiveGameState => {
   switch (action.type) {
+    case SET_GAME_ID:
+      return {
+        ...state,
+        id: action.payload
+      };
     case SELECT_TILE:
       return {
         ...state,
         tiles: immutableUpdate(state.tiles, action.payload.row, action.payload.col, {
           selected: action.payload.selected
-        })
+        }),
+        selectedPosition: action.payload.selected
+          ? [action.payload.row, action.payload.col]
+          : undefined
       };
     case SET_TILE:
       const setToPiece = action.payload.piece;
@@ -76,18 +93,33 @@ export const reducer = (
         })
       };
     case CLEAR_BOARD:
-    default:
       return initialState;
+    default:
+      return state;
   }
 };
 
 export const clickTile = (row: number, col: number): ThunkResult<void> => (dispatch, getState) => {
-  const selectedTile = flatten(getState().activeGame.tiles).find(r => r.selected);
+  const state = getState();
+  const selectedPosition = state.activeGame.selectedPosition;
+  const gameId = state.activeGame.id;
+  const tiles = state.activeGame.tiles;
 
-  if (selectedTile) {
-    // TODO attempt to move to selected tile
+  if (selectedPosition && selectedPosition[0] === row && selectedPosition[1] === col) {
     dispatch(selectTile(row, col, false));
-  } else {
+  } else if (selectedPosition) {
+    return ChessService.move(gameId, selectedPosition[0], selectedPosition[1], row, col)
+      .then(res => {
+        const move = res.data;
+
+        dispatch(selectTile(selectedPosition[0], selectedPosition[1], false));
+        dispatch(setTile(move.srcRow, move.srcCol, undefined));
+        dispatch(setTile(move.dstRow, move.dstCol, move.movingPiece));
+      })
+      .catch(e => {
+        dispatch(sendAlert(e.response.data));
+      });
+  } else if (tiles[row][col].type) {
     dispatch(selectTile(row, col, true));
   }
 };
@@ -103,6 +135,11 @@ export const getPieces = (gameId: number): ThunkResult<void> => async dispatch =
       dispatch(sendAlert(`Could not get pieces for game: ${e.message}`));
     });
 };
+
+export const setGameId = (id: number): SetGameId => ({
+  type: SET_GAME_ID,
+  payload: id
+});
 
 export const setTile = (row: number, col: number, piece?: Piece): SetTile => ({
   type: SET_TILE,

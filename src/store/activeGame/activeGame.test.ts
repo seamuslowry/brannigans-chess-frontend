@@ -8,7 +8,7 @@ import {
   initialState
 } from './activeGame';
 import createMockStore from 'redux-mock-store';
-import { blackRook, testStore } from '../../utils/testData';
+import { blackRook, testStore, whiteMove } from '../../utils/testData';
 import { rest } from 'msw';
 import { setupServer } from 'msw/node';
 import thunk from 'redux-thunk';
@@ -16,7 +16,7 @@ import { AppState } from '../store';
 import { ActionCreator } from 'redux';
 import { immutableUpdate } from '../../utils/arrayHelpers';
 import config from '../../config';
-import { Piece } from '../../services/ChessService';
+import { Move, Piece } from '../../services/ChessService';
 import { SEND_ALERT } from '../notifications/notifications';
 
 const server = setupServer(
@@ -24,6 +24,9 @@ const server = setupServer(
     return res(
       ctx.json<Piece[]>([blackRook])
     );
+  }),
+  rest.post(`${config.serviceUrl}/moves/0`, (req, res, ctx) => {
+    return res(ctx.json<Move>(whiteMove));
   })
 );
 
@@ -55,9 +58,17 @@ test('clears the board', () => {
 });
 
 test('clicks an unselected tile', async () => {
-  await mockedStore.dispatch(clickTile(0, 0));
+  const storeWithRook = mockStore({
+    ...testStore,
+    activeGame: {
+      ...testStore.activeGame,
+      tiles: immutableUpdate(testStore.activeGame.tiles, 0, 0, { type: 'ROOK', color: 'BLACK' })
+    }
+  });
 
-  expect(mockedStore.getActions()).toContainEqual(selectTile(0, 0, true));
+  await storeWithRook.dispatch(clickTile(0, 0));
+
+  expect(storeWithRook.getActions()).toContainEqual(selectTile(0, 0, true));
 });
 
 test('clicks a selected tile', async () => {
@@ -65,6 +76,7 @@ test('clicks a selected tile', async () => {
     ...testStore,
     activeGame: {
       ...testStore.activeGame,
+      selectedPosition: [0, 0],
       tiles: immutableUpdate(testStore.activeGame.tiles, 0, 0, { selected: true })
     }
   });
@@ -72,6 +84,70 @@ test('clicks a selected tile', async () => {
   await selectedStore.dispatch(clickTile(0, 0));
 
   expect(selectedStore.getActions()).toContainEqual(selectTile(0, 0, false));
+});
+
+test('moves a piece', async () => {
+  const selectedStore = mockStore({
+    ...testStore,
+    activeGame: {
+      ...testStore.activeGame,
+      selectedPosition: [whiteMove.srcRow, whiteMove.srcCol],
+      tiles: immutableUpdate(testStore.activeGame.tiles, whiteMove.srcRow, whiteMove.srcCol, {
+        type: whiteMove.movingPiece.type,
+        color: whiteMove.movingPiece.color,
+        selected: true
+      })
+    }
+  });
+
+  await selectedStore.dispatch(clickTile(whiteMove.dstRow, whiteMove.dstCol));
+
+  expect(selectedStore.getActions()).toContainEqual(
+    selectTile(whiteMove.srcRow, whiteMove.srcCol, false)
+  );
+  expect(selectedStore.getActions()).toContainEqual(
+    setTile(whiteMove.srcRow, whiteMove.srcCol, undefined)
+  );
+  expect(selectedStore.getActions()).toContainEqual(
+    setTile(whiteMove.dstRow, whiteMove.dstCol, whiteMove.movingPiece)
+  );
+});
+
+test('fails to move a piece', async () => {
+  server.use(
+    rest.post(`${config.serviceUrl}/moves/0`, (req, res, ctx) => {
+      return res(ctx.status(400));
+    })
+  );
+  const selectedStore = mockStore({
+    ...testStore,
+    activeGame: {
+      ...testStore.activeGame,
+      selectedPosition: [whiteMove.srcRow, whiteMove.srcCol],
+      tiles: immutableUpdate(testStore.activeGame.tiles, whiteMove.srcRow, whiteMove.srcCol, {
+        type: whiteMove.movingPiece.type,
+        color: whiteMove.movingPiece.color,
+        selected: true
+      })
+    }
+  });
+
+  await selectedStore.dispatch(clickTile(whiteMove.dstRow, whiteMove.dstCol));
+
+  expect(selectedStore.getActions()).not.toContainEqual(
+    selectTile(whiteMove.srcRow, whiteMove.srcCol, false)
+  );
+  expect(selectedStore.getActions()).not.toContainEqual(
+    setTile(whiteMove.srcRow, whiteMove.srcCol, undefined)
+  );
+  expect(selectedStore.getActions()).not.toContainEqual(
+    setTile(whiteMove.dstRow, whiteMove.dstCol, whiteMove.movingPiece)
+  );
+  expect(selectedStore.getActions()).toContainEqual(
+    expect.objectContaining({
+      type: SEND_ALERT
+    })
+  );
 });
 
 test('gets pieces', async () => {
