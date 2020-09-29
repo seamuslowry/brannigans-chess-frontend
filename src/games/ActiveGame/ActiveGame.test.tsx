@@ -5,16 +5,18 @@ import createMockStore from 'redux-mock-store';
 import { testStore } from '../../utils/testData';
 import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router-dom';
+import { SET_GAME_ID } from '../../store/activeGame/activeGame';
+import thunk from 'redux-thunk';
 
-const mockStore = createMockStore();
+const mockStore = createMockStore([thunk]);
 const mockedStore = mockStore(testStore);
 
 beforeEach(() => mockedStore.clearActions());
 
-test('renders without crashing', async () => {
-  const { container } = render(
+test('sets and unsets the game id', async () => {
+  const { container, unmount } = render(
     <Provider store={mockedStore}>
-      <MemoryRouter>
+      <MemoryRouter initialEntries={['/test/1']}>
         <Route path="/test/:id">
           <ActiveGame />
         </Route>
@@ -23,4 +25,19 @@ test('renders without crashing', async () => {
   );
 
   expect(container).toBeInTheDocument();
+  expect(mockedStore.getActions()).toContainEqual(
+    expect.objectContaining({
+      type: SET_GAME_ID,
+      payload: 1
+    })
+  );
+
+  unmount();
+
+  expect(mockedStore.getActions()).toContainEqual(
+    expect.objectContaining({
+      type: SET_GAME_ID,
+      payload: 0
+    })
+  );
 });
