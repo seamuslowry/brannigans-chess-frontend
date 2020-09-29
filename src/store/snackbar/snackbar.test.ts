@@ -1,5 +1,5 @@
 import { errorAlertInfo, successAlertInfo } from '../../utils/testData';
-import { reducer, initialState, sendAlert, AlertInfo, removeAlert } from './snackbars';
+import { reducer, initialState, sendAlert, AlertInfo, removeAlert } from './snackbar';
 
 test('sends an alert', () => {
   const result = reducer(undefined, sendAlert(successAlertInfo.message, successAlertInfo.severity));

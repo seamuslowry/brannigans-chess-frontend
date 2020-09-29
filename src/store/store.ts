@@ -1,18 +1,18 @@
 import { AnyAction, applyMiddleware, combineReducers, createStore } from 'redux';
 import thunk, { ThunkAction, ThunkMiddleware } from 'redux-thunk';
 import { reducer as activeGameReducer, ActiveGameState } from './activeGame/activeGame';
-import { reducer as snackbarsReducer, SnackbarState } from './snackbars/snackbars';
+import { reducer as snackbarReducer, SnackbarState } from './snackbar/snackbar';
 
 export type ThunkResult<R> = ThunkAction<R, AppState, undefined, AnyAction>;
 
 export interface AppState {
   activeGame: ActiveGameState;
-  snackbars: SnackbarState;
+  snackbar: SnackbarState;
 }
 
 const rootReducer = combineReducers<AppState>({
   activeGame: activeGameReducer,
-  snackbars: snackbarsReducer
+  snackbar: snackbarReducer
 });
 
 export const store = createStore(
