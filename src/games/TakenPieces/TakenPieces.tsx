@@ -40,7 +40,7 @@ const TakenPieces: React.FC<Props> = ({ gameId, color }) => {
   );
 
   return (
-    <Box width="100%" maxWidth="10vw" display="flex" flexWrap="wrap">
+    <Box width="100%" display="flex" flexWrap="wrap">
       {loading && <CircularProgress />}
       {pieces &&
         pieces.map(piece => (
