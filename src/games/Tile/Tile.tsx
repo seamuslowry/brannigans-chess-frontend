@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { PieceColor, PieceType } from '../../services/ChessService';
 import { clickTile } from '../../store/activeGame/activeGame';
 import { AppState } from '../../store/store';
+import Piece from '../Piece/Piece';
 
 interface Props {
   row: number;
@@ -18,38 +19,6 @@ const getBgColor = (theme: Theme, row: number, col: number, selected: boolean) =
   } else {
     return theme.palette.primary.main;
   }
-};
-
-const getPiece = (type?: PieceType, color?: PieceColor) => {
-  if (!(type && color)) return null;
-
-  let letter;
-  switch (type) {
-    case 'BISHOP':
-      letter = 'B';
-      break;
-    case 'PAWN':
-      letter = 'P';
-      break;
-    case 'QUEEN':
-      letter = 'Q';
-      break;
-    case 'KING':
-      letter = 'K';
-      break;
-    case 'KNIGHT':
-      letter = 'H';
-      break;
-    case 'ROOK':
-      letter = 'R';
-      break;
-  }
-
-  return (
-    <Typography align="center" color={color === 'WHITE' ? 'textPrimary' : 'error'}>
-      {letter}
-    </Typography>
-  );
 };
 
 const Tile: React.FC<Props> = ({ row, col }) => {
@@ -67,7 +36,6 @@ const Tile: React.FC<Props> = ({ row, col }) => {
   );
 
   const bgColor = getBgColor(theme, row, col, selected);
-  const piece = getPiece(pieceType, pieceColor);
 
   const handleClick = () => {
     dispatch(clickTile(row, col));
@@ -81,7 +49,7 @@ const Tile: React.FC<Props> = ({ row, col }) => {
       bgcolor={bgColor}
       onClick={handleClick}
     >
-      {piece}
+      <Piece type={pieceType} color={pieceColor} />
     </Box>
   );
 };
