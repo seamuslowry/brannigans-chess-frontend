@@ -10,6 +10,7 @@ export interface Piece {
   positionRow: number;
   positionCol: number;
   taken: boolean;
+  id: number;
 }
 
 export interface Player {
