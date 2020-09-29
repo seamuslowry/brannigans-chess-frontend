@@ -1,7 +1,7 @@
 import { Game, Piece, PieceColor, PieceType, Player } from '../services/ChessService';
 import { initialState as initialActiveGameState } from '../store/activeGame/activeGame';
-import { initialState as initialSnackbarState } from '../store/snackbar/snackbar';
-import { AlertInfo } from '../store/snackbar/snackbar';
+import { initialState as initialNotificationsState } from '../store/notifications/notifications';
+import { AlertInfo } from '../store/notifications/notifications';
 import { AppState } from '../store/store';
 
 export const successAlertInfo: AlertInfo = {
@@ -54,5 +54,5 @@ export const fullGame: Game = {
 
 export const testStore: AppState = {
   activeGame: initialActiveGameState,
-  snackbar: initialSnackbarState
+  notifications: initialNotificationsState
 };
