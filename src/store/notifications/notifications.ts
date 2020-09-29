@@ -46,7 +46,7 @@ export const reducer = (
         )
       };
     default:
-      return initialState;
+      return state;
   }
 };
 
