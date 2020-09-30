@@ -4,6 +4,7 @@ import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { clearGame, setGameId } from '../../store/activeGame/activeGame';
 import Board from '../Board/Board';
+import MoveList from '../MoveList/MoveList';
 import TakenPieces from '../TakenPieces/TakenPieces';
 
 interface ExpectedRouteParams {
@@ -25,7 +26,7 @@ const ActiveGame: React.FC = () => {
   }, [gameId, dispatch]);
 
   return (
-    <Box display="grid" gridTemplateColumns="1fr max-content 1fr">
+    <Box display="grid" gridTemplateColumns="1fr max-content 1fr 3fr">
       <Box gridRow={1} gridColumn={1}>
         <TakenPieces gameId={gameId} color="WHITE" />
       </Box>
@@ -34,6 +35,9 @@ const ActiveGame: React.FC = () => {
       </Box>
       <Box gridRow={1} gridColumn={3}>
         <TakenPieces gameId={gameId} color="BLACK" />
+      </Box>
+      <Box gridRow={1} gridColumn={4}>
+        <MoveList gameId={gameId} />
       </Box>
     </Box>
   );

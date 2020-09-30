@@ -1,5 +1,5 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render, waitForElementToBeRemoved } from '@testing-library/react';
 import ActiveGame from './ActiveGame';
 import createMockStore from 'redux-mock-store';
 import { testStore } from '../../utils/testData';
@@ -10,7 +10,7 @@ import { MemoryRouter, Route } from 'react-router-dom';
 import { CLEAR_GAME, SET_GAME_ID } from '../../store/activeGame/activeGame';
 import thunk from 'redux-thunk';
 import config from '../../config';
-import { Piece } from '../../services/ChessService';
+import { Move, Piece } from '../../services/ChessService';
 
 const mockStore = createMockStore([thunk]);
 const mockedStore = mockStore(testStore);
@@ -18,8 +18,11 @@ const mockedStore = mockStore(testStore);
 beforeEach(() => mockedStore.clearActions());
 
 const server = setupServer(
-  rest.get(`${config.serviceUrl}/pieces/0`, (req, res, ctx) => {
+  rest.get(`${config.serviceUrl}/pieces/1`, (req, res, ctx) => {
     return res(ctx.json<Piece[]>([]));
+  }),
+  rest.get(`${config.serviceUrl}/moves/1`, (req, res, ctx) => {
+    return res(ctx.json<Move[]>([]));
   })
 );
 
@@ -28,7 +31,7 @@ afterEach(() => server.resetHandlers());
 afterAll(() => server.close());
 
 test('sets and unsets the game id', async () => {
-  const { container, unmount } = render(
+  const { container, getAllByRole, unmount } = render(
     <Provider store={mockedStore}>
       <MemoryRouter initialEntries={['/test/1']}>
         <Route path="/test/:id">
@@ -45,6 +48,8 @@ test('sets and unsets the game id', async () => {
       payload: 1
     })
   );
+
+  await waitForElementToBeRemoved(() => getAllByRole('progressbar')); // wait for service calls to complete
 
   unmount();
 
