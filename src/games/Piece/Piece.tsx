@@ -13,7 +13,7 @@ const Piece: React.FC<Props> = ({ type, color, height = '100%', width = '100%' }
 
   return (
     <img
-      data-testid={`${color}-${type}`}
+      alt={`${color}-${type}`}
       height={height}
       width={width}
       src={`/pieces/${color}_${type}.svg`}

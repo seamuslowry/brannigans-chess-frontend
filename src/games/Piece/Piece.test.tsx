@@ -3,9 +3,9 @@ import { render } from '@testing-library/react';
 import Piece from './Piece';
 
 test('renders with values', async () => {
-  const { getByTestId } = render(<Piece color="BLACK" type="KNIGHT" />);
+  const { getByAltText } = render(<Piece color="BLACK" type="KNIGHT" />);
 
-  const tile = getByTestId('BLACK-KNIGHT');
+  const tile = getByAltText('BLACK-KNIGHT');
 
   expect(tile).toBeInTheDocument();
 });
