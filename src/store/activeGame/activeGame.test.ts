@@ -11,7 +11,10 @@ import {
   clearTaken,
   takePiece,
   takePieces,
-  TAKE_PIECES
+  TAKE_PIECES,
+  addMove,
+  addMoves,
+  ADD_MOVES
 } from './activeGame';
 import createMockStore from 'redux-mock-store';
 import { blackRook, makePiece, testStore, whiteMove, whiteTake } from '../../utils/testData';
@@ -57,13 +60,25 @@ test('sets a tile', () => {
   expect(result.tiles[0][0].type).toEqual(blackRook.type);
 });
 
+test('records a move', () => {
+  const result = reducer(undefined, addMove(whiteMove));
+
+  expect(result.moveList).toContainEqual(whiteMove);
+});
+
+test('records moves', () => {
+  const result = reducer(undefined, addMoves([whiteMove]));
+
+  expect(result.moveList).toContainEqual(whiteMove);
+});
+
 test('takes a piece', () => {
   const result = reducer(undefined, takePiece(blackRook));
 
   expect(result.takenPieces).toContainEqual(blackRook);
 });
 
-test('take a pieces', () => {
+test('takes pieces', () => {
   const result = reducer(undefined, takePieces([blackRook]));
 
   expect(result.takenPieces).toContainEqual(blackRook);
@@ -148,6 +163,12 @@ test('moves a piece', async () => {
   expect(selectedStore.getActions()).toContainEqual(
     setTile(whiteMove.dstRow, whiteMove.dstCol, whiteMove.movingPiece)
   );
+  expect(selectedStore.getActions()).toContainEqual(
+    expect.objectContaining({
+      type: ADD_MOVES,
+      payload: [whiteMove]
+    })
+  );
   expect(selectedStore.getActions()).not.toContainEqual(
     expect.objectContaining({
       type: TAKE_PIECES
@@ -185,6 +206,13 @@ test('moves to take a piece', async () => {
   );
   expect(selectedStore.getActions()).toContainEqual(
     setTile(whiteTake.dstRow, whiteTake.dstCol, whiteTake.movingPiece)
+  );
+
+  expect(selectedStore.getActions()).toContainEqual(
+    expect.objectContaining({
+      type: ADD_MOVES,
+      payload: [whiteTake]
+    })
   );
   expect(selectedStore.getActions()).toContainEqual(takePiece(whiteTake.takenPiece!));
 });

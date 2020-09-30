@@ -1,4 +1,4 @@
-import ChessService, { Piece, PieceColor, PieceType } from '../../services/ChessService';
+import ChessService, { Move, Piece, PieceColor, PieceType } from '../../services/ChessService';
 import { immutableUpdate } from '../../utils/arrayHelpers';
 import { sendAlert } from '../notifications/notifications';
 import { ThunkResult } from '../store';
@@ -10,6 +10,8 @@ export const CLEAR_BOARD = 'chess/activeGame/CLEAR_BOARD';
 export const CLEAR_GAME = 'chess/activeGame/CLEAR_GAME';
 export const TAKE_PIECES = 'chess/activeGame/TAKE_PIECES';
 export const CLEAR_TAKEN = 'chess/activeGame/CLEAR_TAKEN';
+export const ADD_MOVES = 'chess/activeGame/ADD_MOVES';
+export const CLEAR_MOVES = 'chess/activeGame/CLEAR_MOVES';
 
 interface TileInfo {
   color?: PieceColor;
@@ -22,6 +24,7 @@ export interface ActiveGameState {
   tiles: TileInfo[][];
   selectedPosition?: [number, number];
   takenPieces: Piece[];
+  moveList: Move[];
   id: number;
 }
 
@@ -36,6 +39,7 @@ const blankBoard = new Array<TileInfo[]>(8).fill(blankRow);
 export const initialState: ActiveGameState = {
   tiles: blankBoard,
   takenPieces: [],
+  moveList: [],
   id: 0
 };
 
@@ -80,6 +84,15 @@ interface ClearTaken {
   payload: PieceColor;
 }
 
+interface AddMoves {
+  type: typeof ADD_MOVES;
+  payload: Move[];
+}
+
+interface ClearMoves {
+  type: typeof CLEAR_MOVES;
+}
+
 type ActiveGameAction =
   | SelectTile
   | SetTile
@@ -87,7 +100,9 @@ type ActiveGameAction =
   | SetGameId
   | ClearGame
   | TakePieces
-  | ClearTaken;
+  | ClearTaken
+  | AddMoves
+  | ClearMoves;
 
 export const reducer = (
   state: ActiveGameState = initialState,
@@ -123,6 +138,11 @@ export const reducer = (
         ...state,
         takenPieces: [...state.takenPieces, ...action.payload]
       };
+    case ADD_MOVES:
+      return {
+        ...state,
+        moveList: [...state.moveList, ...action.payload]
+      };
     case CLEAR_BOARD:
       return {
         ...state,
@@ -133,6 +153,11 @@ export const reducer = (
       return {
         ...state,
         takenPieces: state.takenPieces.filter(p => p.color !== action.payload)
+      };
+    case CLEAR_MOVES:
+      return {
+        ...state,
+        moveList: initialState.moveList
       };
     case CLEAR_GAME:
       return initialState;
@@ -157,6 +182,7 @@ export const clickTile = (row: number, col: number): ThunkResult<void> => (dispa
         dispatch(selectTile(selectedPosition[0], selectedPosition[1], false));
         dispatch(setTile(move.srcRow, move.srcCol, undefined));
         dispatch(setTile(move.dstRow, move.dstCol, move.movingPiece));
+        dispatch(addMove(move));
         move.takenPiece && dispatch(takePiece(move.takenPiece));
       })
       .catch(e => {
@@ -202,6 +228,16 @@ export const selectTile = (row: number, col: number, selected: boolean): SelectT
   }
 });
 
+export const addMove = (move: Move): AddMoves => ({
+  type: ADD_MOVES,
+  payload: [move]
+});
+
+export const addMoves = (moves: Move[]): AddMoves => ({
+  type: ADD_MOVES,
+  payload: moves
+});
+
 export const takePiece = (piece: Piece): TakePieces => ({
   type: TAKE_PIECES,
   payload: [piece]
@@ -223,4 +259,8 @@ export const clearGame = (): ClearGame => ({
 export const clearTaken = (color: PieceColor): ClearTaken => ({
   type: CLEAR_TAKEN,
   payload: color
+});
+
+export const clearMoves = (): ClearMoves => ({
+  type: CLEAR_MOVES
 });
