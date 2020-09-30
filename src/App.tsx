@@ -3,6 +3,7 @@ import React from 'react';
 import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-dom';
 import ActiveGame from './games/ActiveGame/ActiveGame';
 import GamesList from './games/GamesList/GamesList';
+import Attributions from './information/CreateGameButton/Attributions';
 import Notifications from './notifications/Notifications/Notifications';
 
 const App = () => {
@@ -27,6 +28,7 @@ const App = () => {
           </Switch>
         </Box>
         <Notifications />
+        <Attributions />
       </Box>
     </Router>
   );
