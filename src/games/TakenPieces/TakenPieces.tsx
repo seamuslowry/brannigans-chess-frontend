@@ -40,11 +40,20 @@ const TakenPieces: React.FC<Props> = ({ gameId, color }) => {
   );
 
   return (
-    <Box width="100%" display="flex" flexWrap="wrap">
+    <Box
+      width="100%"
+      display="grid"
+      gridTemplateColumns="repeat(2,10vh)"
+      gridTemplateRows="repeat(8, 10vh)"
+    >
       {loading && <CircularProgress />}
       {pieces &&
-        pieces.map(piece => (
-          <Box key={`taken-piece-${piece.id}`} flex="0 50%" p={2}>
+        pieces.map((piece, index) => (
+          <Box
+            key={`taken-piece-${piece.id}`}
+            gridRow={Math.floor(index / 2) + 1}
+            gridColumn={(index % 2) + 1}
+          >
             <Piece color={piece.color} type={piece.type} />
           </Box>
         ))}

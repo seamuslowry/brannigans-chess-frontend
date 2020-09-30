@@ -1,41 +1,23 @@
-import { Typography } from '@material-ui/core';
 import React from 'react';
 import { PieceColor, PieceType } from '../../services/ChessService';
 
 interface Props {
   type?: PieceType;
   color?: PieceColor;
+  height?: string;
+  width?: string;
 }
 
-const Piece: React.FC<Props> = ({ type, color }) => {
+const Piece: React.FC<Props> = ({ type, color, height = '100%', width = '100%' }) => {
   if (!(type && color)) return null;
 
-  let letter;
-  switch (type) {
-    case 'BISHOP':
-      letter = 'B';
-      break;
-    case 'PAWN':
-      letter = 'P';
-      break;
-    case 'QUEEN':
-      letter = 'Q';
-      break;
-    case 'KING':
-      letter = 'K';
-      break;
-    case 'KNIGHT':
-      letter = 'H';
-      break;
-    case 'ROOK':
-      letter = 'R';
-      break;
-  }
-
   return (
-    <Typography align="center" color={color === 'WHITE' ? 'textPrimary' : 'error'}>
-      {letter}
-    </Typography>
+    <img
+      data-testid={`${color}-${type}`}
+      height={height}
+      width={width}
+      src={`/pieces/${color}_${type}.svg`}
+    />
   );
 };
 

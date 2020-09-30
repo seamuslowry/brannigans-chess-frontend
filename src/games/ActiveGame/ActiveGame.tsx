@@ -26,7 +26,13 @@ const ActiveGame: React.FC = () => {
   }, [gameId, dispatch]);
 
   return (
-    <Box display="grid" gridTemplateColumns="1fr max-content 1fr 3fr">
+    <Box
+      display="grid"
+      width="90vw"
+      gridGap={1}
+      gridTemplateColumns="1fr max-content 1fr 1fr"
+      justifyItems="center"
+    >
       <Box gridRow={1} gridColumn={1}>
         <TakenPieces gameId={gameId} color="WHITE" />
       </Box>

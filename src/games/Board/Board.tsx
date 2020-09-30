@@ -21,11 +21,11 @@ const Board: React.FC<Props> = ({ gameId }) => {
 
   return (
     <Box
-      width="70vh"
-      height="70vh"
+      width="80vh"
+      height="80vh"
       display="grid"
-      gridTemplateColumns="repeat(8, 1fr)"
-      gridTemplateRows="repeat(8, 1fr)"
+      gridTemplateColumns="repeat(8, 10vh)"
+      gridTemplateRows="repeat(8, 10vh)"
     >
       {array.map((_, row) =>
         array.map((__, col) => <Tile key={`tile-${row}-${col}`} row={row} col={col} />)
