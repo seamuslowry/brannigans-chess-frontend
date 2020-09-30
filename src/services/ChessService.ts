@@ -75,6 +75,14 @@ const getPieces = (gameId: number, color?: PieceColor, taken?: boolean) => {
   return chessApi.get<Piece[]>(`pieces/${gameId}?${args.join('&')}`);
 };
 
+const getMoves = (gameId: number, color?: PieceColor) => {
+  const args = [];
+
+  color && args.push(`color=${color}`);
+
+  return chessApi.get<Move[]>(`moves/${gameId}?${args.join('&')}`);
+};
+
 const move = (gameId: number, srcRow: number, srcCol: number, dstRow: number, dstCol: number) =>
   chessApi.post<Move>(`moves/${gameId}`, {
     srcRow,
@@ -88,6 +96,7 @@ const createGame = () => chessApi.post<Game>('games/create');
 export default {
   getGames,
   getPieces,
+  getMoves,
   createGame,
   move
 };
