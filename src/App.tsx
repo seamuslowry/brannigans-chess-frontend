@@ -1,7 +1,10 @@
 import { Box, Typography } from '@material-ui/core';
 import React from 'react';
 import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-dom';
+import ActiveGame from './games/ActiveGame/ActiveGame';
 import GamesList from './games/GamesList/GamesList';
+import Attributions from './information/CreateGameButton/Attributions';
+import Notifications from './notifications/Notifications/Notifications';
 
 const App = () => {
   return (
@@ -15,12 +18,17 @@ const App = () => {
         </Box>
         <Box pt={2} display="flex" justifyContent="center">
           <Switch>
+            <Route path="/game/:id">
+              <ActiveGame />
+            </Route>
             <Route path="/">
               <GamesList />
             </Route>
             <Redirect to="/" />
           </Switch>
         </Box>
+        <Notifications />
+        <Attributions />
       </Box>
     </Router>
   );

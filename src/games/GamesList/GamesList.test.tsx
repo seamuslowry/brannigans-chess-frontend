@@ -6,7 +6,17 @@ import GamesList from './GamesList';
 import { Game, PageResponse } from '../../services/ChessService';
 import config from '../../config';
 import { act } from 'react-test-renderer';
-import { emptyGame } from '../../utils/testData';
+import { emptyGame, testStore } from '../../utils/testData';
+import { ActionCreator } from 'redux';
+import createMockStore from 'redux-mock-store';
+import thunk from 'redux-thunk';
+import { AppState } from '../../store/store';
+import { Provider } from 'react-redux';
+
+const mockStore = createMockStore<AppState, ActionCreator<any>>([thunk]);
+const mockedStore = mockStore(testStore);
+
+beforeEach(() => mockedStore.clearActions());
 
 const gamesResponse: Game[] = [emptyGame, { ...emptyGame, id: 2 }];
 
@@ -27,7 +37,11 @@ afterEach(() => server.resetHandlers());
 afterAll(() => server.close());
 
 test('renders games as a list', async () => {
-  render(<GamesList />);
+  render(
+    <Provider store={mockedStore}>
+      <GamesList />
+    </Provider>
+  );
 
   const gameNodes = await waitFor(() => screen.getAllByTestId('game-list-item'));
 
@@ -41,7 +55,11 @@ test('handles error when getting lists', async () => {
     })
   );
 
-  render(<GamesList />);
+  render(
+    <Provider store={mockedStore}>
+      <GamesList />
+    </Provider>
+  );
 
   const error = await waitFor(() => screen.getByText(/Could not load game/i));
   const games = screen.queryAllByTestId(/game-list-item/i);
@@ -50,8 +68,32 @@ test('handles error when getting lists', async () => {
   expect(games).toHaveLength(0);
 });
 
+test('shows a message when there are no available games', async () => {
+  server.use(
+    rest.get(`${config.serviceUrl}/games`, (req, res, ctx) => {
+      return res(
+        ctx.json<PageResponse<Game>>({ content: [], totalElements: 0, totalPages: 0 })
+      );
+    })
+  );
+
+  render(
+    <Provider store={mockedStore}>
+      <GamesList />
+    </Provider>
+  );
+
+  const message = await waitFor(() => screen.getByText('No available games'));
+
+  expect(message).toBeInTheDocument();
+});
+
 test('handles a page change', async () => {
-  const { getByText } = render(<GamesList />);
+  const { getByText } = render(
+    <Provider store={mockedStore}>
+      <GamesList />
+    </Provider>
+  );
 
   let pageTwo = await waitFor(() => getByText('2'));
 

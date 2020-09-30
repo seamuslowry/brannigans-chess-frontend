@@ -1,0 +1,61 @@
+import React from 'react';
+import { render, waitForElementToBeRemoved } from '@testing-library/react';
+import ActiveGame from './ActiveGame';
+import createMockStore from 'redux-mock-store';
+import { testStore } from '../../utils/testData';
+import { rest } from 'msw';
+import { setupServer } from 'msw/node';
+import { Provider } from 'react-redux';
+import { MemoryRouter, Route } from 'react-router-dom';
+import { CLEAR_GAME, SET_GAME_ID } from '../../store/activeGame/activeGame';
+import thunk from 'redux-thunk';
+import config from '../../config';
+import { Move, Piece } from '../../services/ChessService';
+
+const mockStore = createMockStore([thunk]);
+const mockedStore = mockStore(testStore);
+
+beforeEach(() => mockedStore.clearActions());
+
+const server = setupServer(
+  rest.get(`${config.serviceUrl}/pieces/1`, (req, res, ctx) => {
+    return res(ctx.json<Piece[]>([]));
+  }),
+  rest.get(`${config.serviceUrl}/moves/1`, (req, res, ctx) => {
+    return res(ctx.json<Move[]>([]));
+  })
+);
+
+beforeAll(() => server.listen());
+afterEach(() => server.resetHandlers());
+afterAll(() => server.close());
+
+test('sets and unsets the game id', async () => {
+  const { container, getAllByRole, unmount } = render(
+    <Provider store={mockedStore}>
+      <MemoryRouter initialEntries={['/test/1']}>
+        <Route path="/test/:id">
+          <ActiveGame />
+        </Route>
+      </MemoryRouter>
+    </Provider>
+  );
+
+  expect(container).toBeInTheDocument();
+  expect(mockedStore.getActions()).toContainEqual(
+    expect.objectContaining({
+      type: SET_GAME_ID,
+      payload: 1
+    })
+  );
+
+  await waitForElementToBeRemoved(() => getAllByRole('progressbar')); // wait for service calls to complete
+
+  unmount();
+
+  expect(mockedStore.getActions()).toContainEqual(
+    expect.objectContaining({
+      type: CLEAR_GAME
+    })
+  );
+});

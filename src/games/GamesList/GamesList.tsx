@@ -32,7 +32,7 @@ const GamesList: React.FC = () => {
   const {
     loading,
     response = {
-      content: [],
+      content: undefined,
       totalElements: 0,
       totalPages: 0
     },
@@ -44,17 +44,22 @@ const GamesList: React.FC = () => {
   return (
     <Box display="flex" flexDirection="column" width="40%" alignItems="center">
       {loading && <CircularProgress />}
-      {!error && (
+      {response.content && (
         <>
           <List className={classes.list}>
             {response.content.map(game => (
               <ListItem data-testid="game-list-item" key={`game-item-${game.id}`}>
                 <ListItemText primary={game.uuid} />
                 <ListItemSecondaryAction>
-                  <Button color="primary">Join</Button>
+                  <Button href={`/game/${game.id}`} color="primary">
+                    Join
+                  </Button>
                 </ListItemSecondaryAction>
               </ListItem>
             ))}
+            {response.content.length === 0 && (
+              <Typography align="center">No available games</Typography>
+            )}
           </List>
           <Box m={1}>
             <Pagination
