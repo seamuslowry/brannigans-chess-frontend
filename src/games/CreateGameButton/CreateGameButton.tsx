@@ -2,8 +2,8 @@ import React from 'react';
 import { CircularProgress, Fab, makeStyles } from '@material-ui/core';
 import { Add } from '@material-ui/icons';
 import { useHistory } from 'react-router-dom';
-import ChessService from '../../services/ChessService';
 import { useDispatch } from 'react-redux';
+import ChessService from '../../services/ChessService';
 import { sendAlert } from '../../store/notifications/notifications';
 
 const useStyles = makeStyles(theme => ({

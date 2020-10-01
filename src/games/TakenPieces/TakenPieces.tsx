@@ -1,8 +1,8 @@
 import React from 'react';
 import { Box, CircularProgress } from '@material-ui/core';
+import { useDispatch, useSelector } from 'react-redux';
 import ChessService, { Piece as PieceType, PieceColor } from '../../services/ChessService';
 import Piece from '../Piece/Piece';
-import { useDispatch, useSelector } from 'react-redux';
 import { clearTaken, takePieces } from '../../store/activeGame/activeGame';
 import { sendAlert } from '../../store/notifications/notifications';
 import { AppState } from '../../store/store';

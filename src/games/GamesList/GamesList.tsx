@@ -10,9 +10,9 @@ import {
   makeStyles,
   Typography
 } from '@material-ui/core';
+import { Pagination } from '@material-ui/lab';
 import ChessService from '../../services/ChessService';
 import { useServiceCall } from '../../utils/hooks';
-import { Pagination } from '@material-ui/lab';
 import CreateGameButton from '../CreateGameButton/CreateGameButton';
 
 const useStyles = makeStyles(theme => ({

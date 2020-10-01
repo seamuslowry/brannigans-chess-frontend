@@ -1,14 +1,14 @@
 import React from 'react';
 import { render, waitForElementToBeRemoved } from '@testing-library/react';
-import MoveList from './MoveList';
 import { Provider } from 'react-redux';
 import createMockStore from 'redux-mock-store';
-import { testStore, whiteMove } from '../../utils/testData';
 import { rest } from 'msw';
 import { setupServer } from 'msw/node';
+import thunk from 'redux-thunk';
+import { testStore, whiteMove } from '../../utils/testData';
 import { Move } from '../../services/ChessService';
 import config from '../../config';
-import thunk from 'redux-thunk';
+import MoveList from './MoveList';
 import { ADD_MOVES, CLEAR_MOVES } from '../../store/activeGame/activeGame';
 import { SEND_ALERT } from '../../store/notifications/notifications';
 

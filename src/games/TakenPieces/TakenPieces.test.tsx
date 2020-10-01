@@ -1,14 +1,14 @@
 import React from 'react';
 import { render, waitForElementToBeRemoved } from '@testing-library/react';
-import TakenPieces from './TakenPieces';
 import { Provider } from 'react-redux';
 import createMockStore from 'redux-mock-store';
-import { blackRook, testStore } from '../../utils/testData';
 import { rest } from 'msw';
 import { setupServer } from 'msw/node';
+import thunk from 'redux-thunk';
+import { blackRook, testStore } from '../../utils/testData';
 import { Piece } from '../../services/ChessService';
 import config from '../../config';
-import thunk from 'redux-thunk';
+import TakenPieces from './TakenPieces';
 import { CLEAR_TAKEN, TAKE_PIECES } from '../../store/activeGame/activeGame';
 import { SEND_ALERT } from '../../store/notifications/notifications';
 

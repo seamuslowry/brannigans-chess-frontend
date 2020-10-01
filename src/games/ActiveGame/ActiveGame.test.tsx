@@ -1,14 +1,14 @@
 import React from 'react';
 import { render, waitForElementToBeRemoved } from '@testing-library/react';
-import ActiveGame from './ActiveGame';
 import createMockStore from 'redux-mock-store';
-import { testStore } from '../../utils/testData';
 import { rest } from 'msw';
 import { setupServer } from 'msw/node';
 import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router-dom';
-import { CLEAR_GAME, SET_GAME_ID } from '../../store/activeGame/activeGame';
 import thunk from 'redux-thunk';
+import { CLEAR_GAME, SET_GAME_ID } from '../../store/activeGame/activeGame';
+import { testStore } from '../../utils/testData';
+import ActiveGame from './ActiveGame';
 import config from '../../config';
 import { Move, Piece } from '../../services/ChessService';
 

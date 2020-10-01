@@ -1,14 +1,14 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-import Board from './Board';
 import { Provider } from 'react-redux';
 import createMockStore from 'redux-mock-store';
-import { testStore } from '../../utils/testData';
 import { rest } from 'msw';
 import { setupServer } from 'msw/node';
+import thunk from 'redux-thunk';
+import { testStore } from '../../utils/testData';
 import { Piece } from '../../services/ChessService';
 import config from '../../config';
-import thunk from 'redux-thunk';
+import Board from './Board';
 
 const mockStore = createMockStore([thunk]);
 const mockedStore = mockStore(testStore);

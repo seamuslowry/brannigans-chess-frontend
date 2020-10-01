@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box } from '@material-ui/core';
-import Tile from '../Tile/Tile';
 import { useDispatch } from 'react-redux';
+import Tile from '../Tile/Tile';
 import { clearBoard } from '../../store/activeGame/activeGame';
 import { getPieces } from '../../store/activeGame/activeGame.thunk';
 import { usePieceSize } from '../../utils/hooks';
