@@ -18,6 +18,7 @@ import CreateGameButton from '../CreateGameButton/CreateGameButton';
 const useStyles = makeStyles(theme => ({
   list: {
     width: '100%',
+    height: '80vh',
     backgroundColor: theme.palette.background.paper,
     borderRadius: '1rem'
   }
@@ -42,7 +43,7 @@ const GamesList: React.FC = () => {
   const handlePageChange = (e: React.ChangeEvent<unknown>, newPage: number) => setPage(newPage);
 
   return (
-    <Box display="flex" flexDirection="column" width="40%" alignItems="center">
+    <Box display="flex" flexDirection="column" width="40vw" alignItems="center">
       {loading && <CircularProgress />}
       {response.content && (
         <>
