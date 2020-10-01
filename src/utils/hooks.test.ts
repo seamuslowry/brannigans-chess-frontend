@@ -14,7 +14,9 @@ test('should be loading before the promise resolves', () => {
 
 test('should stop loading return result after resolution', async () => {
   const returnVal = 'test';
-  let resolve = (a: AxiosResponse<string>) => {};
+  let resolve = (a: AxiosResponse<string>) => {
+    a.data.toLowerCase();
+  };
   const promise = new Promise<AxiosResponse<string>>(res => {
     resolve = res;
   });
@@ -32,7 +34,9 @@ test('should stop loading return result after resolution', async () => {
 
 test('should stop loading return error after rejecting', async () => {
   const returnVal = 'error';
-  let reject = (a: AxiosError) => {};
+  let reject = (a: AxiosError) => {
+    a.message.toLowerCase();
+  };
   const promise = new Promise<AxiosResponse<string>>((res, rej) => {
     reject = rej;
   });

@@ -12,7 +12,7 @@ interface ExpectedRouteParams {
 }
 
 const ActiveGame: React.FC = () => {
-  let { id } = useParams<ExpectedRouteParams>();
+  const { id } = useParams<ExpectedRouteParams>();
   const dispatch = useDispatch();
 
   const gameId = Number(id);

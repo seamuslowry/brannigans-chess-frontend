@@ -9,14 +9,14 @@ import { Game } from '../../services/ChessService';
 import { emptyGame, testStore } from '../../utils/testData';
 import CreateGameButton from './CreateGameButton';
 import { Router } from 'react-router-dom';
-import { ActionCreator } from 'redux';
+import { ActionCreator, AnyAction } from 'redux';
 import createMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { AppState } from '../../store/store';
 import { Provider } from 'react-redux';
 import { SEND_ALERT } from '../../store/notifications/notifications';
 
-const mockStore = createMockStore<AppState, ActionCreator<any>>([thunk]);
+const mockStore = createMockStore<AppState, ActionCreator<AnyAction>>([thunk]);
 const mockedStore = mockStore(testStore);
 
 beforeEach(() => mockedStore.clearActions());

@@ -14,6 +14,7 @@ const local: Configuration = {
   serviceUrl: 'http://localhost:8080'
 };
 
+// eslint-disable-next-line import/no-mutable-exports
 let config: Configuration;
 
 switch (process.env.REACT_APP_ENV) {

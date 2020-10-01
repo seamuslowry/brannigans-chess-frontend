@@ -1,0 +1,26 @@
+{
+  "extends": ["airbnb-typescript-prettier"],
+  "plugins": ["jest"],
+  "env": {
+    "jest": true
+  },
+  "rules": {
+    "@typescript-eslint/no-use-before-define": 0,
+    "@typescript-eslint/explicit-function-return-type": "off",
+    "@typescript-eslint/no-empty-function": "off",
+    "no-else-return": "off",
+    "import/prefer-default-export": "off",
+    "import/no-extraneous-dependencies": [
+      "error",
+      { "devDependencies": ["**/*.test.ts", "**/*.test.tsx", "src/setupTests.ts"] }
+    ],
+    "no-case-declarations": "off",
+    "no-unused-expressions": [
+      "warn",
+      {
+        "allowShortCircuit": true,
+        "allowTernary": true
+      }
+    ]
+  }
+}

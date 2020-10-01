@@ -2,7 +2,7 @@ import { Box, makeStyles, Theme, useTheme } from '@material-ui/core';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { PieceColor, PieceType } from '../../services/ChessService';
-import { clickTile } from '../../store/activeGame/activeGame';
+import { clickTile } from '../../store/activeGame/activeGame.thunk';
 import { AppState } from '../../store/store';
 import Piece from '../Piece/Piece';
 

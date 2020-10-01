@@ -7,13 +7,13 @@ import { Game, PageResponse } from '../../services/ChessService';
 import config from '../../config';
 import { act } from 'react-test-renderer';
 import { emptyGame, testStore } from '../../utils/testData';
-import { ActionCreator } from 'redux';
+import { ActionCreator, AnyAction } from 'redux';
 import createMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { AppState } from '../../store/store';
 import { Provider } from 'react-redux';
 
-const mockStore = createMockStore<AppState, ActionCreator<any>>([thunk]);
+const mockStore = createMockStore<AppState, ActionCreator<AnyAction>>([thunk]);
 const mockedStore = mockStore(testStore);
 
 beforeEach(() => mockedStore.clearActions());
