@@ -1,5 +1,6 @@
 import React from 'react';
 import { AxiosResponse } from 'axios';
+import { useMediaQuery, useTheme } from '@material-ui/core';
 
 interface CallState<T> {
   loading: boolean;
@@ -19,4 +20,11 @@ export const useServiceCall = <T>(servicePromise: Promise<AxiosResponse<T>>) => 
   }, [servicePromise]);
 
   return state;
+};
+
+export const usePieceSize = () => {
+  const theme = useTheme();
+  const sm = useMediaQuery(theme.breakpoints.down('sm'));
+
+  return sm ? '8vw' : '5vw';
 };

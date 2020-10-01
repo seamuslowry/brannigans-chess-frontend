@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { clearTaken, takePieces } from '../../store/activeGame/activeGame';
 import { sendAlert } from '../../store/notifications/notifications';
 import { AppState } from '../../store/store';
-import { DEFAULT_PIECE_SIZE } from '../../utils/constants';
+import { usePieceSize } from '../../utils/hooks';
 
 interface Props {
   gameId: number;
@@ -15,6 +15,7 @@ interface Props {
 
 const TakenPieces: React.FC<Props> = ({ gameId, color }) => {
   const dispatch = useDispatch();
+  const pieceSize = usePieceSize();
 
   const [loading, setLoading] = React.useState(false);
 
@@ -44,8 +45,8 @@ const TakenPieces: React.FC<Props> = ({ gameId, color }) => {
     <Box
       width="100%"
       display="grid"
-      gridTemplateColumns={`repeat(2,${DEFAULT_PIECE_SIZE})`}
-      gridTemplateRows={`repeat(8,${DEFAULT_PIECE_SIZE})`}
+      gridTemplateColumns={`repeat(2,${pieceSize})`}
+      gridTemplateRows={`repeat(8,${pieceSize})`}
     >
       {loading && <CircularProgress />}
       {pieces &&
