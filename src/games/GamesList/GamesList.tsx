@@ -21,6 +21,12 @@ const useStyles = makeStyles(theme => ({
     height: '80vh',
     backgroundColor: theme.palette.background.paper,
     borderRadius: '1rem'
+  },
+  root: {
+    width: '40vw',
+    [theme.breakpoints.down('sm')]: {
+      width: '80vw'
+    }
   }
 }));
 
@@ -43,7 +49,7 @@ const GamesList: React.FC = () => {
   const handlePageChange = (e: React.ChangeEvent<unknown>, newPage: number) => setPage(newPage);
 
   return (
-    <Box display="flex" flexDirection="column" width="40vw" alignItems="center">
+    <Box display="flex" flexDirection="column" className={classes.root} alignItems="center">
       {loading && <CircularProgress />}
       {response.content && (
         <>
