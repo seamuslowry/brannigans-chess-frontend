@@ -15,7 +15,6 @@ interface Props {
 const useStyles = makeStyles({
   paper: {
     maxHeight: '80vh',
-    width: '100%',
     overflowY: 'auto'
   }
 });
