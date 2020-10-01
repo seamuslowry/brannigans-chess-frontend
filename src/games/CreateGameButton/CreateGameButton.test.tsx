@@ -57,9 +57,7 @@ test('creates a game', async () => {
   fireEvent.click(button);
   button = await waitFor(() => getByText('Create Game')); // wait for call to complete
 
-  expect(history.entries).toContainEqual(
-    expect.objectContaining({ pathname: `/game/${emptyGame.id}` })
-  );
+  expect(history.location.pathname).toEqual(`/game/${emptyGame.id}`);
 });
 
 test('fails to create a game', async () => {
@@ -81,8 +79,6 @@ test('fails to create a game', async () => {
   fireEvent.click(button);
   button = await waitFor(() => getByText('Create Game')); // wait for call to complete
 
-  expect(history.entries).not.toContainEqual(
-    expect.objectContaining({ pathname: `/game/${emptyGame.id}` })
-  );
+  expect(history.location.pathname).not.toEqual(`/game/${emptyGame.id}`);
   expect(mockedStore.getActions()).toContainEqual(expect.objectContaining({ type: SEND_ALERT }));
 });
