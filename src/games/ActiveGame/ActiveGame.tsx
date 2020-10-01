@@ -1,4 +1,4 @@
-import { Box } from '@material-ui/core';
+import { Grid } from '@material-ui/core';
 import React from 'react';
 import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
@@ -12,7 +12,7 @@ interface ExpectedRouteParams {
 }
 
 const ActiveGame: React.FC = () => {
-  let { id } = useParams<ExpectedRouteParams>();
+  const { id } = useParams<ExpectedRouteParams>();
   const dispatch = useDispatch();
 
   const gameId = Number(id);
@@ -26,26 +26,22 @@ const ActiveGame: React.FC = () => {
   }, [gameId, dispatch]);
 
   return (
-    <Box
-      display="grid"
-      width="90vw"
-      gridGap={1}
-      gridTemplateColumns="1fr max-content 1fr 1fr"
-      justifyItems="center"
-    >
-      <Box gridRow={1} gridColumn={1}>
-        <TakenPieces gameId={gameId} color="WHITE" />
-      </Box>
-      <Box gridRow={1} gridColumn={2}>
-        <Board gameId={gameId} />
-      </Box>
-      <Box gridRow={1} gridColumn={3}>
-        <TakenPieces gameId={gameId} color="BLACK" />
-      </Box>
-      <Box gridRow={1} gridColumn={4}>
+    <Grid container justify="space-evenly" spacing={2}>
+      <Grid item container xs={12} md={8} wrap="nowrap" justify="center">
+        <Grid item>
+          <TakenPieces gameId={gameId} color="WHITE" />
+        </Grid>
+        <Grid item>
+          <Board gameId={gameId} />
+        </Grid>
+        <Grid item>
+          <TakenPieces gameId={gameId} color="BLACK" />
+        </Grid>
+      </Grid>
+      <Grid item xs={12} md={3}>
         <MoveList gameId={gameId} />
-      </Box>
-    </Box>
+      </Grid>
+    </Grid>
   );
 };
 

@@ -1,9 +1,12 @@
+import { ActionCreator, AnyAction } from 'redux';
+import { rest } from 'msw';
+import { setupServer } from 'msw/node';
+import thunk from 'redux-thunk';
+import createMockStore from 'redux-mock-store';
 import {
   reducer,
-  clickTile,
   selectTile,
   setTile,
-  getPieces,
   clearBoard,
   initialState,
   clearGame,
@@ -16,17 +19,13 @@ import {
   addMoves,
   ADD_MOVES
 } from './activeGame';
-import createMockStore from 'redux-mock-store';
 import { blackRook, makePiece, testStore, whiteMove, whiteTake } from '../../utils/testData';
-import { rest } from 'msw';
-import { setupServer } from 'msw/node';
-import thunk from 'redux-thunk';
 import { AppState } from '../store';
-import { ActionCreator } from 'redux';
 import { immutableUpdate } from '../../utils/arrayHelpers';
 import config from '../../config';
 import { Move, Piece } from '../../services/ChessService';
 import { SEND_ALERT } from '../notifications/notifications';
+import { clickTile, getPieces } from './activeGame.thunk';
 
 const server = setupServer(
   rest.get(`${config.serviceUrl}/pieces/0`, (req, res, ctx) => {
@@ -39,7 +38,7 @@ const server = setupServer(
   })
 );
 
-const mockStore = createMockStore<AppState, ActionCreator<any>>([thunk]);
+const mockStore = createMockStore<AppState, ActionCreator<AnyAction>>([thunk]);
 const mockedStore = mockStore(testStore);
 
 beforeEach(() => mockedStore.clearActions());
@@ -214,7 +213,9 @@ test('moves to take a piece', async () => {
       payload: [whiteTake]
     })
   );
-  expect(selectedStore.getActions()).toContainEqual(takePiece(whiteTake.takenPiece!));
+  expect(selectedStore.getActions()).toContainEqual(
+    whiteTake.takenPiece && takePiece(whiteTake.takenPiece)
+  );
 });
 
 test('fails to move a piece', async () => {

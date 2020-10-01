@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, CircularProgress, makeStyles, Paper } from '@material-ui/core';
-import ChessService, { Move as MoveType, PieceColor } from '../../services/ChessService';
 import { useDispatch, useSelector } from 'react-redux';
+import ChessService, { Move as MoveType, PieceColor } from '../../services/ChessService';
 import { addMoves, clearMoves } from '../../store/activeGame/activeGame';
 import { sendAlert } from '../../store/notifications/notifications';
 import { AppState } from '../../store/store';
@@ -14,8 +14,7 @@ interface Props {
 
 const useStyles = makeStyles({
   paper: {
-    maxHeight: '80vh',
-    width: '100%',
+    height: '50vh',
     overflowY: 'auto'
   }
 });

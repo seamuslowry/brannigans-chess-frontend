@@ -1,9 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from './App';
-import { CssBaseline, ThemeProvider } from '@material-ui/core';
-import theme from './theme';
 import { Provider } from 'react-redux';
+import { CssBaseline, ThemeProvider } from '@material-ui/core';
+import App from './App';
+import theme from './theme';
 import { store } from './store/store';
 
 ReactDOM.render(

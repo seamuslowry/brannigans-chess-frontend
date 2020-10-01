@@ -4,19 +4,19 @@ import { render } from '@testing-library/react';
 import { rest } from 'msw';
 import { setupServer } from 'msw/node';
 import { createMemoryHistory } from 'history';
+import { Router } from 'react-router-dom';
+import { ActionCreator, AnyAction } from 'redux';
+import createMockStore from 'redux-mock-store';
+import thunk from 'redux-thunk';
+import { Provider } from 'react-redux';
 import config from '../../config';
 import { Game } from '../../services/ChessService';
 import { emptyGame, testStore } from '../../utils/testData';
 import CreateGameButton from './CreateGameButton';
-import { Router } from 'react-router-dom';
-import { ActionCreator } from 'redux';
-import createMockStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
 import { AppState } from '../../store/store';
-import { Provider } from 'react-redux';
 import { SEND_ALERT } from '../../store/notifications/notifications';
 
-const mockStore = createMockStore<AppState, ActionCreator<any>>([thunk]);
+const mockStore = createMockStore<AppState, ActionCreator<AnyAction>>([thunk]);
 const mockedStore = mockStore(testStore);
 
 beforeEach(() => mockedStore.clearActions());
@@ -57,9 +57,7 @@ test('creates a game', async () => {
   fireEvent.click(button);
   button = await waitFor(() => getByText('Create Game')); // wait for call to complete
 
-  expect(history.entries).toContainEqual(
-    expect.objectContaining({ pathname: `/game/${emptyGame.id}` })
-  );
+  expect(history.location.pathname).toEqual(`/game/${emptyGame.id}`);
 });
 
 test('fails to create a game', async () => {
@@ -81,8 +79,6 @@ test('fails to create a game', async () => {
   fireEvent.click(button);
   button = await waitFor(() => getByText('Create Game')); // wait for call to complete
 
-  expect(history.entries).not.toContainEqual(
-    expect.objectContaining({ pathname: `/game/${emptyGame.id}` })
-  );
+  expect(history.location.pathname).not.toEqual(`/game/${emptyGame.id}`);
   expect(mockedStore.getActions()).toContainEqual(expect.objectContaining({ type: SEND_ALERT }));
 });

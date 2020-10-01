@@ -1,5 +1,5 @@
 import React from 'react';
-import { makeStyles, Typography, useTheme } from '@material-ui/core';
+import { Box, Typography, useTheme } from '@material-ui/core';
 import { Move as MoveType } from '../../services/ChessService';
 import Piece from '../Piece/Piece';
 
@@ -7,34 +7,40 @@ interface Props {
   move: MoveType;
 }
 
-const useStyles = makeStyles({
-  center: {
-    display: 'flex',
-    alignItems: 'flex-end'
-  }
-});
-
 const Move: React.FC<Props> = ({ move }) => {
   const theme = useTheme();
-  const classes = useStyles();
   return (
-    <Typography className={classes.center}>
-      <Piece
-        height={`${theme.typography.fontSize * 2}rem`}
-        width={`${theme.typography.fontSize * 2}rem`}
-        color={move.movingPiece.color}
-        type={move.movingPiece.type}
-      />
-      [{move.srcRow},{move.srcCol}] -&gt; [{move.dstRow},{move.dstCol}]
-      {move.takenPiece && (
+    <Box
+      display="grid"
+      width="100%"
+      gridTemplateColumns="repeat(3, 1fr)"
+      alignItems="center"
+      justifyItems="center"
+    >
+      <Box gridColumn={1}>
         <Piece
-          height={`${theme.typography.fontSize * 2}rem`}
-          width={`${theme.typography.fontSize * 2}rem`}
-          color={move.takenPiece.color}
-          type={move.takenPiece.type}
+          height={`${theme.typography.fontSize * 3}rem`}
+          width={`${theme.typography.fontSize * 3}rem`}
+          color={move.movingPiece.color}
+          type={move.movingPiece.type}
         />
-      )}
-    </Typography>
+      </Box>
+      <Box gridColumn={2}>
+        <Typography>
+          [{move.srcRow},{move.srcCol}] -&gt; [{move.dstRow},{move.dstCol}]
+        </Typography>
+      </Box>
+      <Box gridColumn={3}>
+        {move.takenPiece && (
+          <Piece
+            height={`${theme.typography.fontSize * 3}rem`}
+            width={`${theme.typography.fontSize * 3}rem`}
+            color={move.takenPiece.color}
+            type={move.takenPiece.type}
+          />
+        )}
+      </Box>
+    </Box>
   );
 };
 

@@ -1,7 +1,5 @@
-import ChessService, { Move, Piece, PieceColor, PieceType } from '../../services/ChessService';
+import { Move, Piece, PieceColor, PieceType } from '../../services/ChessService';
 import { immutableUpdate } from '../../utils/arrayHelpers';
-import { sendAlert } from '../notifications/notifications';
-import { ThunkResult } from '../store';
 
 export const SET_GAME_ID = 'chess/activeGame/SET_GAME_ID';
 export const SELECT_TILE = 'chess/activeGame/SELECT_TILE';
@@ -125,7 +123,7 @@ export const reducer = (
           : undefined
       };
     case SET_TILE:
-      const setToPiece = action.payload.piece;
+      const { piece: setToPiece } = action.payload;
       return {
         ...state,
         tiles: immutableUpdate(state.tiles, action.payload.row, action.payload.col, {
@@ -164,45 +162,6 @@ export const reducer = (
     default:
       return state;
   }
-};
-
-export const clickTile = (row: number, col: number): ThunkResult<void> => (dispatch, getState) => {
-  const state = getState();
-  const selectedPosition = state.activeGame.selectedPosition;
-  const gameId = state.activeGame.id;
-  const tiles = state.activeGame.tiles;
-
-  if (selectedPosition && selectedPosition[0] === row && selectedPosition[1] === col) {
-    dispatch(selectTile(row, col, false));
-  } else if (selectedPosition) {
-    return ChessService.move(gameId, selectedPosition[0], selectedPosition[1], row, col)
-      .then(res => {
-        const move = res.data;
-
-        dispatch(selectTile(selectedPosition[0], selectedPosition[1], false));
-        dispatch(setTile(move.srcRow, move.srcCol, undefined));
-        dispatch(setTile(move.dstRow, move.dstCol, move.movingPiece));
-        dispatch(addMove(move));
-        move.takenPiece && dispatch(takePiece(move.takenPiece));
-      })
-      .catch(e => {
-        dispatch(sendAlert(e.response.data));
-      });
-  } else if (tiles[row][col].type) {
-    dispatch(selectTile(row, col, true));
-  }
-};
-
-export const getPieces = (gameId: number): ThunkResult<void> => async dispatch => {
-  return ChessService.getPieces(gameId, undefined, false)
-    .then(res => {
-      res.data.forEach(piece => {
-        dispatch(setTile(piece.positionRow, piece.positionCol, piece));
-      });
-    })
-    .catch(e => {
-      dispatch(sendAlert(`Could not get pieces for game: ${e.message}`));
-    });
 };
 
 export const setGameId = (id: number): SetGameId => ({

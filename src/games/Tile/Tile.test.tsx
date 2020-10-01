@@ -1,16 +1,16 @@
 import React from 'react';
 import { fireEvent, render } from '@testing-library/react';
-import Tile from './Tile';
+import { ActionCreator, AnyAction } from 'redux';
 import { Provider } from 'react-redux';
+import thunk from 'redux-thunk';
 import createMockStore from 'redux-mock-store';
+import Tile from './Tile';
 import { testStore } from '../../utils/testData';
 import { SELECT_TILE } from '../../store/activeGame/activeGame';
-import { ActionCreator } from 'redux';
-import thunk from 'redux-thunk';
 import { AppState } from '../../store/store';
 import { immutableUpdate } from '../../utils/arrayHelpers';
 
-const mockStore = createMockStore<AppState, ActionCreator<any>>([thunk]);
+const mockStore = createMockStore<AppState, ActionCreator<AnyAction>>([thunk]);
 const mockedStore = mockStore(testStore);
 
 beforeEach(() => mockedStore.clearActions());

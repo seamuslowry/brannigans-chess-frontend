@@ -10,16 +10,23 @@ import {
   makeStyles,
   Typography
 } from '@material-ui/core';
+import { Pagination } from '@material-ui/lab';
 import ChessService from '../../services/ChessService';
 import { useServiceCall } from '../../utils/hooks';
-import { Pagination } from '@material-ui/lab';
 import CreateGameButton from '../CreateGameButton/CreateGameButton';
 
 const useStyles = makeStyles(theme => ({
   list: {
     width: '100%',
+    height: '80vh',
     backgroundColor: theme.palette.background.paper,
     borderRadius: '1rem'
+  },
+  root: {
+    width: '40vw',
+    [theme.breakpoints.down('sm')]: {
+      width: '80vw'
+    }
   }
 }));
 
@@ -42,7 +49,7 @@ const GamesList: React.FC = () => {
   const handlePageChange = (e: React.ChangeEvent<unknown>, newPage: number) => setPage(newPage);
 
   return (
-    <Box display="flex" flexDirection="column" width="40%" alignItems="center">
+    <Box display="flex" flexDirection="column" className={classes.root} alignItems="center">
       {loading && <CircularProgress />}
       {response.content && (
         <>

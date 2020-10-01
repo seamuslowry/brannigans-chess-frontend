@@ -1,7 +1,9 @@
 import { Game, Move, Piece, PieceColor, PieceType, Player } from '../services/ChessService';
 import { initialState as initialActiveGameState } from '../store/activeGame/activeGame';
-import { initialState as initialNotificationsState } from '../store/notifications/notifications';
-import { AlertInfo } from '../store/notifications/notifications';
+import {
+  initialState as initialNotificationsState,
+  AlertInfo
+} from '../store/notifications/notifications';
 import { AppState } from '../store/store';
 
 export const successAlertInfo: AlertInfo = {

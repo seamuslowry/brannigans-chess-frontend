@@ -2,16 +2,16 @@ import React from 'react';
 import { render } from '@testing-library/react';
 import { rest } from 'msw';
 import { setupServer } from 'msw/node';
-import App from './App';
-import { Game } from './services/ChessService';
-import { ActionCreator } from 'redux';
+import { ActionCreator, AnyAction } from 'redux';
 import createMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
+import { Provider } from 'react-redux';
+import App from './App';
+import { Game } from './services/ChessService';
 import { AppState } from './store/store';
 import { testStore } from './utils/testData';
-import { Provider } from 'react-redux';
 
-const mockStore = createMockStore<AppState, ActionCreator<any>>([thunk]);
+const mockStore = createMockStore<AppState, ActionCreator<AnyAction>>([thunk]);
 const mockedStore = mockStore(testStore);
 
 beforeEach(() => mockedStore.clearActions());
