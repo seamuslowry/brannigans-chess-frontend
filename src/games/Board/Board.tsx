@@ -3,6 +3,7 @@ import { Box } from '@material-ui/core';
 import Tile from '../Tile/Tile';
 import { useDispatch } from 'react-redux';
 import { clearBoard, getPieces } from '../../store/activeGame/activeGame';
+import { DEFAULT_PIECE_SIZE } from '../../utils/constants';
 
 interface Props {
   gameId: number;
@@ -21,11 +22,9 @@ const Board: React.FC<Props> = ({ gameId }) => {
 
   return (
     <Box
-      width="80vh"
-      height="80vh"
       display="grid"
-      gridTemplateColumns="repeat(8, 10vh)"
-      gridTemplateRows="repeat(8, 10vh)"
+      gridTemplateColumns={`repeat(8, ${DEFAULT_PIECE_SIZE})`}
+      gridTemplateRows={`repeat(8, ${DEFAULT_PIECE_SIZE})`}
     >
       {array.map((_, row) =>
         array.map((__, col) => <Tile key={`tile-${row}-${col}`} row={row} col={col} />)
