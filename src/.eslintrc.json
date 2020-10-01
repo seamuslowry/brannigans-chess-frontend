@@ -1,8 +1,10 @@
 {
   "extends": ["airbnb-typescript-prettier"],
-  "plugins": ["jest"],
+  "plugins": ["react", "@typescript-eslint", "jest", "react-hooks"],
   "env": {
-    "jest": true
+    "jest": true,
+    "browser": true,
+    "es6": true
   },
   "rules": {
     "@typescript-eslint/no-use-before-define": 0,
@@ -21,6 +23,8 @@
         "allowShortCircuit": true,
         "allowTernary": true
       }
-    ]
+    ],
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "error"
   }
 }
