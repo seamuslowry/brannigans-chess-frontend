@@ -44,7 +44,6 @@
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom-fourteen",
     "eject": "react-scripts eject",
-    "format": "prettier src/**/*.{js,jsx,ts,tsx}",
     "lint": "eslint src/**/*.{js,jsx,ts,tsx}"
   },
   "browserslist": {
