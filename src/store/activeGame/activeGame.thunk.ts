@@ -22,6 +22,7 @@ export const clickTile = (row: number, col: number): ThunkResult<Promise<void>> 
         dispatch(setTile(move.dstRow, move.dstCol, move.movingPiece));
         dispatch(addMove(move));
         move.takenPiece && dispatch(takePiece(move.takenPiece));
+        move.moveType === 'EN_PASSANT' && dispatch(setTile(move.srcRow, move.dstCol, undefined));
       })
       .catch(e => {
         dispatch(sendAlert(e.response.data));
