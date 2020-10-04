@@ -334,3 +334,22 @@ test('handles an error when getting pieces', async () => {
     })
   );
 });
+
+test('handles a network error when getting pieces', async () => {
+  server.use(
+    rest.get(`${config.serviceUrl}/pieces/0`, (req, res) => {
+      return res.networkError('Network error');
+    })
+  );
+  await mockedStore.dispatch(getPieces(0));
+
+  expect(mockedStore.getActions()).not.toContainEqual(setTile(0, 0, blackRook));
+  expect(mockedStore.getActions()).toContainEqual(
+    expect.objectContaining({
+      type: SEND_ALERT,
+      payload: expect.objectContaining({
+        message: expect.stringContaining('Network Error')
+      })
+    })
+  );
+});
