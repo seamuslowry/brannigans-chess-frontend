@@ -25,7 +25,7 @@ export const clickTile = (row: number, col: number): ThunkResult<Promise<void>> 
         move.moveType === 'EN_PASSANT' && dispatch(setTile(move.srcRow, move.dstCol, undefined));
       })
       .catch(e => {
-        dispatch(sendAlert(e.response.data));
+        e.status ? dispatch(sendAlert(e.response.data)) : dispatch(sendAlert('Network Error'));
       });
   } else if (tiles[row][col].type) {
     dispatch(selectTile(row, col, true));
