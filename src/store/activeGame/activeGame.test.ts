@@ -313,6 +313,37 @@ test('fails to move a piece', async () => {
   );
 });
 
+test('handles a network error when moving a piece', async () => {
+  server.use(
+    rest.post(`${config.serviceUrl}/moves/0`, (req, res) => {
+      return res.networkError('Network error');
+    })
+  );
+  const selectedStore = mockStore({
+    ...testStore,
+    activeGame: {
+      ...testStore.activeGame,
+      selectedPosition: [whiteMove.srcRow, whiteMove.srcCol],
+      tiles: immutableUpdate(testStore.activeGame.tiles, whiteMove.srcRow, whiteMove.srcCol, {
+        type: whiteMove.movingPiece.type,
+        color: whiteMove.movingPiece.color,
+        selected: true
+      })
+    }
+  });
+
+  await selectedStore.dispatch(clickTile(whiteMove.dstRow, whiteMove.dstCol));
+
+  expect(selectedStore.getActions()).toContainEqual(
+    expect.objectContaining({
+      type: SEND_ALERT,
+      payload: expect.objectContaining({
+        message: expect.stringContaining('Network Error')
+      })
+    })
+  );
+});
+
 test('gets pieces', async () => {
   await mockedStore.dispatch(getPieces(0));
 
@@ -331,25 +362,6 @@ test('handles an error when getting pieces', async () => {
   expect(mockedStore.getActions()).toContainEqual(
     expect.objectContaining({
       type: SEND_ALERT
-    })
-  );
-});
-
-test('handles a network error when getting pieces', async () => {
-  server.use(
-    rest.get(`${config.serviceUrl}/pieces/0`, (req, res) => {
-      return res.networkError('Network error');
-    })
-  );
-  await mockedStore.dispatch(getPieces(0));
-
-  expect(mockedStore.getActions()).not.toContainEqual(setTile(0, 0, blackRook));
-  expect(mockedStore.getActions()).toContainEqual(
-    expect.objectContaining({
-      type: SEND_ALERT,
-      payload: expect.objectContaining({
-        message: expect.stringContaining('Network Error')
-      })
     })
   );
 });
