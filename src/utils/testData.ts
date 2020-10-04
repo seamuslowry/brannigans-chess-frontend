@@ -62,6 +62,7 @@ export const whiteMove: Move = {
   srcCol: 0,
   dstRow: 4,
   dstCol: 0,
+  moveType: 'STANDARD',
   id: 1
 };
 
@@ -72,6 +73,7 @@ export const whiteTake: Move = {
   srcCol: 0,
   dstRow: 4,
   dstCol: 0,
+  moveType: 'STANDARD',
   id: 2
 };
 
@@ -82,6 +84,7 @@ export const blackMove: Move = {
   srcCol: 0,
   dstRow: 4,
   dstCol: 0,
+  moveType: 'STANDARD',
   id: 3
 };
 
@@ -92,7 +95,19 @@ export const blackTake: Move = {
   srcCol: 0,
   dstRow: 4,
   dstCol: 0,
+  moveType: 'STANDARD',
   id: 4
+};
+
+export const whiteEnPassant: Move = {
+  movingPiece: makePiece('PAWN', 'WHITE'),
+  takenPiece: makePiece('PAWN', 'BLACK'),
+  srcRow: 3,
+  srcCol: 3,
+  dstRow: 2,
+  dstCol: 2,
+  moveType: 'EN_PASSANT',
+  id: 2
 };
 
 export const testStore: AppState = {
