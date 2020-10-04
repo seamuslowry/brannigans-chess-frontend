@@ -25,13 +25,12 @@ const CreateGameButton: React.FC = () => {
     setLoading(true);
     ChessService.createGame()
       .then(res => {
+        setLoading(false); // putting this in a `finally` results in a warning for updating an unmounted component
         history.push(`/game/${res.data.id}`);
       })
       .catch(e => {
         dispatch(sendAlert(`Could not create game: ${e.message}`));
-      })
-      .finally(() => {
-        setLoading(false);
+        setLoading(false); // putting this in a `finally` results in a warning for updating an unmounted component
       });
   };
 
