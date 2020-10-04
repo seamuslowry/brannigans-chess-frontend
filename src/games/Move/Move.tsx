@@ -1,11 +1,22 @@
 import React from 'react';
 import { Box, Typography, useTheme } from '@material-ui/core';
-import { Move as MoveType } from '../../services/ChessService';
+import { Move as MoveType, MoveType as TypeOfMove } from '../../services/ChessService';
 import Piece from '../Piece/Piece';
 
 interface Props {
   move: MoveType;
 }
+
+const getMoveDescriptor = (type: TypeOfMove) => {
+  switch (type) {
+    case 'EN_PASSANT':
+      return 'EP';
+    case 'STANDARD':
+    case 'CASTLE':
+    default:
+      return '->';
+  }
+};
 
 const Move: React.FC<Props> = ({ move }) => {
   const theme = useTheme();
@@ -27,7 +38,8 @@ const Move: React.FC<Props> = ({ move }) => {
       </Box>
       <Box gridColumn={2}>
         <Typography>
-          [{move.srcRow},{move.srcCol}] -&gt; [{move.dstRow},{move.dstCol}]
+          [{move.srcRow},{move.srcCol}] {getMoveDescriptor(move.moveType)} [{move.dstRow},
+          {move.dstCol}]
         </Typography>
       </Box>
       <Box gridColumn={3}>

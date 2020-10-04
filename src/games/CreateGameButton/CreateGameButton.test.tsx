@@ -1,5 +1,5 @@
 import React from 'react';
-import { fireEvent, waitFor } from '@testing-library/dom';
+import { fireEvent, waitFor, waitForElementToBeRemoved } from '@testing-library/dom';
 import { render } from '@testing-library/react';
 import { rest } from 'msw';
 import { setupServer } from 'msw/node';
@@ -45,7 +45,7 @@ test('renders a button', async () => {
 
 test('creates a game', async () => {
   const history = createMemoryHistory();
-  const { getByText } = render(
+  const { getByText, getByRole } = render(
     <Router history={history}>
       <Provider store={mockedStore}>
         <CreateGameButton />
@@ -53,9 +53,9 @@ test('creates a game', async () => {
     </Router>
   );
 
-  let button = await waitFor(() => getByText('Create Game'));
+  const button = await waitFor(() => getByText('Create Game'));
   fireEvent.click(button);
-  button = await waitFor(() => getByText('Create Game')); // wait for call to complete
+  await waitForElementToBeRemoved(() => getByRole('progressbar')); // wait for call to complete
 
   expect(history.location.pathname).toEqual(`/game/${emptyGame.id}`);
 });
@@ -67,7 +67,7 @@ test('fails to create a game', async () => {
     })
   );
   const history = createMemoryHistory();
-  const { getByText } = render(
+  const { getByText, getByRole } = render(
     <Router history={history}>
       <Provider store={mockedStore}>
         <CreateGameButton />
@@ -75,9 +75,9 @@ test('fails to create a game', async () => {
     </Router>
   );
 
-  let button = await waitFor(() => getByText('Create Game'));
+  const button = await waitFor(() => getByText('Create Game'));
   fireEvent.click(button);
-  button = await waitFor(() => getByText('Create Game')); // wait for call to complete
+  await waitForElementToBeRemoved(() => getByRole('progressbar')); // wait for call to complete
 
   expect(history.location.pathname).not.toEqual(`/game/${emptyGame.id}`);
   expect(mockedStore.getActions()).toContainEqual(expect.objectContaining({ type: SEND_ALERT }));

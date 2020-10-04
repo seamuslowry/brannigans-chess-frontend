@@ -19,7 +19,14 @@ import {
   addMoves,
   ADD_MOVES
 } from './activeGame';
-import { blackRook, makePiece, testStore, whiteMove, whiteTake } from '../../utils/testData';
+import {
+  blackRook,
+  makePiece,
+  testStore,
+  whiteEnPassant,
+  whiteMove,
+  whiteTake
+} from '../../utils/testData';
 import { AppState } from '../store';
 import { immutableUpdate } from '../../utils/arrayHelpers';
 import config from '../../config';
@@ -215,6 +222,57 @@ test('moves to take a piece', async () => {
   );
   expect(selectedStore.getActions()).toContainEqual(
     whiteTake.takenPiece && takePiece(whiteTake.takenPiece)
+  );
+});
+
+test('en passants a piece', async () => {
+  server.use(
+    rest.post(`${config.serviceUrl}/moves/0`, (req, res, ctx) => {
+      return res(ctx.json(whiteEnPassant));
+    })
+  );
+
+  const selectedStore = mockStore({
+    ...testStore,
+    activeGame: {
+      ...testStore.activeGame,
+      selectedPosition: [whiteEnPassant.srcRow, whiteEnPassant.srcCol],
+      tiles: immutableUpdate(
+        testStore.activeGame.tiles,
+        whiteEnPassant.srcRow,
+        whiteEnPassant.srcCol,
+        {
+          type: whiteEnPassant.movingPiece.type,
+          color: whiteEnPassant.movingPiece.color,
+          selected: true
+        }
+      )
+    }
+  });
+
+  await selectedStore.dispatch(clickTile(whiteEnPassant.dstRow, whiteEnPassant.dstCol));
+
+  expect(selectedStore.getActions()).toContainEqual(
+    selectTile(whiteEnPassant.srcRow, whiteEnPassant.srcCol, false)
+  );
+  expect(selectedStore.getActions()).toContainEqual(
+    setTile(whiteEnPassant.srcRow, whiteEnPassant.srcCol, undefined)
+  );
+  expect(selectedStore.getActions()).toContainEqual(
+    setTile(whiteEnPassant.dstRow, whiteEnPassant.dstCol, whiteEnPassant.movingPiece)
+  );
+
+  expect(selectedStore.getActions()).toContainEqual(
+    expect.objectContaining({
+      type: ADD_MOVES,
+      payload: [whiteEnPassant]
+    })
+  );
+  expect(selectedStore.getActions()).toContainEqual(
+    whiteEnPassant.takenPiece && takePiece(whiteEnPassant.takenPiece)
+  );
+  expect(selectedStore.getActions()).toContainEqual(
+    setTile(whiteEnPassant.srcRow, whiteEnPassant.dstCol, undefined)
   );
 });
 

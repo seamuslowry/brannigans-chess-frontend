@@ -4,6 +4,8 @@ export type PieceColor = 'BLACK' | 'WHITE';
 
 export type PieceType = 'KNIGHT' | 'BISHOP' | 'PAWN' | 'ROOK' | 'QUEEN' | 'KING';
 
+export type MoveType = 'EN_PASSANT' | 'CASTLE' | 'STANDARD';
+
 export interface Piece {
   color: PieceColor;
   type: PieceType;
@@ -34,6 +36,7 @@ export interface Move {
   srcCol: number;
   dstRow: number;
   dstCol: number;
+  moveType: MoveType;
   id: number;
 }
 
