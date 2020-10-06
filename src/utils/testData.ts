@@ -110,6 +110,28 @@ export const whiteEnPassant: Move = {
   id: 2
 };
 
+export const whiteKingSideCastle: Move = {
+  movingPiece: makePiece('KING', 'WHITE'),
+  takenPiece: null,
+  srcRow: 7,
+  srcCol: 4,
+  dstRow: 7,
+  dstCol: 6,
+  moveType: 'KING_SIDE_CASTLE',
+  id: 2
+};
+
+export const whiteQueenSideCastle: Move = {
+  movingPiece: makePiece('KING', 'WHITE'),
+  takenPiece: null,
+  srcRow: 7,
+  srcCol: 4,
+  dstRow: 7,
+  dstCol: 2,
+  moveType: 'QUEEN_SIDE_CASTLE',
+  id: 2
+};
+
 export const testStore: AppState = {
   activeGame: initialActiveGameState,
   notifications: initialNotificationsState
