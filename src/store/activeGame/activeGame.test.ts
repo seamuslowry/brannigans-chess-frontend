@@ -24,7 +24,9 @@ import {
   makePiece,
   testStore,
   whiteEnPassant,
+  whiteKingSideCastle,
   whiteMove,
+  whiteQueenSideCastle,
   whiteTake
 } from '../../utils/testData';
 import { AppState } from '../store';
@@ -253,16 +255,6 @@ test('en passants a piece', async () => {
   await selectedStore.dispatch(clickTile(whiteEnPassant.dstRow, whiteEnPassant.dstCol));
 
   expect(selectedStore.getActions()).toContainEqual(
-    selectTile(whiteEnPassant.srcRow, whiteEnPassant.srcCol, false)
-  );
-  expect(selectedStore.getActions()).toContainEqual(
-    setTile(whiteEnPassant.srcRow, whiteEnPassant.srcCol, undefined)
-  );
-  expect(selectedStore.getActions()).toContainEqual(
-    setTile(whiteEnPassant.dstRow, whiteEnPassant.dstCol, whiteEnPassant.movingPiece)
-  );
-
-  expect(selectedStore.getActions()).toContainEqual(
     expect.objectContaining({
       type: ADD_MOVES,
       payload: [whiteEnPassant]
@@ -273,6 +265,94 @@ test('en passants a piece', async () => {
   );
   expect(selectedStore.getActions()).toContainEqual(
     setTile(whiteEnPassant.srcRow, whiteEnPassant.dstCol, undefined)
+  );
+});
+
+test('king side castles', async () => {
+  server.use(
+    rest.post(`${config.serviceUrl}/moves/0`, (req, res, ctx) => {
+      return res(ctx.json(whiteKingSideCastle));
+    })
+  );
+
+  const selectedStore = mockStore({
+    ...testStore,
+    activeGame: {
+      ...testStore.activeGame,
+      selectedPosition: [whiteKingSideCastle.srcRow, whiteKingSideCastle.srcCol],
+      tiles: immutableUpdate(
+        testStore.activeGame.tiles,
+        whiteKingSideCastle.srcRow,
+        whiteKingSideCastle.srcCol,
+        {
+          type: whiteKingSideCastle.movingPiece.type,
+          color: whiteKingSideCastle.movingPiece.color,
+          selected: true
+        }
+      )
+    }
+  });
+
+  await selectedStore.dispatch(clickTile(whiteKingSideCastle.dstRow, whiteKingSideCastle.dstCol));
+
+  expect(selectedStore.getActions()).toContainEqual(
+    expect.objectContaining({
+      type: ADD_MOVES,
+      payload: [whiteKingSideCastle]
+    })
+  );
+  expect(selectedStore.getActions()).toContainEqual(
+    setTile(whiteKingSideCastle.srcRow, whiteKingSideCastle.dstCol + 1, undefined)
+  );
+  expect(selectedStore.getActions()).toContainEqual(
+    setTile(whiteKingSideCastle.srcRow, whiteKingSideCastle.dstCol - 1, {
+      type: 'ROOK',
+      color: 'WHITE'
+    })
+  );
+});
+
+test('queen side castles', async () => {
+  server.use(
+    rest.post(`${config.serviceUrl}/moves/0`, (req, res, ctx) => {
+      return res(ctx.json(whiteQueenSideCastle));
+    })
+  );
+
+  const selectedStore = mockStore({
+    ...testStore,
+    activeGame: {
+      ...testStore.activeGame,
+      selectedPosition: [whiteQueenSideCastle.srcRow, whiteQueenSideCastle.srcCol],
+      tiles: immutableUpdate(
+        testStore.activeGame.tiles,
+        whiteQueenSideCastle.srcRow,
+        whiteQueenSideCastle.srcCol,
+        {
+          type: whiteQueenSideCastle.movingPiece.type,
+          color: whiteQueenSideCastle.movingPiece.color,
+          selected: true
+        }
+      )
+    }
+  });
+
+  await selectedStore.dispatch(clickTile(whiteQueenSideCastle.dstRow, whiteQueenSideCastle.dstCol));
+
+  expect(selectedStore.getActions()).toContainEqual(
+    expect.objectContaining({
+      type: ADD_MOVES,
+      payload: [whiteQueenSideCastle]
+    })
+  );
+  expect(selectedStore.getActions()).toContainEqual(
+    setTile(whiteQueenSideCastle.srcRow, whiteQueenSideCastle.dstCol - 2, undefined)
+  );
+  expect(selectedStore.getActions()).toContainEqual(
+    setTile(whiteQueenSideCastle.srcRow, whiteQueenSideCastle.dstCol + 1, {
+      type: 'ROOK',
+      color: 'WHITE'
+    })
   );
 });
 

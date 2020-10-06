@@ -34,6 +34,11 @@ const blankTile: TileInfo = {
 const blankRow = new Array<TileInfo>(8).fill(blankTile);
 const blankBoard = new Array<TileInfo[]>(8).fill(blankRow);
 
+interface AgnosticPiece {
+  color: PieceColor;
+  type: PieceType;
+}
+
 export const initialState: ActiveGameState = {
   tiles: blankBoard,
   takenPieces: [],
@@ -55,7 +60,7 @@ interface SetTile {
   payload: {
     row: number;
     col: number;
-    piece?: Piece;
+    piece?: AgnosticPiece;
   };
 }
 
@@ -169,7 +174,7 @@ export const setGameId = (id: number): SetGameId => ({
   payload: id
 });
 
-export const setTile = (row: number, col: number, piece?: Piece): SetTile => ({
+export const setTile = (row: number, col: number, piece?: AgnosticPiece): SetTile => ({
   type: SET_TILE,
   payload: {
     row,
