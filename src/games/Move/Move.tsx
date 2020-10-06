@@ -11,8 +11,11 @@ const getMoveDescriptor = (type: TypeOfMove) => {
   switch (type) {
     case 'EN_PASSANT':
       return 'EP';
+    case 'KING_SIDE_CASTLE':
+      return 'KSC';
+    case 'QUEEN_SIDE_CASTLE':
+      return 'QSC';
     case 'STANDARD':
-    case 'CASTLE':
     default:
       return '->';
   }
