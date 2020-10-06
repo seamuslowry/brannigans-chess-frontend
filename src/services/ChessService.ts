@@ -4,7 +4,7 @@ export type PieceColor = 'BLACK' | 'WHITE';
 
 export type PieceType = 'KNIGHT' | 'BISHOP' | 'PAWN' | 'ROOK' | 'QUEEN' | 'KING';
 
-export type MoveType = 'EN_PASSANT' | 'CASTLE' | 'STANDARD';
+export type MoveType = 'EN_PASSANT' | 'KING_SIDE_CASTLE' | 'QUEEN_SIDE_CASTLE' | 'STANDARD';
 
 export interface Piece {
   color: PieceColor;
