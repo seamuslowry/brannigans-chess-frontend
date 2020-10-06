@@ -23,6 +23,17 @@ export const clickTile = (row: number, col: number): ThunkResult<Promise<void>> 
         dispatch(addMove(move));
         move.takenPiece && dispatch(takePiece(move.takenPiece));
         move.moveType === 'EN_PASSANT' && dispatch(setTile(move.srcRow, move.dstCol, undefined));
+        if (move.moveType === 'KING_SIDE_CASTLE') {
+          dispatch(setTile(move.srcRow, move.dstCol + 1, undefined));
+          dispatch(
+            setTile(move.srcRow, move.dstCol - 1, { color: move.movingPiece.color, type: 'ROOK' })
+          );
+        } else if (move.moveType === 'QUEEN_SIDE_CASTLE') {
+          dispatch(setTile(move.srcRow, move.dstCol - 2, undefined));
+          dispatch(
+            setTile(move.srcRow, move.dstCol + 1, { color: move.movingPiece.color, type: 'ROOK' })
+          );
+        }
       })
       .catch(e => {
         e.response ? dispatch(sendAlert(e.response.data)) : dispatch(sendAlert('Network Error'));
