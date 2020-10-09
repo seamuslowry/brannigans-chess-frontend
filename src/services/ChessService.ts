@@ -55,6 +55,12 @@ export interface PageResponse<T> {
   totalElements: number;
 }
 
+export interface PieceIdentitifierDto {
+  gameId: number;
+  row: number;
+  col: number;
+}
+
 const getGames = (active?: boolean, pageRequest: Partial<PageRequest> = {}) => {
   const { page, size, order, orderBy } = pageRequest;
 
@@ -96,6 +102,9 @@ const move = (gameId: number, srcRow: number, srcCol: number, dstRow: number, ds
     dstCol
   });
 
+const promote = (type: PieceType, dto: PieceIdentitifierDto) =>
+  chessApi.post<Piece>(`pieces/promote/${type}`, dto);
+
 const createGame = () => chessApi.post<Game>('games/create');
 
 export default {
@@ -103,5 +112,6 @@ export default {
   getPieces,
   getMoves,
   createGame,
+  promote,
   move
 };
