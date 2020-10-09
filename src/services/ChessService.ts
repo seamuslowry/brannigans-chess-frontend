@@ -4,6 +4,8 @@ export type PieceColor = 'BLACK' | 'WHITE';
 
 export type PieceType = 'KNIGHT' | 'BISHOP' | 'PAWN' | 'ROOK' | 'QUEEN' | 'KING';
 
+export type PieceStatus = 'ACTIVE' | 'TAKEN' | 'REMOVED';
+
 export type MoveType = 'EN_PASSANT' | 'KING_SIDE_CASTLE' | 'QUEEN_SIDE_CASTLE' | 'STANDARD';
 
 export interface Piece {
@@ -11,7 +13,7 @@ export interface Piece {
   type: PieceType;
   positionRow: number;
   positionCol: number;
-  taken: boolean;
+  status: PieceStatus;
   id: number;
 }
 
@@ -68,10 +70,10 @@ const getGames = (active?: boolean, pageRequest: Partial<PageRequest> = {}) => {
   return chessApi.get<PageResponse<Game>>(`/games?${args.join('&')}`);
 };
 
-const getPieces = (gameId: number, color?: PieceColor, taken?: boolean) => {
+const getPieces = (gameId: number, color?: PieceColor, status?: PieceStatus) => {
   const args = [];
 
-  taken !== undefined && args.push(`taken=${taken}`);
+  status && args.push(`status=${status}`);
 
   color && args.push(`color=${color}`);
 

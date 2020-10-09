@@ -21,7 +21,7 @@ const TakenPieces: React.FC<Props> = ({ gameId, color }) => {
 
   React.useEffect(() => {
     setLoading(true);
-    ChessService.getPieces(gameId, color, true)
+    ChessService.getPieces(gameId, color, 'TAKEN')
       .then(res => {
         dispatch(takePieces(res.data));
       })
