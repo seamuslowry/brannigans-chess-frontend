@@ -33,7 +33,7 @@ export const makePiece = (type: PieceType, color: PieceColor): Piece => ({
   type,
   positionCol: 0,
   positionRow: 0,
-  taken: false,
+  status: 'ACTIVE',
   id: Number(Math.random() * 1000)
 });
 

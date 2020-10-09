@@ -11,7 +11,7 @@ export const CLEAR_TAKEN = 'chess/activeGame/CLEAR_TAKEN';
 export const ADD_MOVES = 'chess/activeGame/ADD_MOVES';
 export const CLEAR_MOVES = 'chess/activeGame/CLEAR_MOVES';
 
-interface TileInfo {
+export interface TileInfo {
   color?: PieceColor;
   type?: PieceType;
   selected: boolean;
