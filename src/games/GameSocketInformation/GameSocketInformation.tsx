@@ -14,7 +14,7 @@ const MAX_CONNECTION_ATTEMPTS = 5;
 const GameSocketInformation: React.FC<Props> = ({ gameId }) => {
   const dispatch = useDispatch();
 
-  const [gameStatus, setGameStatus] = React.useState('');
+  const [gameStatus, setGameStatus] = React.useState<string | null>(null);
   const [connectionAttempts, setConnectionAttempts] = React.useState(0);
 
   React.useEffect(() => {
@@ -31,6 +31,7 @@ const GameSocketInformation: React.FC<Props> = ({ gameId }) => {
         setConnectionAttempts(0);
       },
       () => {
+        setGameStatus(null);
         setTimeout(() => setConnectionAttempts(ca => ca + 1), 3000);
       }
     );
