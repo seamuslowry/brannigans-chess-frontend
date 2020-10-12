@@ -31,7 +31,6 @@ const GameSocketInformation: React.FC<Props> = ({ gameId }) => {
         setConnectionAttempts(0);
       },
       () => {
-        setGameStatus(null);
         setTimeout(() => setConnectionAttempts(ca => ca + 1), 3000);
       }
     );
@@ -42,13 +41,15 @@ const GameSocketInformation: React.FC<Props> = ({ gameId }) => {
 
   return (
     <Box width="100%">
-      {!gameStatus && connectionAttempts <= MAX_CONNECTION_ATTEMPTS && <CircularProgress />}
-      {!gameStatus && connectionAttempts > MAX_CONNECTION_ATTEMPTS && (
+      {connectionAttempts > 0 && connectionAttempts <= MAX_CONNECTION_ATTEMPTS && (
+        <CircularProgress />
+      )}
+      {connectionAttempts > MAX_CONNECTION_ATTEMPTS && (
         <Typography color="error">
           Failed to establish connection to server. Please try again later.
         </Typography>
       )}
-      <Typography>{gameStatus}</Typography>
+      {gameStatus && connectionAttempts === 0 && <Typography>{gameStatus}</Typography>}
     </Box>
   );
 };
