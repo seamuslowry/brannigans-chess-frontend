@@ -1,9 +1,6 @@
 import React from 'react';
-import { useDispatch } from 'react-redux';
 import { Box, CircularProgress, Typography } from '@material-ui/core';
-import Stomp from 'stompjs';
-import SockJS from 'sockjs-client';
-import config from '../../config';
+import useGameSocket from '../../utils/useGameSocket';
 
 interface Props {
   gameId: number;
@@ -12,32 +9,13 @@ interface Props {
 const MAX_CONNECTION_ATTEMPTS = 5;
 
 const GameSocketInformation: React.FC<Props> = ({ gameId }) => {
-  const dispatch = useDispatch();
-
-  const [gameStatus, setGameStatus] = React.useState<string | null>(null);
-  const [connectionAttempts, setConnectionAttempts] = React.useState(0);
+  const [socket, connectionAttempts] = useGameSocket(gameId);
 
   React.useEffect(() => {
-    if (connectionAttempts > MAX_CONNECTION_ATTEMPTS) return () => {};
+    socket && socket.subscribe(`/game/status/${gameId}`, d => setGameStatus(d.body));
+  }, [socket, gameId]);
 
-    const ws = new SockJS(`${config.serviceUrl}/ws`);
-    const client = Stomp.over(ws);
-    const sub = `/game/status/${gameId}`;
-
-    client.connect(
-      {},
-      () => {
-        client.subscribe(sub, d => setGameStatus(d.body));
-        setConnectionAttempts(0);
-      },
-      () => {
-        setTimeout(() => setConnectionAttempts(ca => ca + 1), 3000);
-      }
-    );
-    return () => {
-      client.disconnect(() => {});
-    };
-  }, [gameId, connectionAttempts, dispatch]);
+  const [gameStatus, setGameStatus] = React.useState<string | null>(null);
 
   return (
     <Box width="100%">
