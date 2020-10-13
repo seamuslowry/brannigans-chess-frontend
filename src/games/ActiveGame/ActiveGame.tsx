@@ -6,7 +6,7 @@ import { clearGame, setGameId } from '../../store/activeGame/activeGame';
 import Board from '../Board/Board';
 import MoveList from '../MoveList/MoveList';
 import TakenPieces from '../TakenPieces/TakenPieces';
-import GameSocketInformation from '../GameSocketInformation/GameSocketInformation';
+import GameStatus from '../GameStatus/GameStatus';
 
 interface ExpectedRouteParams {
   id?: string;
@@ -39,9 +39,9 @@ const ActiveGame: React.FC = () => {
           <TakenPieces gameId={gameId} color="BLACK" />
         </Grid>
       </Grid>
-      <Grid item container xs={12} md={3}>
+      <Grid item container xs={12} md={3} spacing={2} alignContent="flex-start">
         <Grid item xs={12}>
-          <GameSocketInformation gameId={gameId} />
+          <GameStatus gameId={gameId} />
         </Grid>
         <Grid item xs={12}>
           <MoveList gameId={gameId} />
