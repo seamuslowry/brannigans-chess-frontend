@@ -12,7 +12,7 @@ import {
 } from '@material-ui/core';
 import { Pagination } from '@material-ui/lab';
 import ChessService from '../../services/ChessService';
-import { useServiceCall } from '../../utils/hooks';
+import useServiceCall from '../../utils/useServiceCall';
 import CreateGameButton from '../CreateGameButton/CreateGameButton';
 
 const useStyles = makeStyles(theme => ({

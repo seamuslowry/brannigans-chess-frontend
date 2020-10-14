@@ -1,8 +1,8 @@
-import { renderHook, act } from '@testing-library/react-hooks';
-import { AxiosError, AxiosResponse } from 'axios';
-import { useServiceCall } from './hooks';
+import { renderHook } from '@testing-library/react-hooks';
+import { AxiosResponse, AxiosError } from 'axios';
+import useServiceCall from './useServiceCall';
 
-test('should be loading before the promise resolves', () => {
+test('should be loading before the promise resolves', async () => {
   const promise = new Promise<AxiosResponse<string>>(() => {});
 
   const { result } = renderHook(() => useServiceCall(promise));
@@ -21,11 +21,10 @@ test('should stop loading return result after resolution', async () => {
     resolve = res;
   });
 
-  const { result } = renderHook(() => useServiceCall(promise));
+  const { result, waitForNextUpdate } = renderHook(() => useServiceCall(promise));
 
-  await act(async () => {
-    resolve({ data: returnVal } as AxiosResponse<string>);
-  });
+  resolve({ data: returnVal } as AxiosResponse<string>);
+  await waitForNextUpdate();
 
   expect(result.current.loading).toBe(false);
   expect(result.current.response).toEqual(returnVal);
@@ -41,11 +40,10 @@ test('should stop loading return error after rejecting', async () => {
     reject = rej;
   });
 
-  const { result } = renderHook(() => useServiceCall(promise));
+  const { result, waitForNextUpdate } = renderHook(() => useServiceCall(promise));
 
-  await act(async () => {
-    reject({ message: returnVal } as AxiosError);
-  });
+  reject({ message: returnVal } as AxiosError);
+  await waitForNextUpdate();
 
   expect(result.current.loading).toBe(false);
   expect(result.current.response).toBeUndefined();
