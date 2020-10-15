@@ -13,7 +13,18 @@ import config from '../../config';
 import { Move, Piece } from '../../services/ChessService';
 
 const mockStore = createMockStore([thunk]);
-const mockedStore = mockStore(testStore);
+const mockedStore = mockStore({
+  ...testStore,
+  socket: {
+    ...testStore.socket,
+    messages: [
+      {
+        topic: '/game/status/1',
+        data: 'WHITE_TURN'
+      }
+    ]
+  }
+});
 
 beforeEach(() => mockedStore.clearActions());
 
