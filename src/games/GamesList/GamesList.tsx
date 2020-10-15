@@ -10,6 +10,7 @@ import {
   makeStyles,
   Typography
 } from '@material-ui/core';
+import { Link } from 'react-router-dom';
 import { Pagination } from '@material-ui/lab';
 import ChessService from '../../services/ChessService';
 import useServiceCall from '../../utils/useServiceCall';
@@ -58,9 +59,9 @@ const GamesList: React.FC = () => {
               <ListItem data-testid="game-list-item" key={`game-item-${game.id}`}>
                 <ListItemText primary={game.uuid} />
                 <ListItemSecondaryAction>
-                  <Button href={`/game/${game.id}`} color="primary">
-                    Join
-                  </Button>
+                  <Link to={`/game/${game.id}`}>
+                    <Button color="primary">Join</Button>
+                  </Link>
                 </ListItemSecondaryAction>
               </ListItem>
             ))}
