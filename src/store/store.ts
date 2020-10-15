@@ -4,6 +4,8 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 import { reducer as activeGameReducer, ActiveGameState } from './activeGame/activeGame';
 import { reducer as notificationsReducer, NotificationsState } from './notifications/notifications';
 import { reducer as socketReducer, SocketState } from './socket/socket';
+import createStompMiddleware from './middleware/stomp';
+import config from '../config';
 
 export type ThunkResult<R> = ThunkAction<R, AppState, undefined, AnyAction>;
 
@@ -21,5 +23,10 @@ const rootReducer = combineReducers<AppState>({
 
 export const store = createStore(
   rootReducer,
-  composeWithDevTools(applyMiddleware(thunk as ThunkMiddleware<AppState, AnyAction>))
+  composeWithDevTools(
+    applyMiddleware(
+      thunk as ThunkMiddleware<AppState, AnyAction>,
+      createStompMiddleware(`${config.serviceUrl}/ws`)
+    )
+  )
 );
