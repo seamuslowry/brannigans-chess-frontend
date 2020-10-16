@@ -1,5 +1,5 @@
 import { Middleware } from 'redux';
-import GameStompClient from './client';
+import GameStompClient from './gameStompClient';
 
 // should be handled by the middleware alone
 const CONNECT_STOMP = 'middleware/stomp/CONNECT';

@@ -1,7 +1,7 @@
 import SockJS from 'sockjs-client';
 import * as Stomp from '@stomp/stompjs';
 import { StompSubscription } from '@stomp/stompjs';
-import GameStompClient, { sockFactory } from './client';
+import GameStompClient, { sockFactory } from './gameStompClient';
 
 jest.mock('sockjs-client');
 const mockedSock = SockJS as jest.Mocked<typeof SockJS>;
