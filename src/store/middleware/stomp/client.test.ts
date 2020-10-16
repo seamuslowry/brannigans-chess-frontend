@@ -18,7 +18,7 @@ test('gets a sock when asked', () => {
   expect(mockedSock).toHaveBeenCalledWith(url);
 });
 
-test('creates a stomp client when constructing the gam client', () => {
+test('creates a stomp client when constructing the game client', () => {
   const client = new GameStompClient('test-url', jest.fn(), jest.fn(), jest.fn());
   expect(mockedStomp.Client).toHaveBeenCalled();
   expect(client.connected).toBeFalsy();
