@@ -7,7 +7,7 @@ import { Provider } from 'react-redux';
 import GameStatus from './GameStatus';
 import { testStore } from '../../utils/testData';
 import { AppState } from '../../store/store';
-import { subscribe, unsubscribe } from '../../store/middleware/stomp';
+import { subscribe, unsubscribe } from '../../store/middleware/stomp/stomp';
 
 const mockStore = createMockStore<AppState, ActionCreator<AnyAction>>([thunk]);
 const mockedStore = mockStore(testStore);

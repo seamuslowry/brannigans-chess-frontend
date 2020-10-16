@@ -5,7 +5,7 @@ import {
   STOMP_CLOSED,
   STOMP_CONNECTED,
   STOMP_MESSAGE
-} from '../middleware/stomp';
+} from '../middleware/stomp/stomp';
 
 export interface Message {
   topic: string;

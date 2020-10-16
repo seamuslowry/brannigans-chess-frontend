@@ -1,4 +1,4 @@
-import { STOMP_CLOSED, STOMP_CONNECTED, STOMP_MESSAGE } from '../middleware/stomp';
+import { STOMP_CLOSED, STOMP_CONNECTED, STOMP_MESSAGE } from '../middleware/stomp/stomp';
 import { reducer, Message } from './socket';
 
 test('marks as connected', () => {

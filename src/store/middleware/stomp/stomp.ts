@@ -1,6 +1,5 @@
-import SockJS from 'sockjs-client';
-import * as Stomp from '@stomp/stompjs';
 import { Middleware } from 'redux';
+import GameStompClient from './client';
 
 // should be handled by the middleware alone
 const CONNECT_STOMP = 'middleware/stomp/CONNECT';
@@ -69,59 +68,73 @@ const message = (topic: string, data: string): StompMessage => ({
 });
 
 const createStompMiddleware: (url: string) => Middleware = (url: string) => store => {
-  const subscriptions: {
-    [topic: string]: { subscription?: Stomp.StompSubscription; subscribers: number };
-  } = {};
-
-  const client = new Stomp.Client({
-    webSocketFactory: () => new SockJS(url),
-    reconnectDelay: 3000,
-    onConnect: () => {
+  const client = new GameStompClient(
+    url,
+    topic => d => store.dispatch(message(topic, d.body)),
+    () => {
       store.dispatch(connected());
-      Object.keys(subscriptions).forEach(key => {
-        subscriptions[key].subscription = stompSubscribe(key);
-      });
+      client.resubscribe();
     },
-    onDisconnect: () => {
-      store.dispatch(disconnected());
-    },
-    onWebSocketClose: () => {
-      store.dispatch(disconnected());
-    }
-  });
+    () => store.dispatch(disconnected())
+  );
 
-  const stompSubscribe = (topic: string) =>
-    client.connected
-      ? client.subscribe(topic, d => store.dispatch(message(topic, d.body)))
-      : undefined;
+  // const subscriptions: {
+  //   [topic: string]: { subscription?: Stomp.StompSubscription; subscribers: number };
+  // } = {};
+
+  // const client = new Stomp.Client({
+  //   webSocketFactory: () => new SockJS(url),
+  //   reconnectDelay: 3000,
+  //   onConnect: () => {
+  //     store.dispatch(connected());
+  //     Object.keys(subscriptions).forEach(key => {
+  //       subscriptions[key].subscription = stompSubscribe(key);
+  //     });
+  //   },
+  //   onDisconnect: () => {
+  //     store.dispatch(disconnected());
+  //   },
+  //   onWebSocketClose: () => {
+  //     store.dispatch(disconnected());
+  //   }
+  // });
+
+  // const stompSubscribe = (topic: string) =>
+  //   client.connected
+  //     ? client.subscribe(topic, d => store.dispatch(message(topic, d.body)))
+  //     : undefined;
 
   const addSubscription = (topic: string) => {
-    const existingSub = subscriptions[topic];
-    if (existingSub) {
-      subscriptions[topic] = {
-        ...existingSub,
-        subscribers: existingSub.subscribers + 1
-      };
-    } else {
-      subscriptions[topic] = {
-        subscription: stompSubscribe(topic),
-        subscribers: 1
-      };
-    }
+    client.subscribe(topic);
+    // const existingSub = subscriptions[topic];
+    // if (existingSub) {
+    //   subscriptions[topic] = {
+    //     ...existingSub,
+    //     subscribers: existingSub.subscribers + 1
+    //   };
+    // } else {
+    //   subscriptions[topic] = {
+    //     subscription: stompSubscribe(topic),
+    //     subscribers: 1
+    //   };
+    // }
   };
 
   const removeSubscription = (topic: string) => {
-    const existingSub = subscriptions[topic];
-    if (existingSub && existingSub.subscribers <= 1) {
-      existingSub.subscription && existingSub.subscription.unsubscribe();
-      delete subscriptions[topic];
-      Object.keys(subscriptions).length === 0 && store.dispatch(disconnect());
-    } else {
-      subscriptions[topic] = {
-        ...existingSub,
-        subscribers: existingSub.subscribers - 1
-      };
-    }
+    client.unsubscribe(topic);
+    Object.keys(client.subscriptions).length === 0 && store.dispatch(disconnect());
+
+    // const existingSub = subscriptions[topic];
+    // if (existingSub && existingSub.subscribers <= 1) {
+    //   existingSub.subscription && existingSub.subscription.unsubscribe();
+    //   delete subscriptions[topic];
+    //   Object.keys(subscriptions).length === 0 && store.dispatch(disconnect());
+    // } else {
+    //   subscriptions[topic] = {
+    //     ...existingSub,
+    //     subscribers: existingSub.subscribers - 1
+    //   };
+    // }
   };
 
   return next => action => {

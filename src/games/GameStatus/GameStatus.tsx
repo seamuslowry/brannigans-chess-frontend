@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, CircularProgress, Typography } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
-import { subscribe, unsubscribe } from '../../store/middleware/stomp';
+import { subscribe, unsubscribe } from '../../store/middleware/stomp/stomp';
 import { AppState } from '../../store/store';
 import { Message } from '../../store/socket/socket';
 
