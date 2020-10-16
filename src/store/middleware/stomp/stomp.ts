@@ -78,63 +78,13 @@ const createStompMiddleware: (url: string) => Middleware = (url: string) => stor
     () => store.dispatch(disconnected())
   );
 
-  // const subscriptions: {
-  //   [topic: string]: { subscription?: Stomp.StompSubscription; subscribers: number };
-  // } = {};
-
-  // const client = new Stomp.Client({
-  //   webSocketFactory: () => new SockJS(url),
-  //   reconnectDelay: 3000,
-  //   onConnect: () => {
-  //     store.dispatch(connected());
-  //     Object.keys(subscriptions).forEach(key => {
-  //       subscriptions[key].subscription = stompSubscribe(key);
-  //     });
-  //   },
-  //   onDisconnect: () => {
-  //     store.dispatch(disconnected());
-  //   },
-  //   onWebSocketClose: () => {
-  //     store.dispatch(disconnected());
-  //   }
-  // });
-
-  // const stompSubscribe = (topic: string) =>
-  //   client.connected
-  //     ? client.subscribe(topic, d => store.dispatch(message(topic, d.body)))
-  //     : undefined;
-
   const addSubscription = (topic: string) => {
     client.subscribe(topic);
-    // const existingSub = subscriptions[topic];
-    // if (existingSub) {
-    //   subscriptions[topic] = {
-    //     ...existingSub,
-    //     subscribers: existingSub.subscribers + 1
-    //   };
-    // } else {
-    //   subscriptions[topic] = {
-    //     subscription: stompSubscribe(topic),
-    //     subscribers: 1
-    //   };
-    // }
   };
 
   const removeSubscription = (topic: string) => {
     client.unsubscribe(topic);
     Object.keys(client.subscriptions).length === 0 && store.dispatch(disconnect());
-
-    // const existingSub = subscriptions[topic];
-    // if (existingSub && existingSub.subscribers <= 1) {
-    //   existingSub.subscription && existingSub.subscription.unsubscribe();
-    //   delete subscriptions[topic];
-    //   Object.keys(subscriptions).length === 0 && store.dispatch(disconnect());
-    // } else {
-    //   subscriptions[topic] = {
-    //     ...existingSub,
-    //     subscribers: existingSub.subscribers - 1
-    //   };
-    // }
   };
 
   return next => action => {
