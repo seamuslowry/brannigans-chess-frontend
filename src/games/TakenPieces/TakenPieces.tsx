@@ -48,7 +48,11 @@ const TakenPieces: React.FC<Props> = ({ gameId, color }) => {
       gridTemplateColumns={`repeat(2,${pieceSize})`}
       gridTemplateRows={`repeat(8,${pieceSize})`}
     >
-      {loading && <CircularProgress />}
+      {loading && (
+        <Box gridColumn="1/3" justifySelf="center">
+          <CircularProgress />
+        </Box>
+      )}
       {pieces &&
         pieces.map((piece, index) => (
           <Box
