@@ -47,7 +47,11 @@ const MoveList: React.FC<Props> = ({ gameId, color }) => {
 
   return (
     <Paper className={classes.paper}>
-      {loading && <CircularProgress />}
+      {loading && (
+        <Box textAlign="center" my={1}>
+          <CircularProgress />
+        </Box>
+      )}
       {moves &&
         moves.map(move => (
           <Box key={`move-list-item-${move.id}`} p={2}>
