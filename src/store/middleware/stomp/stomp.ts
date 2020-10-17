@@ -7,7 +7,7 @@ const DISCONNECT_STOMP = 'middleware/stomp/DISCONNECT';
 const SUBSCRIBE_STOMP = 'middleware/stomp/SUBSCRIBE';
 const UNSUBSCRIBE_STOMP = 'middleware/stomp/UNSUBSCRIBE';
 
-// shuold be handled outside the middleware
+// should be handled outside the middleware
 export const STOMP_CONNECTED = 'middleware/stomp/CONNECTED';
 export const STOMP_CLOSED = 'middleware/stomp/CLOSED';
 export const STOMP_MESSAGE = 'middleware/stomp/MESSAGE';
