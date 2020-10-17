@@ -8,6 +8,8 @@ export type PieceStatus = 'ACTIVE' | 'TAKEN' | 'REMOVED';
 
 export type MoveType = 'EN_PASSANT' | 'KING_SIDE_CASTLE' | 'QUEEN_SIDE_CASTLE' | 'STANDARD';
 
+export type GameStatus = 'WHITE_TURN' | 'BLACK_TURN' | 'WHITE_CHECK' | 'BLACK_CHECK';
+
 export interface Piece {
   color: PieceColor;
   type: PieceType;

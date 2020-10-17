@@ -1,6 +1,7 @@
 import React from 'react';
-import { Box, CircularProgress, Typography } from '@material-ui/core';
+import { Box, CircularProgress, Paper, Typography } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
+import startCase from 'lodash.startcase';
 import { subscribe, unsubscribe } from '../../store/middleware/stomp/stomp';
 import { AppState } from '../../store/store';
 import { Message } from '../../store/socket/socket';
@@ -28,10 +29,19 @@ const GameStatus: React.FC<Props> = ({ gameId }) => {
   }, [topic, dispatch]);
 
   return (
-    <Box width="100%">
-      {!gameStatus && <CircularProgress />}
-      {gameStatus && <Typography>{gameStatus}</Typography>}
-    </Box>
+    <Paper>
+      <Box width="100%" p={2}>
+        {!gameStatus && <CircularProgress />}
+        {gameStatus && (
+          <>
+            <Typography display="inline" color="secondary">
+              STATUS:{' '}
+            </Typography>
+            <Typography display="inline">{startCase(gameStatus.toLowerCase())}</Typography>
+          </>
+        )}
+      </Box>
+    </Paper>
   );
 };
 

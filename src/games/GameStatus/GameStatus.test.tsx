@@ -49,7 +49,7 @@ test('shows the most recent status of the game when available', async () => {
     </Provider>
   );
 
-  const status = await waitFor(() => getByText('TEST_STATUS'));
+  const status = await waitFor(() => getByText('Test Status'));
 
   expect(status).toBeInTheDocument();
 });
