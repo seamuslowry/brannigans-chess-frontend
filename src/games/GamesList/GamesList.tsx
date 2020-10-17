@@ -21,11 +21,15 @@ const useStyles = makeStyles(theme => ({
     width: '100%',
     height: '80vh',
     overflowY: 'auto',
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'space-between',
+    // display: 'flex',
+    // flexDirection: 'column',
+    // justifyContent: 'space-between',
     backgroundColor: theme.palette.background.paper,
     borderRadius: '1rem'
+  },
+  listItemContainer: {
+    height: '10%',
+    display: 'flex'
   },
   root: {
     width: '40vw',
@@ -60,7 +64,13 @@ const GamesList: React.FC = () => {
         <>
           <List className={classes.list}>
             {response.content.map(game => (
-              <ListItem data-testid="game-list-item" key={`game-item-${game.id}`}>
+              <ListItem
+                classes={{
+                  container: classes.listItemContainer
+                }}
+                data-testid="game-list-item"
+                key={`game-item-${game.id}`}
+              >
                 <ListItemText primary={game.uuid} />
                 <ListItemSecondaryAction>
                   <Link to={`/game/${game.id}`}>
