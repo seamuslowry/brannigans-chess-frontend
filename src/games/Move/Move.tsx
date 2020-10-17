@@ -23,6 +23,12 @@ const getMoveDescriptor = (type: TypeOfMove) => {
 
 const Move: React.FC<Props> = ({ move }) => {
   const theme = useTheme();
+  const ref = React.useRef<HTMLSpanElement | null>(null);
+
+  React.useEffect(() => {
+    ref.current && ref.current.scrollIntoView();
+  }, []);
+
   return (
     <Box
       display="grid"
@@ -40,7 +46,7 @@ const Move: React.FC<Props> = ({ move }) => {
         />
       </Box>
       <Box gridColumn={2}>
-        <Typography>
+        <Typography ref={ref}>
           [{move.srcRow},{move.srcCol}] {getMoveDescriptor(move.moveType)} [{move.dstRow},
           {move.dstCol}]
         </Typography>
