@@ -21,9 +21,6 @@ const useStyles = makeStyles(theme => ({
     width: '100%',
     height: '80vh',
     overflowY: 'auto',
-    // display: 'flex',
-    // flexDirection: 'column',
-    // justifyContent: 'space-between',
     backgroundColor: theme.palette.background.paper,
     borderRadius: '1rem'
   },
