@@ -1,24 +1,8 @@
 import React from 'react';
-import { Box, IconButton } from '@material-ui/core';
-import { GitHub } from '@material-ui/icons';
+import { Box } from '@material-ui/core';
 import Faq from './Faq/Faq';
 
 const faqs = [
-  {
-    question: 'Can I see how this was made?',
-    answer: (
-      <>
-        You can indeed! Check out the github repo
-        <IconButton
-          component="a"
-          target="_blank"
-          href="https://github.com/seamuslowry/brannigans-chess"
-        >
-          <GitHub />
-        </IconButton>
-      </>
-    )
-  },
   {
     question: 'Why can I only see half the pieces?',
     answer:
