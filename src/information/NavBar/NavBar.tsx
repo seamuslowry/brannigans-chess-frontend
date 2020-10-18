@@ -1,6 +1,7 @@
 import React from 'react';
-import { AppBar, Box, Button, Toolbar, Typography } from '@material-ui/core';
+import { AppBar, Box, Button, IconButton, Toolbar, Typography } from '@material-ui/core';
 import { Link } from 'react-router-dom';
+import { GitHub } from '@material-ui/icons';
 
 const NavBar: React.FC = () => {
   return (
@@ -17,6 +18,14 @@ const NavBar: React.FC = () => {
         <Button component={Link} to="/faq" color="secondary" variant="text">
           FAQ
         </Button>
+        <IconButton
+          color="secondary"
+          component="a"
+          target="_blank"
+          href="https://github.com/seamuslowry/brannigans-chess"
+        >
+          <GitHub />
+        </IconButton>
       </Toolbar>
     </AppBar>
   );
