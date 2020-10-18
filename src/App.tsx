@@ -1,21 +1,17 @@
-import { Box, Typography } from '@material-ui/core';
+import { Box } from '@material-ui/core';
 import React from 'react';
 import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-dom';
 import ActiveGame from './games/ActiveGame/ActiveGame';
 import GamesList from './games/GamesList/GamesList';
 import Attributions from './information/Attributions/Attributions';
+import NavBar from './information/NavBar/NavBar';
 import Notifications from './notifications/Notifications/Notifications';
 
 const App = () => {
   return (
     <Router>
+      <NavBar />
       <Box m={1}>
-        <Box>
-          <Typography align="center">
-            In the game of chess, you can never let your adversary see your pieces.
-          </Typography>
-          <Typography align="center">-Zapp Brannigan</Typography>
-        </Box>
         <Box pt={2} display="flex" justifyContent="center">
           <Switch>
             <Route path="/game/:id">
