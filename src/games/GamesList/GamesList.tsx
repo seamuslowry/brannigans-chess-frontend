@@ -10,17 +10,23 @@ import {
   makeStyles,
   Typography
 } from '@material-ui/core';
+import { Link } from 'react-router-dom';
 import { Pagination } from '@material-ui/lab';
 import ChessService from '../../services/ChessService';
-import { useServiceCall } from '../../utils/hooks';
+import useServiceCall from '../../utils/useServiceCall';
 import CreateGameButton from '../CreateGameButton/CreateGameButton';
 
 const useStyles = makeStyles(theme => ({
   list: {
     width: '100%',
     height: '80vh',
+    overflowY: 'auto',
     backgroundColor: theme.palette.background.paper,
     borderRadius: '1rem'
+  },
+  listItemContainer: {
+    height: '10%',
+    display: 'flex'
   },
   root: {
     width: '40vw',
@@ -55,12 +61,18 @@ const GamesList: React.FC = () => {
         <>
           <List className={classes.list}>
             {response.content.map(game => (
-              <ListItem data-testid="game-list-item" key={`game-item-${game.id}`}>
+              <ListItem
+                classes={{
+                  container: classes.listItemContainer
+                }}
+                data-testid="game-list-item"
+                key={`game-item-${game.id}`}
+              >
                 <ListItemText primary={game.uuid} />
                 <ListItemSecondaryAction>
-                  <Button href={`/game/${game.id}`} color="primary">
-                    Join
-                  </Button>
+                  <Link to={`/game/${game.id}`}>
+                    <Button color="primary">Join</Button>
+                  </Link>
                 </ListItemSecondaryAction>
               </ListItem>
             ))}

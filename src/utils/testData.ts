@@ -4,6 +4,7 @@ import {
   initialState as initialNotificationsState,
   AlertInfo
 } from '../store/notifications/notifications';
+import { initialState as initialSocketState } from '../store/socket/socket';
 import { AppState } from '../store/store';
 
 export const successAlertInfo: AlertInfo = {
@@ -134,5 +135,6 @@ export const whiteQueenSideCastle: Move = {
 
 export const testStore: AppState = {
   activeGame: initialActiveGameState,
-  notifications: initialNotificationsState
+  notifications: initialNotificationsState,
+  socket: initialSocketState
 };

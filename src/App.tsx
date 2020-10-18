@@ -21,7 +21,7 @@ const App = () => {
             <Route path="/game/:id">
               <ActiveGame />
             </Route>
-            <Route path="/">
+            <Route exact path="/">
               <GamesList />
             </Route>
             <Redirect to="/" />

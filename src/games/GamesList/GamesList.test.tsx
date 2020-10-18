@@ -3,6 +3,7 @@ import { render, waitFor, screen, fireEvent } from '@testing-library/react';
 import { rest } from 'msw';
 import { setupServer } from 'msw/node';
 import { act } from 'react-test-renderer';
+import { MemoryRouter } from 'react-router-dom';
 import { ActionCreator, AnyAction } from 'redux';
 import createMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
@@ -39,7 +40,9 @@ afterAll(() => server.close());
 test('renders games as a list', async () => {
   render(
     <Provider store={mockedStore}>
-      <GamesList />
+      <MemoryRouter>
+        <GamesList />
+      </MemoryRouter>
     </Provider>
   );
 
@@ -91,7 +94,9 @@ test('shows a message when there are no available games', async () => {
 test('handles a page change', async () => {
   const { getByText } = render(
     <Provider store={mockedStore}>
-      <GamesList />
+      <MemoryRouter>
+        <GamesList />
+      </MemoryRouter>
     </Provider>
   );
 

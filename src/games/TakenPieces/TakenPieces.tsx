@@ -6,7 +6,7 @@ import Piece from '../Piece/Piece';
 import { clearTaken, takePieces } from '../../store/activeGame/activeGame';
 import { sendAlert } from '../../store/notifications/notifications';
 import { AppState } from '../../store/store';
-import { usePieceSize } from '../../utils/hooks';
+import usePieceSize from '../../utils/usePieceSize';
 
 interface Props {
   gameId: number;
@@ -48,7 +48,11 @@ const TakenPieces: React.FC<Props> = ({ gameId, color }) => {
       gridTemplateColumns={`repeat(2,${pieceSize})`}
       gridTemplateRows={`repeat(8,${pieceSize})`}
     >
-      {loading && <CircularProgress />}
+      {loading && (
+        <Box gridColumn="1/3" justifySelf="center">
+          <CircularProgress />
+        </Box>
+      )}
       {pieces &&
         pieces.map((piece, index) => (
           <Box
