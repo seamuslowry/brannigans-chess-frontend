@@ -2,8 +2,8 @@ import React from 'react';
 import { Card, CardContent, CardHeader } from '@material-ui/core';
 
 interface Props {
-  question: React.ReactNode;
-  answer: React.ReactNode;
+  question: string;
+  answer: string;
 }
 
 const Faq: React.FC<Props> = ({ question, answer }) => {
