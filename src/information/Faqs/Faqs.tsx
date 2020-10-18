@@ -34,8 +34,6 @@ const Faqs: React.FC = () => {
   return (
     <Box display="flex" flexDirection="column" alignItems="center" width="100%">
       {faqs.map((q, index) => (
-        // because the array is static, we can (and should) use the index for the key
-        // eslint-disable-next-line react/no-array-index-key
         <Box key={`faq-${index}`} p={1} width="80%">
           <Faq {...q} />
         </Box>
