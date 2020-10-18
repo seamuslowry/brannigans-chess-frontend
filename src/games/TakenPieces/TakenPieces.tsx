@@ -6,7 +6,7 @@ import Piece from '../Piece/Piece';
 import { clearTaken, takePieces } from '../../store/activeGame/activeGame';
 import { sendAlert } from '../../store/notifications/notifications';
 import { AppState } from '../../store/store';
-import { usePieceSize } from '../../utils/usePieceSize';
+import usePieceSize from '../../utils/usePieceSize';
 
 interface Props {
   gameId: number;
