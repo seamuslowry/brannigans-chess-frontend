@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux';
 import Tile from '../Tile/Tile';
 import { clearBoard } from '../../store/activeGame/activeGame';
 import { getPieces } from '../../store/activeGame/activeGame.thunk';
-import { usePieceSize } from '../../utils/hooks';
+import { usePieceSize } from '../../utils/usePieceSize';
 import PawnPromotion from '../PawnPromotion/PawnPromotion';
 
 interface Props {
