@@ -1,11 +1,10 @@
 import React from 'react';
 import { Box, Paper, Typography } from '@material-ui/core';
 import { Sync, SyncProblem } from '@material-ui/icons';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import startCase from 'lodash.startcase';
-import { subscribe, unsubscribe } from '../../store/middleware/stomp/stomp';
 import { AppState } from '../../store/store';
-import { Message } from '../../store/socket/socket';
+import useSubscription from '../../utils/useSubscription';
 
 interface Props {
   gameId: number;
@@ -13,22 +12,10 @@ interface Props {
 
 const GameStatus: React.FC<Props> = ({ gameId }) => {
   const topic = `/game/status/${gameId}`;
-  const statusMessages = useSelector<AppState, Message[]>(state =>
-    state.socket.messages.filter(m => m.topic === topic)
-  );
+  const statusMessages = useSubscription(topic);
   const connected = useSelector<AppState, boolean>(state => state.socket.connected);
 
   const gameStatus = !!statusMessages.length && statusMessages[statusMessages.length - 1].data;
-
-  const dispatch = useDispatch();
-
-  React.useEffect(() => {
-    dispatch(subscribe(topic));
-
-    return () => {
-      dispatch(unsubscribe(topic));
-    };
-  }, [topic, dispatch]);
 
   return (
     <Paper>
