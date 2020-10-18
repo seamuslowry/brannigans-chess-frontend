@@ -9,7 +9,7 @@ const faqs = [
       "As the inspirational quote states: \" you can never let your adversary see your pieces\". You can't see your adversary's pieces and they can't see yours."
   },
   {
-    question: "Why can't I offer a draw?",
+    question: 'Are there plans to allow draws?',
     answer: 'Coward.'
   }
 ];
