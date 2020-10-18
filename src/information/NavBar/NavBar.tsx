@@ -11,9 +11,8 @@ const NavBar: React.FC = () => {
         </Button>
         <Box margin="auto">
           <Typography>
-            In the game of chess, you can never let your adversary see your pieces.
+            In the game of chess, you can never let your adversary see your pieces. -Zapp Brannigan
           </Typography>
-          <Typography>-Zapp Brannigan</Typography>
         </Box>
         <Button component={Link} to="/faq" color="secondary" variant="text">
           FAQ
