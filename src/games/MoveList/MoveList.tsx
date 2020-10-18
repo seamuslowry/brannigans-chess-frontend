@@ -25,6 +25,8 @@ const MoveList: React.FC<Props> = ({ gameId, color }) => {
 
   const [loading, setLoading] = React.useState(false);
 
+  const ref = React.useRef<HTMLElement | null>(null);
+
   React.useEffect(() => {
     setLoading(true);
     ChessService.getMoves(gameId, color)
@@ -45,8 +47,12 @@ const MoveList: React.FC<Props> = ({ gameId, color }) => {
 
   const moves = useSelector<AppState, MoveType[]>(state => state.activeGame.moveList);
 
+  React.useEffect(() => {
+    moves.length && ref.current && (ref.current.scrollTop = ref.current.scrollHeight);
+  }, [moves.length]);
+
   return (
-    <Paper className={classes.paper}>
+    <Paper className={classes.paper} ref={ref}>
       {loading && (
         <Box textAlign="center" my={1}>
           <CircularProgress />

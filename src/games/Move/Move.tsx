@@ -25,10 +25,6 @@ const Move: React.FC<Props> = ({ move }) => {
   const theme = useTheme();
   const ref = React.useRef<HTMLSpanElement | null>(null);
 
-  React.useEffect(() => {
-    ref.current && ref.current.scrollIntoView();
-  }, []);
-
   return (
     <Box
       display="grid"
