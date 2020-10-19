@@ -1,5 +1,6 @@
 import { Game, Move, Piece, PieceColor, PieceType, Player } from '../services/ChessService';
 import { initialState as initialActiveGameState } from '../store/activeGame/activeGame';
+import { initialState as initialAuthState } from '../store/auth/auth';
 import {
   initialState as initialNotificationsState,
   AlertInfo
@@ -136,5 +137,6 @@ export const whiteQueenSideCastle: Move = {
 export const testStore: AppState = {
   activeGame: initialActiveGameState,
   notifications: initialNotificationsState,
-  socket: initialSocketState
+  socket: initialSocketState,
+  auth: initialAuthState
 };

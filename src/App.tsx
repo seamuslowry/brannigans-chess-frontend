@@ -1,6 +1,7 @@
 import { Box } from '@material-ui/core';
 import React from 'react';
 import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-dom';
+import PrivateRoute from './auth/PrivateRoute/PrivateRoute';
 import ActiveGame from './games/ActiveGame/ActiveGame';
 import GamesList from './games/GamesList/GamesList';
 import Attributions from './information/Attributions/Attributions';
@@ -15,15 +16,15 @@ const App = () => {
       <Box m={1}>
         <Box pt={2} display="flex" justifyContent="center">
           <Switch>
-            <Route path="/game/:id">
-              <ActiveGame />
-            </Route>
             <Route path="/faq">
               <Faqs />
             </Route>
-            <Route exact path="/">
+            <PrivateRoute path="/game/:id">
+              <ActiveGame />
+            </PrivateRoute>
+            <PrivateRoute exact path="/">
               <GamesList />
-            </Route>
+            </PrivateRoute>
             <Redirect to="/" />
           </Switch>
         </Box>
