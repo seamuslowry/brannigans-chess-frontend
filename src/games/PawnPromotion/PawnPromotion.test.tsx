@@ -6,7 +6,7 @@ import { rest } from 'msw';
 import { setupServer } from 'msw/node';
 import thunk from 'redux-thunk';
 import { testStore, whiteMove } from '../../utils/testData';
-import { Move } from '../../services/ChessService';
+import { Move } from '../../services/ChessService.types';
 import config from '../../config';
 import PawnPromotion from './PawnPromotion';
 import { SET_TILE } from '../../store/activeGame/activeGame';

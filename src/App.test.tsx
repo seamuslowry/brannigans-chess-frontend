@@ -7,7 +7,7 @@ import createMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { Provider } from 'react-redux';
 import App from './App';
-import { Game } from './services/ChessService';
+import { Game } from './services/ChessService.types';
 import { AppState } from './store/store';
 import { testStore } from './utils/testData';
 

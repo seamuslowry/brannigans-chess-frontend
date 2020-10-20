@@ -16,15 +16,15 @@ const App = () => {
       <Box m={1}>
         <Box pt={2} display="flex" justifyContent="center">
           <Switch>
-            <Route path="/faq">
-              <Faqs />
-            </Route>
             <PrivateRoute path="/game/:id">
               <ActiveGame />
             </PrivateRoute>
-            <PrivateRoute exact path="/">
+            <Route path="/faq">
+              <Faqs />
+            </Route>
+            <Route exact path="/">
               <GamesList />
-            </PrivateRoute>
+            </Route>
             <Redirect to="/" />
           </Switch>
         </Box>

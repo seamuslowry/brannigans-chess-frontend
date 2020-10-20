@@ -7,13 +7,13 @@ interface CallState<T> {
   error?: string;
 }
 
-const useServiceCall = <T>(servicePromise: Promise<AxiosResponse<T>>) => {
+const useServiceCall = <T>(servicePromise: () => Promise<AxiosResponse<T>>) => {
   const [state, setState] = React.useState<CallState<T>>({
     loading: true
   });
 
   React.useEffect(() => {
-    servicePromise
+    servicePromise()
       .then(res => setState({ error: undefined, response: res.data, loading: false }))
       .catch(e => setState({ error: e.message, response: undefined, loading: false }));
   }, [servicePromise]);

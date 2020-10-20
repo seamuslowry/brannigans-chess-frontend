@@ -32,7 +32,7 @@ import {
 import { AppState } from '../store';
 import { immutableUpdate } from '../../utils/arrayHelpers';
 import config from '../../config';
-import { Move, Piece } from '../../services/ChessService';
+import { Move, Piece } from '../../services/ChessService.types';
 import { SEND_ALERT } from '../notifications/notifications';
 import { clickTile, getPieces } from './activeGame.thunk';
 

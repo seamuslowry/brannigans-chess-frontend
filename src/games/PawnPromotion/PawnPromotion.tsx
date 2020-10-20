@@ -3,9 +3,10 @@ import { Dialog, DialogActions, DialogTitle, IconButton, makeStyles } from '@mat
 import { useDispatch, useSelector } from 'react-redux';
 import Piece from '../Piece/Piece';
 import { AppState } from '../../store/store';
-import ChessService, { PieceColor, PieceType } from '../../services/ChessService';
+import { PieceColor, PieceType } from '../../services/ChessService.types';
 import { setTile, TileInfo } from '../../store/activeGame/activeGame';
 import { sendAlert } from '../../store/notifications/notifications';
+import ChessService from '../../services/ChessService';
 
 const useStyles = makeStyles({
   center: {

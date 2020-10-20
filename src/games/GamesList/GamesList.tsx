@@ -41,7 +41,9 @@ const GamesList: React.FC = () => {
 
   const [page, setPage] = React.useState(1);
 
-  const memoizedCall = React.useMemo(() => ChessService.getGames(true, { page: page - 1 }), [page]);
+  const memoizedCall = React.useCallback(() => ChessService.getGames(true, { page: page - 1 }), [
+    page
+  ]);
   const {
     loading,
     response = {

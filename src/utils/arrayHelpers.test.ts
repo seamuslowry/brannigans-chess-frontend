@@ -1,4 +1,4 @@
-import { Game } from '../services/ChessService';
+import { Game } from '../services/ChessService.types';
 import { flatten, immutableUpdate } from './arrayHelpers';
 import { emptyGame } from './testData';
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, Typography, useTheme } from '@material-ui/core';
-import { Move as MoveType, MoveType as TypeOfMove } from '../../services/ChessService';
+import { Move as MoveType, MoveType as TypeOfMove } from '../../services/ChessService.types';
 import Piece from '../Piece/Piece';
 
 interface Props {

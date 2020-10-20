@@ -1,4 +1,4 @@
-import { Move, Piece, PieceColor, PieceType } from '../../services/ChessService';
+import { PieceColor, PieceType, Piece, Move } from '../../services/ChessService.types';
 import { immutableUpdate } from '../../utils/arrayHelpers';
 
 export const SET_GAME_ID = 'chess/activeGame/SET_GAME_ID';

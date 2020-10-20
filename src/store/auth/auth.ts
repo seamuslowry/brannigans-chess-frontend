@@ -1,7 +1,13 @@
 import { GoogleLoginResponse } from 'react-google-login';
 
 export const LOGIN = 'chess/auth/LOGIN';
+export const UPDATE_TOKEN = 'chess/auth/UPDATE_TOKEN';
 export const LOGOUT = 'chess/auth/LOGOUT';
+
+export type GoogleLoginRequired = Pick<
+  GoogleLoginResponse,
+  'profileObj' | 'tokenObj' | 'getAuthResponse' | 'reloadAuthResponse'
+>;
 
 export interface UserProfile {
   imageUrl: string;
@@ -18,14 +24,19 @@ export const initialState: AuthState = {};
 
 interface Login {
   type: typeof LOGIN;
-  payload: GoogleLoginResponse;
+  payload: GoogleLoginRequired;
+}
+
+interface UpdateToken {
+  type: typeof UPDATE_TOKEN;
+  payload: string;
 }
 
 interface Logout {
   type: typeof LOGOUT;
 }
 
-type AuthAction = Login | Logout;
+type AuthAction = Login | Logout | UpdateToken;
 
 export const reducer = (state: AuthState = initialState, action: AuthAction): AuthState => {
   switch (action.type) {
@@ -35,7 +46,14 @@ export const reducer = (state: AuthState = initialState, action: AuthAction): Au
         user: {
           ...action.payload.profileObj
         },
-        token: action.payload.tokenObj.id_token
+        // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+        // @ts-ignore
+        token: action.payload.getAuthResponse(true).access_token
+      };
+    case UPDATE_TOKEN:
+      return {
+        ...state,
+        token: action.payload
       };
     case LOGOUT:
       return initialState;
@@ -44,8 +62,13 @@ export const reducer = (state: AuthState = initialState, action: AuthAction): Au
   }
 };
 
-export const login = (payload: GoogleLoginResponse): Login => ({
+export const loginOnce = (payload: GoogleLoginRequired): Login => ({
   type: LOGIN,
+  payload
+});
+
+export const updateToken = (payload: string): UpdateToken => ({
+  type: UPDATE_TOKEN,
   payload
 });
 

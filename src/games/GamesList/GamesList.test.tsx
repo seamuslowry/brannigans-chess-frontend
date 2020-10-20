@@ -9,7 +9,7 @@ import createMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { Provider } from 'react-redux';
 import GamesList from './GamesList';
-import { Game, PageResponse } from '../../services/ChessService';
+import { Game, PageResponse } from '../../services/ChessService.types';
 import config from '../../config';
 import { emptyGame, testStore } from '../../utils/testData';
 import { AppState } from '../../store/store';

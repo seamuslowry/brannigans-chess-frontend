@@ -1,5 +1,5 @@
 import React from 'react';
-import { PieceColor, PieceType } from '../../services/ChessService';
+import { PieceColor, PieceType } from '../../services/ChessService.types';
 
 interface Props {
   type?: PieceType;

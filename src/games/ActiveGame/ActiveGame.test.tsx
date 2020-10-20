@@ -10,7 +10,7 @@ import { CLEAR_GAME, SET_GAME_ID } from '../../store/activeGame/activeGame';
 import { testStore } from '../../utils/testData';
 import ActiveGame from './ActiveGame';
 import config from '../../config';
-import { Move, Piece } from '../../services/ChessService';
+import { Move, Piece } from '../../services/ChessService.types';
 
 const mockStore = createMockStore([thunk]);
 const mockedStore = mockStore(testStore);
