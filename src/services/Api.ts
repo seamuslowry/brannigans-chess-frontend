@@ -14,7 +14,7 @@ chessApi.interceptors.request.use(axiosConfig => {
     ...axiosConfig,
     headers: {
       ...axiosConfig.headers,
-      Authorization: `Bearer ${token}`
+      Authorization: token && `Bearer ${token}`
     }
   };
 });
