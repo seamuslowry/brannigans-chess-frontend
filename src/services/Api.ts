@@ -10,11 +10,13 @@ export const chessApi = axios.create({
 chessApi.interceptors.request.use(axiosConfig => {
   const { token } = store.getState().auth;
 
+  if (!token) return axiosConfig;
+
   return {
     ...axiosConfig,
     headers: {
       ...axiosConfig.headers,
-      Authorization: token
+      Authorization: `Bearer ${token}`
     }
   };
 });

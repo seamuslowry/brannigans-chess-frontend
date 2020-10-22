@@ -15,8 +15,8 @@ beforeEach(() => jest.clearAllMocks());
 test('performs the initial login', () => {
   const result = reducer(undefined, loginOnce(loginResponse));
 
-  expect(loginResponse.getAuthResponse).toHaveBeenCalled();
   expect(result.user).not.toBeUndefined();
+  expect(result.token).toEqual(loginResponse.tokenId);
 });
 
 test('updates the access token', () => {

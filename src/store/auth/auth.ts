@@ -6,7 +6,7 @@ export const LOGOUT = 'chess/auth/LOGOUT';
 
 export type GoogleLoginRequired = Pick<
   GoogleLoginResponse,
-  'profileObj' | 'tokenObj' | 'getAuthResponse' | 'reloadAuthResponse'
+  'profileObj' | 'tokenObj' | 'reloadAuthResponse' | 'tokenId'
 >;
 
 export interface UserProfile {
@@ -46,9 +46,7 @@ export const reducer = (state: AuthState = initialState, action: AuthAction): Au
         user: {
           ...action.payload.profileObj
         },
-        // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
-        // @ts-ignore
-        token: action.payload.getAuthResponse(true).access_token
+        token: action.payload.tokenId
       };
     case UPDATE_TOKEN:
       return {

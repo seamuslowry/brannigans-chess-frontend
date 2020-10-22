@@ -153,7 +153,7 @@ export const loginResponse: GoogleLoginRequired = {
     scope: '',
     first_issued_at: 0
   },
-  getAuthResponse: jest.fn().mockImplementation(() => ({ access_token: '' })),
+  tokenId: 'test',
   reloadAuthResponse: jest.fn().mockImplementation(() => ({ expires_in: 10 }))
 };
 /* eslint-enable @typescript-eslint/camelcase */

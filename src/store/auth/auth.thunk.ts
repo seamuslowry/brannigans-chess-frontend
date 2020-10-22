@@ -8,7 +8,7 @@ export const login = (payload: GoogleLoginRequired): ThunkResult<void> => dispat
   const refreshToken = async () => {
     const newAuthRes = await payload.reloadAuthResponse();
     refreshTiming = (newAuthRes.expires_in - 5 * 60) * 1000;
-    dispatch(updateToken(newAuthRes.access_token));
+    dispatch(updateToken(newAuthRes.id_token));
 
     setTimeout(refreshToken, refreshTiming);
   };
