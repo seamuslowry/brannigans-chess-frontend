@@ -57,11 +57,14 @@ const promote = (type: PieceType, dto: PieceIdentitifierDto) =>
 
 const createGame = () => chessApi.post<Game>('games/create');
 
+const user = () => chessApi.get<string>('games/user');
+
 export default {
   getGames,
   getPieces,
   getMoves,
   createGame,
   promote,
-  move
+  move,
+  user
 };

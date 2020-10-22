@@ -56,6 +56,12 @@ const GamesList: React.FC = () => {
 
   const handlePageChange = (e: React.ChangeEvent<unknown>, newPage: number) => setPage(newPage);
 
+  // React.useEffect(() => {
+  //   ChessService.user().then(res => {
+  //     console.log(res.data);
+  //   });
+  // }, []);
+
   return (
     <Box display="flex" flexDirection="column" className={classes.root} alignItems="center">
       {loading && <CircularProgress />}
