@@ -23,6 +23,5 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - run: yarn install
       - run: yarn lint
-      - run: yarn test --coverage
-      - run: bash <(curl -s https://codecov.io/bash) -t ${{ secrets.CODECOV_TOKEN }}
+      - run: yarn test
       - run: yarn build
