@@ -17,7 +17,9 @@ import {
   TAKE_PIECES,
   addMove,
   addMoves,
-  ADD_MOVES
+  ADD_MOVES,
+  setGameId,
+  clearMoves
 } from './activeGame';
 import {
   blackRook,
@@ -55,10 +57,28 @@ beforeAll(() => server.listen());
 afterEach(() => server.resetHandlers());
 afterAll(() => server.close());
 
+test('sets the global game id', () => {
+  const result = reducer(undefined, setGameId(1));
+
+  expect(result.id).toEqual(1);
+});
+
+test('clears all moves', () => {
+  const result = reducer(undefined, clearMoves());
+
+  expect(result.moveList).toEqual([]);
+});
+
 test('selects a tile', () => {
   const result = reducer(undefined, selectTile(0, 0, true));
 
   expect(result.tiles[0][0].selected).toBeTruthy();
+});
+
+test('unselects a tile', () => {
+  const result = reducer(undefined, selectTile(0, 0, false));
+
+  expect(result.tiles[0][0].selected).toBeFalsy();
 });
 
 test('sets a tile', () => {

@@ -1,3 +1,4 @@
+import { messageCallbackType } from '@stomp/stompjs';
 import GameStompClient from './gameStompClient';
 import createStompMiddleware, {
   connect,
@@ -30,7 +31,13 @@ jest.mock('./gameStompClient', () => {
   return jest
     .fn()
     .mockImplementation(
-      (url: string, factory: Function, onConnect: VoidFunction, onDisconnect: VoidFunction) => {
+      (
+        url: string,
+        factory: (topic: string) => messageCallbackType,
+        onConnect: VoidFunction,
+        onDisconnect: VoidFunction
+      ) => {
+        factory('test');
         connectHandler = onConnect;
         disconnectHandler = onDisconnect;
         return mockedClient;
@@ -71,6 +78,16 @@ test('notifies the store of disconnection', () => {
       type: STOMP_CLOSED
     })
   );
+});
+
+test('handles an unrelated action', () => {
+  const actionHandler = createStompMiddleware(url)(fakeStore)(fakeStore.dispatch);
+  actionHandler({ type: 'NOT_RELATED' });
+
+  expect(mockedClient.activate).not.toHaveBeenCalled();
+  expect(mockedClient.deactivate).not.toHaveBeenCalled();
+  expect(mockedClient.subscribe).not.toHaveBeenCalled();
+  expect(mockedClient.unsubscribe).not.toHaveBeenCalled();
 });
 
 test('connects the client when asked', () => {

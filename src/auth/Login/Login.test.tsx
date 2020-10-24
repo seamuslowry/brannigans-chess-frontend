@@ -26,7 +26,6 @@ const mockedStore = mockStore(testStore);
 
 jest.mock('react-google-login', () => ({
   useGoogleLogin: jest.fn().mockImplementation((args: UseGoogleLoginProps) => {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
     // @ts-ignore
     successHandler = args.onSuccess;
     failureHandler = args.onFailure;

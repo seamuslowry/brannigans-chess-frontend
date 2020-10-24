@@ -134,7 +134,6 @@ export const whiteQueenSideCastle: Move = {
   id: 2
 };
 
-/* eslint-disable @typescript-eslint/camelcase */
 export const loginResponse: GoogleLoginRequired = {
   profileObj: {
     email: 'test@email.com',
@@ -156,7 +155,6 @@ export const loginResponse: GoogleLoginRequired = {
   tokenId: 'test',
   reloadAuthResponse: jest.fn().mockImplementation(() => ({ expires_in: 10 }))
 };
-/* eslint-enable @typescript-eslint/camelcase */
 
 export const testStore: AppState = {
   activeGame: initialActiveGameState,
