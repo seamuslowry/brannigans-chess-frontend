@@ -20,7 +20,6 @@ const local: Configuration = {
   clientId
 };
 
-// eslint-disable-next-line import/no-mutable-exports
 let config: Configuration;
 
 switch (process.env.REACT_APP_ENV) {

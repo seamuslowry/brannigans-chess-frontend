@@ -1,3 +1,4 @@
+import { messageCallbackType } from '@stomp/stompjs';
 import GameStompClient from './gameStompClient';
 import createStompMiddleware, {
   connect,
@@ -30,7 +31,12 @@ jest.mock('./gameStompClient', () => {
   return jest
     .fn()
     .mockImplementation(
-      (url: string, factory: Function, onConnect: VoidFunction, onDisconnect: VoidFunction) => {
+      (
+        url: string,
+        factory: (topic: string) => messageCallbackType,
+        onConnect: VoidFunction,
+        onDisconnect: VoidFunction
+      ) => {
         connectHandler = onConnect;
         disconnectHandler = onDisconnect;
         return mockedClient;
