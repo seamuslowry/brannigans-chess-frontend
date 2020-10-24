@@ -1,10 +1,10 @@
-# Brannigan's Chess
-
 `main` coverage:
 <img align='center' src="https://codecov.io/gh/seamuslowry/brannigans-chess-frontend/branch/main/graph/badge.svg"/>
 
 `develop-0.0.2` coverage:
 <img align='center' src="https://codecov.io/gh/seamuslowry/brannigans-chess-frontend/branch/develop-0.0.2/graph/badge.svg"/>
+
+# Brannigan's Chess
 
 "In the game of chess, you can never let your adversary see your pieces." -Zapp Brannigan
 
