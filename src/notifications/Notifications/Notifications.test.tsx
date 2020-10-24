@@ -87,3 +87,22 @@ test('closes the alert', async () => {
   // this test will fail if the element is not removed
   await waitForElementToBeRemoved(() => queryAllByRole('alert'));
 });
+
+test('does not close the alert when clicking awai', async () => {
+  const notificationStore = mockStore({
+    ...testStore,
+    notifications: {
+      ...testStore.notifications,
+      pendingAlerts: [successAlertInfo]
+    }
+  });
+
+  const { getAllByRole, getByTitle } = render(
+    <Provider store={notificationStore}>
+      <Notifications />
+    </Provider>
+  );
+
+  fireEvent.click(document);
+  await waitFor(() => getAllByRole('alert'));
+});
