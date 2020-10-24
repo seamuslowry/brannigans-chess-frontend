@@ -54,7 +54,13 @@
     "lint": "eslint src/**/*.{js,jsx,ts,tsx}"
   },
   "jest": {
-    "resetMocks": false
+    "resetMocks": false,
+    "coveragePathIgnorePatterns": [
+      "<rootDir>/src/config.ts",
+      "<rootDir>/src/index.tsx",
+      "<rootDir>/src/theme.ts",
+      "<rootDir>/src/services"
+    ]
   },
   "browserslist": {
     "production": [
