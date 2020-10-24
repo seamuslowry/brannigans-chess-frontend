@@ -59,7 +59,8 @@
       "<rootDir>/src/config.ts",
       "<rootDir>/src/index.tsx",
       "<rootDir>/src/theme.ts",
-      "<rootDir>/src/services"
+      "<rootDir>/src/services",
+      "<rootDir>/src/utils/usePieceSize.ts"
     ]
   },
   "browserslist": {
