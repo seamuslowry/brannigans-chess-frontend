@@ -6,7 +6,7 @@ import { rest } from 'msw';
 import { setupServer } from 'msw/node';
 import thunk from 'redux-thunk';
 import { blackRook, testStore } from '../../utils/testData';
-import { Piece } from '../../services/ChessService';
+import { Piece } from '../../services/ChessService.types';
 import config from '../../config';
 import TakenPieces from './TakenPieces';
 import { CLEAR_TAKEN, TAKE_PIECES } from '../../store/activeGame/activeGame';

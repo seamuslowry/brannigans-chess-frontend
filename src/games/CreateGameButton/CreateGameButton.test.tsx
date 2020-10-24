@@ -10,7 +10,7 @@ import createMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { Provider } from 'react-redux';
 import config from '../../config';
-import { Game } from '../../services/ChessService';
+import { Game } from '../../services/ChessService.types';
 import { emptyGame, testStore } from '../../utils/testData';
 import CreateGameButton from './CreateGameButton';
 import { AppState } from '../../store/store';

@@ -3,9 +3,9 @@ import { AxiosResponse, AxiosError } from 'axios';
 import useServiceCall from './useServiceCall';
 
 test('should be loading before the promise resolves', async () => {
-  const promise = new Promise<AxiosResponse<string>>(() => {});
+  const promiseCall = () => new Promise<AxiosResponse<string>>(() => {});
 
-  const { result } = renderHook(() => useServiceCall(promise));
+  const { result } = renderHook(() => useServiceCall(promiseCall));
 
   expect(result.current.loading).toBe(true);
   expect(result.current.response).toBeUndefined();
@@ -17,11 +17,12 @@ test('should stop loading return result after resolution', async () => {
   let resolve = (a: AxiosResponse<string>) => {
     a.data.toLowerCase();
   };
-  const promise = new Promise<AxiosResponse<string>>(res => {
-    resolve = res;
-  });
+  const promiseCall = () =>
+    new Promise<AxiosResponse<string>>(res => {
+      resolve = res;
+    });
 
-  const { result, waitForNextUpdate } = renderHook(() => useServiceCall(promise));
+  const { result, waitForNextUpdate } = renderHook(() => useServiceCall(promiseCall));
 
   resolve({ data: returnVal } as AxiosResponse<string>);
   await waitForNextUpdate();
@@ -36,11 +37,12 @@ test('should stop loading return error after rejecting', async () => {
   let reject = (a: AxiosError) => {
     a.message.toLowerCase();
   };
-  const promise = new Promise<AxiosResponse<string>>((res, rej) => {
-    reject = rej;
-  });
+  const promiseCall = () =>
+    new Promise<AxiosResponse<string>>((res, rej) => {
+      reject = rej;
+    });
 
-  const { result, waitForNextUpdate } = renderHook(() => useServiceCall(promise));
+  const { result, waitForNextUpdate } = renderHook(() => useServiceCall(promiseCall));
 
   reject({ message: returnVal } as AxiosError);
   await waitForNextUpdate();
