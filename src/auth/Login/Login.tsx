@@ -6,32 +6,18 @@ import config from '../../config';
 import { GoogleLoginRequired, logout } from '../../store/auth/auth';
 import { sendAlert } from '../../store/notifications/notifications';
 import { login } from '../../store/auth/auth.thunk';
+import AuthDialog from '../AuthDialog/AuthDialog';
 
 const Login: React.FC<Omit<ButtonProps, 'onClick'>> = props => {
-  const dispatch = useDispatch();
-
-  const onSuccess = (data: GoogleLoginRequired | GoogleLoginResponseOffline) => {
-    if ('profileObj' in data) {
-      dispatch(login(data));
-    } else {
-      dispatch(sendAlert('Login Failed'));
-    }
-  };
-  const onFailure = () => {
-    dispatch(logout());
-  };
-
-  const { signIn } = useGoogleLogin({
-    clientId: config.clientId,
-    onSuccess,
-    onFailure,
-    isSignedIn: true
-  });
+  const [open, setOpen] = React.useState(false);
 
   return (
-    <Button {...props} onClick={signIn}>
-      Login
-    </Button>
+    <>
+      <Button {...props} onClick={() => setOpen(true)}>
+        Login
+      </Button>
+      <AuthDialog open={open} onClose={() => setOpen(false)} variant="login" />
+    </>
   );
 };
 

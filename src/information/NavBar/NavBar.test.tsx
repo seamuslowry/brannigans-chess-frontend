@@ -41,7 +41,10 @@ test('renders the logout button when logged in', () => {
     ...testStore,
     auth: {
       ...testStore.auth,
-      token: 'logged_in'
+      player: {
+        id: 1,
+        googleId: '123'
+      }
     }
   });
   const { getByText } = render(

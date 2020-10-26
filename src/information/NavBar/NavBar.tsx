@@ -7,11 +7,12 @@ import Logout from '../../auth/Logout/Logout';
 import { AppState } from '../../store/store';
 import { AuthState } from '../../store/auth/auth';
 import Login from '../../auth/Login/Login';
+import Signup from '../../auth/Signup/Signup';
 
 const NavBar: React.FC = () => {
-  const { token } = useSelector<AppState, AuthState>(state => state.auth);
+  const { player } = useSelector<AppState, AuthState>(state => state.auth);
 
-  const AuthButtonComponent = token ? Logout : Login;
+  const authButtonComponents = player ? [Logout] : [Signup, Login];
 
   return (
     <AppBar position="static">
@@ -35,7 +36,9 @@ const NavBar: React.FC = () => {
         <Button component={Link} to="/faq" color="secondary" variant="text">
           FAQ
         </Button>
-        <AuthButtonComponent variant="text" color="secondary" />
+        {authButtonComponents.map(AuthButtonComponent => (
+          <AuthButtonComponent variant="text" color="secondary" />
+        ))}
       </Toolbar>
     </AppBar>
   );

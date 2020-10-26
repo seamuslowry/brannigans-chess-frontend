@@ -18,8 +18,7 @@ export interface Piece {
 }
 
 export interface Player {
-  username: string;
-  email: string;
+  googleId: string;
   id: number;
 }
 
