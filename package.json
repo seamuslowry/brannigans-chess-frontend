@@ -41,6 +41,7 @@
     "eslint": "^7.0.0",
     "eslint-plugin-jest": "^24.0.2",
     "eslint-plugin-react-hooks": "^4.0.4",
+    "eslint-plugin-unused-imports": "^1.0.0",
     "msw": "^0.21.2",
     "prettier": "^2.1.2",
     "react-test-renderer": "^16.13.1",

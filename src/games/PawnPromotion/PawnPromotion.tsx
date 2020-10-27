@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dialog, DialogActions, DialogTitle, IconButton, makeStyles } from '@material-ui/core';
+import { Dialog, DialogActions, DialogTitle, IconButton } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
 import Piece from '../Piece/Piece';
 import { AppState } from '../../store/store';
