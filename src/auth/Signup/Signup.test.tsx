@@ -7,8 +7,8 @@ import createMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { AppState } from '../../store/store';
 import { testStore } from '../../utils/testData';
-import Signup from './Signup';
 import { GoogleLoginRequired } from '../../store/auth/auth';
+import Signup from './Signup';
 
 let successHandler:
   | ((response: GoogleLoginRequired | GoogleLoginResponseOffline) => void)
