@@ -4,7 +4,6 @@ import AuthenticateWithGoogle from '../AuthenticateWithGoogle/AuthenticateWithGo
 
 export interface LoginOptionProps {
   authVariant: AuthVariant;
-  onAuthenticationSuccess: () => void;
 }
 
 export type AuthVariant = 'login' | 'signup';
@@ -28,15 +27,11 @@ const AuthDialog: React.FC<Props> = ({ variant, open, onClose }) => {
   const { title } = variants[variant];
 
   return (
-    <Dialog onClose={onClose} open={open} maxWidth="xs" fullWidth>
+    <Dialog keepMounted onClose={onClose} open={open} maxWidth="xs" fullWidth>
       <DialogTitle>{title}</DialogTitle>
       <DialogContent>
         <Box display="flex" justifyContent="center" pb={2}>
-          <AuthenticateWithGoogle
-            authVariant={variant}
-            fullWidth
-            onAuthenticationSuccess={onClose}
-          />
+          <AuthenticateWithGoogle authVariant={variant} fullWidth />
         </Box>
       </DialogContent>
     </Dialog>

@@ -21,13 +21,17 @@ export interface AuthState {
   user?: UserProfile;
   player?: Player;
   token?: string;
+  refreshHandler?: NodeJS.Timeout;
 }
 
 export const initialState: AuthState = {};
 
 interface Login {
   type: typeof LOGIN;
-  payload: GoogleLoginRequired;
+  payload: {
+    data: GoogleLoginRequired;
+    refreshHandler: NodeJS.Timeout;
+  };
 }
 
 interface UpdatePlayer {
@@ -37,7 +41,10 @@ interface UpdatePlayer {
 
 interface UpdateToken {
   type: typeof UPDATE_TOKEN;
-  payload: string;
+  payload: {
+    token: string;
+    refreshHandler: NodeJS.Timeout;
+  };
 }
 
 interface Logout {
@@ -52,14 +59,16 @@ export const reducer = (state: AuthState = initialState, action: AuthAction): Au
       return {
         ...state,
         user: {
-          ...action.payload.profileObj
+          ...action.payload.data.profileObj
         },
-        token: action.payload.tokenId
+        token: action.payload.data.tokenId,
+        refreshHandler: action.payload.refreshHandler
       };
     case UPDATE_TOKEN:
       return {
         ...state,
-        token: action.payload
+        token: action.payload.token,
+        refreshHandler: action.payload.refreshHandler
       };
     case UPDATE_PLAYER:
       return {
@@ -67,20 +76,27 @@ export const reducer = (state: AuthState = initialState, action: AuthAction): Au
         player: action.payload
       };
     case LOGOUT:
+      state.refreshHandler && clearTimeout(state.refreshHandler);
       return initialState;
     default:
       return state;
   }
 };
 
-export const loginOnce = (payload: GoogleLoginRequired): Login => ({
+export const loginOnce = (data: GoogleLoginRequired, refreshHandler: NodeJS.Timeout): Login => ({
   type: LOGIN,
-  payload
+  payload: {
+    data,
+    refreshHandler
+  }
 });
 
-export const updateToken = (payload: string): UpdateToken => ({
+export const updateToken = (token: string, refreshHandler: NodeJS.Timeout): UpdateToken => ({
   type: UPDATE_TOKEN,
-  payload
+  payload: {
+    token,
+    refreshHandler
+  }
 });
 
 export const updatePlayer = (payload: Player): UpdatePlayer => ({

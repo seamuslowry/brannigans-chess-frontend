@@ -36,8 +36,12 @@ const NavBar: React.FC = () => {
         <Button component={Link} to="/faq" color="secondary" variant="text">
           FAQ
         </Button>
-        {authButtonComponents.map(AuthButtonComponent => (
-          <AuthButtonComponent variant="text" color="secondary" />
+        {authButtonComponents.map((AuthButtonComponent, index) => (
+          <AuthButtonComponent
+            key={`auth-button-${AuthButtonComponent.displayName}-${index}`}
+            variant="text"
+            color="secondary"
+          />
         ))}
       </Toolbar>
     </AppBar>

@@ -1,52 +1,38 @@
 import React from 'react';
 import { Button, ButtonProps } from '@material-ui/core';
-import { AxiosError, AxiosResponse } from 'axios';
 import { GoogleLoginResponseOffline, useGoogleLogin } from 'react-google-login';
 import { useDispatch } from 'react-redux';
 import config from '../../config';
-import { GoogleLoginRequired, logout, updatePlayer } from '../../store/auth/auth';
+import { GoogleLoginRequired, logout } from '../../store/auth/auth';
 import { sendAlert } from '../../store/notifications/notifications';
-import { login } from '../../store/auth/auth.thunk';
+import { googleSignup, googleLogin } from '../../store/auth/auth.thunk';
 import { AuthVariant, LoginOptionProps } from '../AuthDialog/AuthDialog';
-import { Player } from '../../services/ChessService.types';
-import ChessService from '../../services/ChessService';
 
 type VariantValues = {
   [key in AuthVariant]: {
-    serverCheck: () => Promise<AxiosResponse<Player>>;
+    action: typeof googleLogin | typeof googleSignup;
   };
 };
 
 const variants: VariantValues = {
   login: {
-    serverCheck: ChessService.loginWithGoogle
+    action: googleLogin
   },
   signup: {
-    serverCheck: ChessService.signupWithGoogle
+    action: googleSignup
   }
 };
 
 const AuthenticateWithGoogle: React.FC<LoginOptionProps & Omit<ButtonProps, 'onClick'>> = ({
   authVariant,
-  onAuthenticationSuccess,
   ...props
 }) => {
   const dispatch = useDispatch();
-  const { serverCheck } = variants[authVariant];
+  const { action } = variants[authVariant];
 
   const onSuccess = (data: GoogleLoginRequired | GoogleLoginResponseOffline) => {
     if ('profileObj' in data) {
-      dispatch(login(data));
-      serverCheck()
-        .then(res => {
-          dispatch(updatePlayer(res.data));
-          onAuthenticationSuccess();
-        })
-        .catch(e => {
-          console.log(e.response);
-          dispatch(logout());
-          dispatch(sendAlert(`Error: ${e.response.data}`));
-        });
+      dispatch(action(data));
     } else {
       dispatch(sendAlert('Login Failed'));
     }
@@ -55,7 +41,7 @@ const AuthenticateWithGoogle: React.FC<LoginOptionProps & Omit<ButtonProps, 'onC
     dispatch(logout());
   };
 
-  const { signIn } = useGoogleLogin({
+  const { signIn, loaded } = useGoogleLogin({
     clientId: config.clientId,
     onSuccess,
     onFailure,
@@ -63,7 +49,7 @@ const AuthenticateWithGoogle: React.FC<LoginOptionProps & Omit<ButtonProps, 'onC
   });
 
   return (
-    <Button {...props} onClick={signIn}>
+    <Button {...props} onClick={signIn} disabled={!loaded}>
       Continue with Google
     </Button>
   );
