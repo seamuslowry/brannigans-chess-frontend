@@ -7,27 +7,10 @@ import createMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { MemoryRouter } from 'react-router-dom';
 import { AppState } from '../../store/store';
-import { loginResponse, playerOne, testStore } from '../../utils/testData';
+import { loginResponse, testStore } from '../../utils/testData';
 import AuthenticateWithGoogle from './AuthenticateWithGoogle';
 import { GoogleLoginRequired, LOGIN, logout } from '../../store/auth/auth';
 import { SEND_ALERT } from '../../store/notifications/notifications';
-import { rest } from 'msw';
-import { setupServer } from 'msw/node';
-import { Player } from '../../services/ChessService.types';
-import config from '../../config';
-
-const server = setupServer(
-  rest.get(`${config.serviceUrl}/login/google`, (req, res, ctx) => {
-    return res(ctx.json<Player>(playerOne));
-  }),
-  rest.put(`${config.serviceUrl}/signup/google`, (req, res, ctx) => {
-    return res(ctx.json<Player>(playerOne));
-  })
-);
-
-beforeAll(() => server.listen());
-afterEach(() => server.resetHandlers());
-afterAll(() => server.close());
 
 let successHandler:
   | ((response: GoogleLoginRequired | GoogleLoginResponseOffline) => void)
