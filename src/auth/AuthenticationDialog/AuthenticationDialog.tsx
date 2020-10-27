@@ -1,6 +1,15 @@
 import React from 'react';
-import { Box, Dialog, DialogContent, DialogTitle } from '@material-ui/core';
+import {
+  Box,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  IconButton,
+  Typography,
+  useTheme
+} from '@material-ui/core';
 import AuthenticateWithGoogle from '../AuthenticateWithGoogle/AuthenticateWithGoogle';
+import { Close } from '@material-ui/icons';
 
 export interface LoginOptionProps {
   authVariant: AuthenticationVariant;
@@ -25,10 +34,18 @@ interface Props {
 
 const AuthenticationDialog: React.FC<Props> = ({ variant, open, onClose }) => {
   const { title } = variants[variant];
+  const theme = useTheme();
 
   return (
-    <Dialog keepMounted onClose={onClose} open={open} maxWidth="xs" fullWidth>
-      <DialogTitle>{title}</DialogTitle>
+    <Dialog onClose={onClose} open={open} maxWidth="xs" fullWidth>
+      <DialogTitle disableTypography>
+        <Typography variant="h6">{title}</Typography>
+        <Box position="absolute" right={theme.spacing(1)} top={theme.spacing(1)}>
+          <IconButton aria-label="close" onClick={onClose}>
+            <Close />
+          </IconButton>
+        </Box>
+      </DialogTitle>
       <DialogContent>
         <Box display="flex" justifyContent="center" pb={2}>
           <AuthenticateWithGoogle authVariant={variant} fullWidth />

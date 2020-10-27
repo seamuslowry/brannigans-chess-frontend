@@ -9,7 +9,9 @@ import {
   updateToken,
   UPDATE_TOKEN,
   initialState,
-  UPDATE_PLAYER
+  UPDATE_PLAYER,
+  LOGOUT,
+  updatePlayer
 } from './auth';
 import { loginResponse, playerOne, testStore } from '../../utils/testData';
 import { AppState } from '../store';
@@ -55,8 +57,14 @@ test('updates the access token', () => {
   expect(result.token).toEqual(token);
 });
 
+test('updates the player', () => {
+  const result = reducer(undefined, updatePlayer(playerOne));
+
+  expect(result.player).toEqual(playerOne);
+});
+
 test('logs out', () => {
-  const result = reducer(undefined, logout());
+  const result = reducer({ refreshHandler: testTimeout }, logout());
 
   expect(result).toEqual(initialState);
 });
@@ -107,6 +115,60 @@ test('signs up and refreshes', async () => {
   expect(mockedStore.getActions()).toContainEqual(
     expect.objectContaining({
       type: UPDATE_PLAYER
+    })
+  );
+});
+
+test('signs up but fails to get a player', async () => {
+  server.use(
+    rest.put(`${config.serviceUrl}/players/signup/google`, (req, res, ctx) => {
+      return res(ctx.status(500));
+    })
+  );
+
+  await waitFor(() => mockedStore.dispatch(googleSignup(loginResponse)));
+
+  expect(loginResponse.reloadAuthResponse).not.toHaveBeenCalled();
+  expect(mockedStore.getActions()).toContainEqual(
+    expect.objectContaining({
+      type: LOGIN
+    })
+  );
+  expect(mockedStore.getActions()).not.toContainEqual(
+    expect.objectContaining({
+      type: UPDATE_PLAYER
+    })
+  );
+  expect(mockedStore.getActions()).toContainEqual(
+    expect.objectContaining({
+      type: LOGOUT
+    })
+  );
+});
+
+test('logs in but fails to get a player', async () => {
+  server.use(
+    rest.get(`${config.serviceUrl}/players/login/google`, (req, res, ctx) => {
+      return res(ctx.status(500));
+    })
+  );
+
+  await waitFor(() => mockedStore.dispatch(googleLogin(loginResponse)));
+
+  expect(loginResponse.reloadAuthResponse).not.toHaveBeenCalled();
+  expect(mockedStore.getActions()).toContainEqual(
+    expect.objectContaining({
+      type: LOGIN
+    })
+  );
+  expect(mockedStore.getActions()).not.toContainEqual(
+    expect.objectContaining({
+      type: UPDATE_PLAYER
+    })
+  );
+  expect(mockedStore.getActions()).toContainEqual(
+    expect.objectContaining({
+      type: LOGOUT
     })
   );
 });

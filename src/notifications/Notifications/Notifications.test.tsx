@@ -88,7 +88,7 @@ test('closes the alert', async () => {
   await waitForElementToBeRemoved(() => queryAllByRole('alert'));
 });
 
-test('does not close the alert when clicking awai', async () => {
+test('does not close the alert when clicking away', async () => {
   const notificationStore = mockStore({
     ...testStore,
     notifications: {
@@ -97,7 +97,7 @@ test('does not close the alert when clicking awai', async () => {
     }
   });
 
-  const { getAllByRole, getByTitle } = render(
+  const { getAllByRole } = render(
     <Provider store={notificationStore}>
       <Notifications />
     </Provider>
