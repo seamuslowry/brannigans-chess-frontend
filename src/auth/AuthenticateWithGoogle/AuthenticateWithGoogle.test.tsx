@@ -9,11 +9,11 @@ import { MemoryRouter } from 'react-router-dom';
 import { AppState } from '../../store/store';
 import { loginResponse, playerOne, testStore } from '../../utils/testData';
 import AuthenticateWithGoogle from './AuthenticateWithGoogle';
-import { GoogleLoginRequired, loginOnce, logout } from '../../store/auth/auth';
+import { GoogleLoginRequired, LOGIN, logout } from '../../store/auth/auth';
 import { SEND_ALERT } from '../../store/notifications/notifications';
 import { rest } from 'msw';
 import { setupServer } from 'msw/node';
-import { Piece, Move, Player } from '../../services/ChessService.types';
+import { Player } from '../../services/ChessService.types';
 import config from '../../config';
 
 const server = setupServer(
@@ -35,7 +35,8 @@ let successHandler:
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 let failureHandler: ((e?: any) => void) | undefined;
 const mockedReturn = {
-  signIn: jest.fn()
+  signIn: jest.fn(),
+  loaded: true
 };
 
 const mockStore = createMockStore<AppState, ActionCreator<AnyAction>>([thunk]);
@@ -57,7 +58,19 @@ beforeEach(() => jest.clearAllMocks());
 test('attempts to log in on click', () => {
   const { getByText } = render(
     <Provider store={mockedStore}>
-      <AuthenticateWithGoogle authVariant="login" onAuthenticationSuccess={jest.fn()} />
+      <AuthenticateWithGoogle authVariant="login" />
+    </Provider>
+  );
+  const button = getByText('Continue with Google');
+  fireEvent.click(button);
+
+  expect(mockedReturn.signIn).toHaveBeenCalled();
+});
+
+test('attempts to sign up on click', () => {
+  const { getByText } = render(
+    <Provider store={mockedStore}>
+      <AuthenticateWithGoogle authVariant="signup" />
     </Provider>
   );
   const button = getByText('Continue with Google');
@@ -70,7 +83,7 @@ test('successfully logs in when not offline', () => {
   render(
     <MemoryRouter>
       <Provider store={mockedStore}>
-        <AuthenticateWithGoogle authVariant="login" onAuthenticationSuccess={jest.fn()} />
+        <AuthenticateWithGoogle authVariant="login" />
       </Provider>
     </MemoryRouter>
   );
@@ -78,7 +91,9 @@ test('successfully logs in when not offline', () => {
   successHandler && successHandler(loginResponse);
 
   expect(mockedStore.getActions()).toContainEqual(
-    expect.objectContaining(loginOnce(loginResponse))
+    expect.objectContaining({
+      type: LOGIN
+    })
   );
 });
 
@@ -86,7 +101,7 @@ test('attempts to log in when offline', () => {
   render(
     <MemoryRouter>
       <Provider store={mockedStore}>
-        <AuthenticateWithGoogle authVariant="login" onAuthenticationSuccess={jest.fn()} />
+        <AuthenticateWithGoogle authVariant="login" />
       </Provider>
     </MemoryRouter>
   );
@@ -104,7 +119,7 @@ test('fails to logs in', () => {
   render(
     <MemoryRouter>
       <Provider store={mockedStore}>
-        <AuthenticateWithGoogle authVariant="login" onAuthenticationSuccess={jest.fn()} />
+        <AuthenticateWithGoogle authVariant="login" />
       </Provider>
     </MemoryRouter>
   );
