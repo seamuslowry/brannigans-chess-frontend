@@ -3,13 +3,13 @@ import { Box, Dialog, DialogContent, DialogTitle } from '@material-ui/core';
 import AuthenticateWithGoogle from '../AuthenticateWithGoogle/AuthenticateWithGoogle';
 
 export interface LoginOptionProps {
-  authVariant: AuthVariant;
+  authVariant: AuthenticationVariant;
 }
 
-export type AuthVariant = 'login' | 'signup';
+export type AuthenticationVariant = 'login' | 'signup';
 
 type VariantValues = {
-  [key in AuthVariant]: { title: string };
+  [key in AuthenticationVariant]: { title: string };
 };
 
 const variants: VariantValues = {
@@ -18,12 +18,12 @@ const variants: VariantValues = {
 };
 
 interface Props {
-  variant: AuthVariant;
+  variant: AuthenticationVariant;
   open: boolean;
   onClose: VoidFunction;
 }
 
-const AuthDialog: React.FC<Props> = ({ variant, open, onClose }) => {
+const AuthenticationDialog: React.FC<Props> = ({ variant, open, onClose }) => {
   const { title } = variants[variant];
 
   return (
@@ -38,4 +38,4 @@ const AuthDialog: React.FC<Props> = ({ variant, open, onClose }) => {
   );
 };
 
-export default AuthDialog;
+export default AuthenticationDialog;

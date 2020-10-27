@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button, ButtonProps } from '@material-ui/core';
-import AuthDialog from '../AuthDialog/AuthDialog';
+import AuthenticationDialog from '../AuthenticationDialog/AuthenticationDialog';
 
 const Signup: React.FC<Omit<ButtonProps, 'onClick'>> = props => {
   const [open, setOpen] = React.useState(false);
@@ -10,7 +10,7 @@ const Signup: React.FC<Omit<ButtonProps, 'onClick'>> = props => {
       <Button {...props} onClick={() => setOpen(true)}>
         Signup
       </Button>
-      <AuthDialog open={open} onClose={() => setOpen(false)} variant="signup" />
+      <AuthenticationDialog open={open} onClose={() => setOpen(false)} variant="signup" />
     </>
   );
 };

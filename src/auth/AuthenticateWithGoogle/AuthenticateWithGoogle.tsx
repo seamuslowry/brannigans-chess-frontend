@@ -6,10 +6,13 @@ import config from '../../config';
 import { GoogleLoginRequired, logout } from '../../store/auth/auth';
 import { sendAlert } from '../../store/notifications/notifications';
 import { googleSignup, googleLogin } from '../../store/auth/auth.thunk';
-import { AuthVariant, LoginOptionProps } from '../AuthDialog/AuthDialog';
+import {
+  AuthenticationVariant,
+  LoginOptionProps
+} from '../AuthenticationDialog/AuthenticationDialog';
 
 type VariantValues = {
-  [key in AuthVariant]: {
+  [key in AuthenticationVariant]: {
     action: typeof googleLogin | typeof googleSignup;
   };
 };

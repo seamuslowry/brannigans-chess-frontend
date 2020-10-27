@@ -8,7 +8,7 @@ import thunk from 'redux-thunk';
 import { testStore, whiteMove } from '../../utils/testData';
 import { Move } from '../../services/ChessService.types';
 import config from '../../config';
-import AuthDialog from './AuthDialog';
+import AuthenticationDialog from './AuthenticationDialog';
 import { SET_TILE } from '../../store/activeGame/activeGame';
 import { immutableUpdate } from '../../utils/arrayHelpers';
 import { SEND_ALERT } from '../../store/notifications/notifications';
@@ -37,7 +37,7 @@ afterAll(() => server.close());
 test('opens as signup', async () => {
   const { getByText } = render(
     <Provider store={mockedStore}>
-      <AuthDialog variant="signup" open onClose={jest.fn()} />
+      <AuthenticationDialog variant="signup" open onClose={jest.fn()} />
     </Provider>
   );
 
@@ -47,7 +47,7 @@ test('opens as signup', async () => {
 test('opens as login', async () => {
   const { getByText } = render(
     <Provider store={mockedStore}>
-      <AuthDialog variant="login" open onClose={jest.fn()} />
+      <AuthenticationDialog variant="login" open onClose={jest.fn()} />
     </Provider>
   );
 
