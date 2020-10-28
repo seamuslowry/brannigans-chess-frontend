@@ -34,6 +34,7 @@ const AuthenticateWithGoogle: React.FC<LoginOptionProps & Omit<ButtonProps, 'onC
   const { action } = variants[authVariant];
 
   const onSuccess = (data: GoogleLoginRequired | GoogleLoginResponseOffline) => {
+    console.log(data); // with Authorization Code flow ('code' and 'offline', only has a `code` property that should be sent to the server)
     if ('profileObj' in data) {
       dispatch(action(data));
     } else {
@@ -46,6 +47,8 @@ const AuthenticateWithGoogle: React.FC<LoginOptionProps & Omit<ButtonProps, 'onC
 
   const { signIn, loaded } = useGoogleLogin({
     clientId: config.clientId,
+    responseType: 'code',
+    accessType: 'offline',
     onSuccess,
     onFailure,
     isSignedIn: authVariant === 'login'
