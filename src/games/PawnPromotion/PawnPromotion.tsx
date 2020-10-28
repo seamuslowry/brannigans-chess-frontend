@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dialog, DialogActions, DialogTitle, IconButton, makeStyles } from '@material-ui/core';
+import { Dialog, DialogActions, DialogTitle, IconButton } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
 import Piece from '../Piece/Piece';
 import { AppState } from '../../store/store';
@@ -7,12 +7,6 @@ import { PieceColor, PieceType } from '../../services/ChessService.types';
 import { setTile, TileInfo } from '../../store/activeGame/activeGame';
 import { sendAlert } from '../../store/notifications/notifications';
 import ChessService from '../../services/ChessService';
-
-const useStyles = makeStyles({
-  center: {
-    textAlign: 'center'
-  }
-});
 
 type VariantValues = {
   [key in PieceColor]: { row: number };
@@ -32,7 +26,6 @@ const PawnPromotion: React.FC<Props> = ({ color, gameId }) => {
   const { row } = variants[color];
   const [open, setOpen] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
-  const classes = useStyles();
   const dispatch = useDispatch();
 
   const tiles = useSelector<AppState, TileInfo[][]>(state => state.activeGame.tiles);
@@ -68,7 +61,7 @@ const PawnPromotion: React.FC<Props> = ({ color, gameId }) => {
   return (
     <>
       <Dialog open={open}>
-        <DialogTitle className={classes.center}>Pawn Promotion</DialogTitle>
+        <DialogTitle>Pawn Promotion</DialogTitle>
         <DialogActions>
           <IconButton disabled={loading} onClick={handleSelection('QUEEN')}>
             <Piece type="QUEEN" color={color} />

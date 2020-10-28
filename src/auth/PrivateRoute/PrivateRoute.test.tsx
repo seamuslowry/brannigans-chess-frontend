@@ -7,7 +7,7 @@ import { MemoryRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import PrivateRoute from './PrivateRoute';
 import { AppState } from '../../store/store';
-import { testStore } from '../../utils/testData';
+import { playerOne, testStore } from '../../utils/testData';
 
 const mockStore = createMockStore<AppState, ActionCreator<AnyAction>>([thunk]);
 const mockedStore = mockStore(testStore);
@@ -29,7 +29,7 @@ test('renders the route when logged in', () => {
     ...testStore,
     auth: {
       ...testStore.auth,
-      token: 'logged_is'
+      player: playerOne
     }
   });
   const path = '/test';

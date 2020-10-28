@@ -8,7 +8,7 @@ import thunk from 'redux-thunk';
 import { AppState } from '../../store/store';
 import { testStore } from '../../utils/testData';
 import { GoogleLoginRequired } from '../../store/auth/auth';
-import Login from './Login';
+import Signup from './Signup';
 
 let successHandler:
   | ((response: GoogleLoginRequired | GoogleLoginResponseOffline) => void)
@@ -40,7 +40,7 @@ test('opens the authentication dialog', async () => {
   const id = 'test-id';
   const { getByTestId, queryByRole } = render(
     <Provider store={mockedStore}>
-      <Login data-testid={id} />
+      <Signup data-testid={id} />
     </Provider>
   );
 
@@ -57,7 +57,7 @@ test('closes the authentication dialog', async () => {
 
   const { getByTestId, queryByRole, getByLabelText } = render(
     <Provider store={mockedStore}>
-      <Login data-testid={id} />
+      <Signup data-testid={id} />
     </Provider>
   );
 

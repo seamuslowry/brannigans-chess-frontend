@@ -20,14 +20,12 @@ export const errorAlertInfo: AlertInfo = {
 
 export const playerOne: Player = {
   id: 1,
-  username: 'playerOne',
-  email: 'test@test.com'
+  googleId: 'playerOne'
 };
 
 export const playerTwo: Player = {
   id: 2,
-  username: 'playerTwo',
-  email: 'test2@test.com'
+  googleId: 'playerTwo'
 };
 
 export const makePiece = (type: PieceType, color: PieceColor): Piece => ({

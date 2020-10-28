@@ -5,7 +5,7 @@ import { Route, RouteProps } from 'react-router-dom';
 import { AppState } from '../../store/store';
 
 const PrivateRoute: React.FC<RouteProps> = props => {
-  const loggedIn = useSelector<AppState, boolean>(state => !!state.auth.token);
+  const loggedIn = useSelector<AppState, boolean>(state => !!state.auth.player);
 
   return loggedIn ? <Route {...props} /> : <Typography>Not available until after login</Typography>;
 };

@@ -8,7 +8,8 @@ import {
   PieceColor,
   PieceIdentitifierDto,
   PieceStatus,
-  PieceType
+  PieceType,
+  Player
 } from './ChessService.types';
 
 const getGames = (active?: boolean, pageRequest: Partial<PageRequest> = {}) => {
@@ -57,11 +58,16 @@ const promote = (type: PieceType, dto: PieceIdentitifierDto) =>
 
 const createGame = () => chessApi.post<Game>('games/create');
 
+const signupWithGoogle = () => chessApi.put<Player>('players/signup/google');
+const loginWithGoogle = () => chessApi.get<Player>('players/login/google');
+
 export default {
   getGames,
   getPieces,
   getMoves,
   createGame,
   promote,
-  move
+  move,
+  signupWithGoogle,
+  loginWithGoogle
 };

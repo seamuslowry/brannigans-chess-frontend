@@ -14,6 +14,13 @@ const theme = createMuiTheme({
     secondary: {
       main: '#dcb153'
     }
+  },
+  overrides: {
+    MuiDialogTitle: {
+      root: {
+        textAlign: 'center'
+      }
+    }
   }
 });
 
