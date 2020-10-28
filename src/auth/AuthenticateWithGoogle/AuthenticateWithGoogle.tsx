@@ -35,7 +35,12 @@ const AuthenticateWithGoogle: React.FC<LoginOptionProps & Omit<ButtonProps, 'onC
 
   const onSuccess = (data: GoogleLoginRequired | GoogleLoginResponseOffline) => {
     console.log(data); // with Authorization Code flow ('code' and 'offline', only has a `code` property that should be sent to the server)
+    if ('code' in data) {
+      // new check for offline
+      console.log(data.code);
+    }
     if ('profileObj' in data) {
+      // shouldn't use this anymore probably
       dispatch(action(data));
     } else {
       dispatch(sendAlert('Login Failed'));
