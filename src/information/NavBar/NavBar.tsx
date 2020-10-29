@@ -1,18 +1,43 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
 import { AppBar, Box, Button, IconButton, Toolbar, Typography } from '@material-ui/core';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { GitHub } from '@material-ui/icons';
 import Logout from '../../auth/Logout/Logout';
-import { AppState } from '../../store/store';
-import { AuthState } from '../../store/auth/auth';
 import Login from '../../auth/Login/Login';
-import Signup from '../../auth/Signup/Signup';
+import { useAuth0 } from '@auth0/auth0-react';
+import { updatePlayer, updateToken } from '../../store/auth/auth';
+import { AppState } from '../../store/store';
+import { playerOne } from '../../utils/testData';
 
 const NavBar: React.FC = () => {
-  const { player } = useSelector<AppState, AuthState>(state => state.auth);
+  const { isAuthenticated, getAccessTokenSilently } = useAuth0(); // make new hook that checks for both player and isAuthenticated
+  const accessToken = useSelector<AppState, string | undefined>(state => state.auth.token);
 
-  const authButtonComponents = player ? [Logout] : [Signup, Login];
+  const dispatch = useDispatch();
+
+  const AuthButtonComponent = isAuthenticated ? Logout : Login;
+
+  React.useEffect(() => {
+    if (!isAuthenticated) return;
+    const getToken = async () => {
+      const token = await getAccessTokenSilently();
+      console.log(token);
+      dispatch(updateToken(token));
+    };
+
+    getToken();
+    const interval = setInterval(getToken, 60 * 60 * 1000);
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, [isAuthenticated, dispatch, getAccessTokenSilently]);
+
+  React.useEffect(() => {
+    // ChessService.getPlayer (a new endpoint that gets or creates and gets)
+    accessToken && dispatch(updatePlayer(playerOne)); // update to use player gotten from endpoint
+  }, [accessToken, dispatch]);
 
   return (
     <AppBar position="static">
@@ -36,13 +61,7 @@ const NavBar: React.FC = () => {
         <Button component={Link} to="/faq" color="secondary" variant="text">
           FAQ
         </Button>
-        {authButtonComponents.map((AuthButtonComponent, index) => (
-          <AuthButtonComponent
-            key={`auth-button-${AuthButtonComponent.displayName}-${index}`}
-            variant="text"
-            color="secondary"
-          />
-        ))}
+        <AuthButtonComponent variant="text" color="secondary" />
       </Toolbar>
     </AppBar>
   );

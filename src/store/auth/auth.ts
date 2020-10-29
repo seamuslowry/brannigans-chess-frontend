@@ -6,10 +6,7 @@ export const UPDATE_TOKEN = 'chess/auth/UPDATE_TOKEN';
 export const UPDATE_PLAYER = 'chess/auth/UPDATE_PLAYER';
 export const LOGOUT = 'chess/auth/LOGOUT';
 
-export type GoogleLoginRequired = Pick<
-  GoogleLoginResponse,
-  'profileObj' | 'tokenObj' | 'reloadAuthResponse' | 'tokenId'
->;
+export type GoogleLoginRequired = Pick<GoogleLoginResponse, 'profileObj' | 'tokenObj' | 'tokenId'>;
 
 export interface UserProfile {
   imageUrl: string;
@@ -41,10 +38,7 @@ interface UpdatePlayer {
 
 interface UpdateToken {
   type: typeof UPDATE_TOKEN;
-  payload: {
-    token: string;
-    refreshHandler: NodeJS.Timeout;
-  };
+  payload: string;
 }
 
 interface Logout {
@@ -67,8 +61,7 @@ export const reducer = (state: AuthState = initialState, action: AuthAction): Au
     case UPDATE_TOKEN:
       return {
         ...state,
-        token: action.payload.token,
-        refreshHandler: action.payload.refreshHandler
+        token: action.payload
       };
     case UPDATE_PLAYER:
       return {
@@ -91,12 +84,9 @@ export const loginOnce = (data: GoogleLoginRequired, refreshHandler: NodeJS.Time
   }
 });
 
-export const updateToken = (token: string, refreshHandler: NodeJS.Timeout): UpdateToken => ({
+export const updateToken = (payload: string): UpdateToken => ({
   type: UPDATE_TOKEN,
-  payload: {
-    token,
-    refreshHandler
-  }
+  payload
 });
 
 export const updatePlayer = (payload: Player): UpdatePlayer => ({

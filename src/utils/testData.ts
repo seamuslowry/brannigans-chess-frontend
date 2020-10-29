@@ -150,8 +150,7 @@ export const loginResponse: GoogleLoginRequired = {
     scope: '',
     first_issued_at: 0
   },
-  tokenId: 'test',
-  reloadAuthResponse: jest.fn().mockImplementation(() => ({ expires_in: 10 }))
+  tokenId: 'test'
 };
 
 export const testStore: AppState = {
