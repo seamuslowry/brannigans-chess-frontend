@@ -41,7 +41,7 @@ beforeEach(() => jest.clearAllMocks());
 test('attempts to log in on click', () => {
   const { getByText } = render(
     <Provider store={mockedStore}>
-      <AuthenticateWithGoogle authVariant="login" />
+      <AuthenticateWithGoogle authVariant="login">Continue with Google</AuthenticateWithGoogle>
     </Provider>
   );
   const button = getByText('Continue with Google');
@@ -53,7 +53,7 @@ test('attempts to log in on click', () => {
 test('attempts to sign up on click', () => {
   const { getByText } = render(
     <Provider store={mockedStore}>
-      <AuthenticateWithGoogle authVariant="signup" />
+      <AuthenticateWithGoogle authVariant="signup">Continue with Google</AuthenticateWithGoogle>
     </Provider>
   );
   const button = getByText('Continue with Google');
@@ -66,7 +66,7 @@ test('successfully logs in when not offline', () => {
   render(
     <MemoryRouter>
       <Provider store={mockedStore}>
-        <AuthenticateWithGoogle authVariant="login" />
+        <AuthenticateWithGoogle authVariant="login">Continue with Google</AuthenticateWithGoogle>
       </Provider>
     </MemoryRouter>
   );
@@ -84,7 +84,7 @@ test('attempts to log in when offline', () => {
   render(
     <MemoryRouter>
       <Provider store={mockedStore}>
-        <AuthenticateWithGoogle authVariant="login" />
+        <AuthenticateWithGoogle authVariant="login">Continue with Google</AuthenticateWithGoogle>
       </Provider>
     </MemoryRouter>
   );
@@ -102,7 +102,7 @@ test('fails to logs in', () => {
   render(
     <MemoryRouter>
       <Provider store={mockedStore}>
-        <AuthenticateWithGoogle authVariant="login" />
+        <AuthenticateWithGoogle authVariant="login">Continue with Google</AuthenticateWithGoogle>
       </Provider>
     </MemoryRouter>
   );

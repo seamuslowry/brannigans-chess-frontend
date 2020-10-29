@@ -6,10 +6,12 @@ import config from '../../config';
 import { GoogleLoginRequired, logout } from '../../store/auth/auth';
 import { sendAlert } from '../../store/notifications/notifications';
 import { googleSignup, googleLogin } from '../../store/auth/auth.thunk';
-import {
-  AuthenticationVariant,
-  LoginOptionProps
-} from '../AuthenticationDialog/AuthenticationDialog';
+
+interface LoginOptionProps {
+  authVariant: AuthenticationVariant;
+}
+
+type AuthenticationVariant = 'login' | 'signup';
 
 type VariantValues = {
   [key in AuthenticationVariant]: {
@@ -34,13 +36,7 @@ const AuthenticateWithGoogle: React.FC<LoginOptionProps & Omit<ButtonProps, 'onC
   const { action } = variants[authVariant];
 
   const onSuccess = (data: GoogleLoginRequired | GoogleLoginResponseOffline) => {
-    console.log(data); // with Authorization Code flow ('code' and 'offline', only has a `code` property that should be sent to the server)
-    if ('code' in data) {
-      // new check for offline
-      console.log(data.code);
-    }
     if ('profileObj' in data) {
-      // shouldn't use this anymore probably
       dispatch(action(data));
     } else {
       dispatch(sendAlert('Login Failed'));
@@ -52,18 +48,12 @@ const AuthenticateWithGoogle: React.FC<LoginOptionProps & Omit<ButtonProps, 'onC
 
   const { signIn, loaded } = useGoogleLogin({
     clientId: config.clientId,
-    responseType: 'code',
-    accessType: 'offline',
     onSuccess,
     onFailure,
     isSignedIn: authVariant === 'login'
   });
 
-  return (
-    <Button {...props} onClick={signIn} disabled={!loaded}>
-      Continue with Google
-    </Button>
-  );
+  return <Button {...props} onClick={signIn} disabled={!loaded} />;
 };
 
 export default AuthenticateWithGoogle;
