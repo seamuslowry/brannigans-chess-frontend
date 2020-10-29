@@ -8,21 +8,23 @@ import Login from '../../auth/Login/Login';
 import { useAuth0 } from '@auth0/auth0-react';
 import { updatePlayer, updateToken } from '../../store/auth/auth';
 import { AppState } from '../../store/store';
-import { playerOne } from '../../utils/testData';
+import ChessService from '../../services/ChessService';
+import { sendAlert } from '../../store/notifications/notifications';
+import useLoggedIn from '../../utils/useLoggedIn';
 
 const NavBar: React.FC = () => {
   const { isAuthenticated, getAccessTokenSilently } = useAuth0(); // make new hook that checks for both player and isAuthenticated
   const accessToken = useSelector<AppState, string | undefined>(state => state.auth.token);
+  const loggedIn = useLoggedIn();
 
   const dispatch = useDispatch();
 
-  const AuthButtonComponent = isAuthenticated ? Logout : Login;
+  const AuthButtonComponent = loggedIn ? Logout : Login;
 
   React.useEffect(() => {
     if (!isAuthenticated) return;
     const getToken = async () => {
       const token = await getAccessTokenSilently();
-      console.log(token);
       dispatch(updateToken(token));
     };
 
@@ -35,8 +37,14 @@ const NavBar: React.FC = () => {
   }, [isAuthenticated, dispatch, getAccessTokenSilently]);
 
   React.useEffect(() => {
-    // ChessService.getPlayer (a new endpoint that gets or creates and gets)
-    accessToken && dispatch(updatePlayer(playerOne)); // update to use player gotten from endpoint
+    accessToken &&
+      ChessService.authenticatePlayer()
+        .then(res => {
+          dispatch(updatePlayer(res.data));
+        })
+        .catch(e => {
+          dispatch(sendAlert(`Error finding Player: ${e.message}`));
+        });
   }, [accessToken, dispatch]);
 
   return (

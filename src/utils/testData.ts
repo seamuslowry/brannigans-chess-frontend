@@ -1,6 +1,6 @@
 import { Game, Move, Piece, PieceColor, PieceType, Player } from '../services/ChessService.types';
 import { initialState as initialActiveGameState } from '../store/activeGame/activeGame';
-import { GoogleLoginRequired, initialState as initialAuthState } from '../store/auth/auth';
+import { initialState as initialAuthState } from '../store/auth/auth';
 import {
   initialState as initialNotificationsState,
   AlertInfo
@@ -130,27 +130,6 @@ export const whiteQueenSideCastle: Move = {
   dstCol: 2,
   moveType: 'QUEEN_SIDE_CASTLE',
   id: 2
-};
-
-export const loginResponse: GoogleLoginRequired = {
-  profileObj: {
-    email: 'test@email.com',
-    givenName: 'given',
-    familyName: 'familyName',
-    googleId: 'id',
-    imageUrl: '',
-    name: 'name'
-  },
-  tokenObj: {
-    access_token: '',
-    login_hint: '',
-    id_token: '',
-    expires_at: 0,
-    expires_in: 10,
-    scope: '',
-    first_issued_at: 0
-  },
-  tokenId: 'test'
 };
 
 export const testStore: AppState = {

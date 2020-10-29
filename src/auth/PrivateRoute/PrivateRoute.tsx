@@ -1,16 +1,12 @@
-import { useAuth0 } from '@auth0/auth0-react';
-import { Typography } from '@material-ui/core';
 import React from 'react';
+import { Typography } from '@material-ui/core';
 import { Route, RouteProps } from 'react-router-dom';
+import useLoggedIn from '../../utils/useLoggedIn';
 
 const PrivateRoute: React.FC<RouteProps> = props => {
-  const { isAuthenticated } = useAuth0();
+  const loggedIn = useLoggedIn();
 
-  return isAuthenticated ? (
-    <Route {...props} />
-  ) : (
-    <Typography>Not available until after login</Typography>
-  );
+  return loggedIn ? <Route {...props} /> : <Typography>Not available until after login</Typography>;
 };
 
 export default PrivateRoute;

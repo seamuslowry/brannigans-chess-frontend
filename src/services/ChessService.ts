@@ -58,8 +58,7 @@ const promote = (type: PieceType, dto: PieceIdentitifierDto) =>
 
 const createGame = () => chessApi.post<Game>('games/create');
 
-const signupWithGoogle = () => chessApi.put<Player>('players/signup/google');
-const loginWithGoogle = () => chessApi.get<Player>('players/login/google');
+const authenticatePlayer = () => chessApi.get<Player>('players/auth');
 
 export default {
   getGames,
@@ -68,6 +67,5 @@ export default {
   createGame,
   promote,
   move,
-  signupWithGoogle,
-  loginWithGoogle
+  authenticatePlayer
 };
