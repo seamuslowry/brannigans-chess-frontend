@@ -1,3 +1,4 @@
+import { Auth0ContextInterface } from '@auth0/auth0-react';
 import { Game, Move, Piece, PieceColor, PieceType, Player } from '../services/ChessService.types';
 import { initialState as initialActiveGameState } from '../store/activeGame/activeGame';
 import { initialState as initialAuthState } from '../store/auth/auth';
@@ -130,6 +131,26 @@ export const whiteQueenSideCastle: Move = {
   dstCol: 2,
   moveType: 'QUEEN_SIDE_CASTLE',
   id: 2
+};
+
+export const unauthenticatedAuth0: Auth0ContextInterface = {
+  isAuthenticated: false,
+  getAccessTokenSilently: jest.fn(),
+  getAccessTokenWithPopup: jest.fn(),
+  getIdTokenClaims: jest.fn(),
+  loginWithPopup: jest.fn(),
+  loginWithRedirect: jest.fn(),
+  logout: jest.fn(),
+  isLoading: false,
+  user: {
+    name: 'test name',
+    picture: 'test-picture.jpg'
+  }
+};
+
+export const authenticatedAuth0 = {
+  ...unauthenticatedAuth0,
+  isAuthenticated: true
 };
 
 export const testStore: AppState = {

@@ -14,7 +14,6 @@ ReactDOM.render(
       clientId="ze6Tou8TRTMzdxpXHqUIZg27GviJqYD7"
       redirectUri={window.location.origin}
       audience="https://branniganschess.com"
-      scope="read:current_user" // TODO is this necessary
       useRefreshTokens
     >
       <Provider store={store}>

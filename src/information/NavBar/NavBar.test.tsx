@@ -7,7 +7,18 @@ import createMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { AppState } from '../../store/store';
 import NavBar from './NavBar';
-import { testStore } from '../../utils/testData';
+import {
+  playerOne,
+  testStore,
+  unauthenticatedAuth0,
+  authenticatedAuth0
+} from '../../utils/testData';
+import { useAuth0 } from '@auth0/auth0-react';
+
+jest.mock('@auth0/auth0-react');
+const mockedAuth0 = useAuth0 as jest.MockedFunction<typeof useAuth0>;
+
+beforeEach(() => mockedAuth0.mockImplementation(() => unauthenticatedAuth0));
 
 const mockStore = createMockStore<AppState, ActionCreator<AnyAction>>([thunk]);
 const mockedStore = mockStore(testStore);
@@ -37,14 +48,12 @@ test('renders the login button when not logged in', () => {
 });
 
 test('renders the logout button when logged in', () => {
+  mockedAuth0.mockImplementation(() => authenticatedAuth0);
   const loggedInStore = mockStore({
     ...testStore,
     auth: {
       ...testStore.auth,
-      player: {
-        id: 1,
-        googleId: '123'
-      }
+      player: playerOne
     }
   });
   const { getByText } = render(
