@@ -1,15 +1,5 @@
-import { ActionCreator, AnyAction } from 'redux';
-import thunk from 'redux-thunk';
-import createMockStore from 'redux-mock-store';
 import { reducer, updateToken, updatePlayer } from './auth';
-import { playerOne, testStore } from '../../utils/testData';
-import { AppState } from '../store';
-
-const mockStore = createMockStore<AppState, ActionCreator<AnyAction>>([thunk]);
-const mockedStore = mockStore(testStore);
-
-beforeEach(() => mockedStore.clearActions());
-beforeEach(() => jest.clearAllMocks());
+import { playerOne } from '../../utils/testData';
 
 test('updates the access token', () => {
   const token = 'new-token';
