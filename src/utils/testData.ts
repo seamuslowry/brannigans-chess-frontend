@@ -21,12 +21,12 @@ export const errorAlertInfo: AlertInfo = {
 
 export const playerOne: Player = {
   id: 1,
-  googleId: 'playerOne'
+  authId: 'playerOne'
 };
 
 export const playerTwo: Player = {
   id: 2,
-  googleId: 'playerTwo'
+  authId: 'playerTwo'
 };
 
 export const makePiece = (type: PieceType, color: PieceColor): Piece => ({
