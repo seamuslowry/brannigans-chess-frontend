@@ -5,12 +5,14 @@ import createStompMiddleware, {
   disconnect,
   STOMP_CLOSED,
   STOMP_CONNECTED,
+  STOMP_MESSAGE,
   subscribe,
   unsubscribe
 } from './stomp';
 
 let connectHandler: VoidFunction;
 let disconnectHandler: VoidFunction;
+let messageHandler: messageCallbackType;
 
 const fakeStore = {
   dispatch: jest.fn(),
@@ -37,7 +39,7 @@ jest.mock('./gameStompClient', () => {
         onConnect: VoidFunction,
         onDisconnect: VoidFunction
       ) => {
-        factory('test');
+        messageHandler = factory('test');
         connectHandler = onConnect;
         disconnectHandler = onDisconnect;
         return mockedClient;
@@ -76,6 +78,27 @@ test('notifies the store of disconnection', () => {
   expect(fakeStore.dispatch).toHaveBeenCalledWith(
     expect.objectContaining({
       type: STOMP_CLOSED
+    })
+  );
+});
+
+test('notifies the store of a message', () => {
+  createStompMiddleware(url);
+
+  messageHandler &&
+    messageHandler({
+      ack: jest.fn(),
+      nack: jest.fn(),
+      command: '',
+      isBinaryBody: false,
+      body: 'message',
+      headers: {},
+      binaryBody: {} as Uint8Array
+    });
+
+  expect(fakeStore.dispatch).toHaveBeenCalledWith(
+    expect.objectContaining({
+      type: STOMP_MESSAGE
     })
   );
 });

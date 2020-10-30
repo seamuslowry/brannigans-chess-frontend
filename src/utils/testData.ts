@@ -1,6 +1,7 @@
+import { Auth0ContextInterface } from '@auth0/auth0-react';
 import { Game, Move, Piece, PieceColor, PieceType, Player } from '../services/ChessService.types';
 import { initialState as initialActiveGameState } from '../store/activeGame/activeGame';
-import { GoogleLoginRequired, initialState as initialAuthState } from '../store/auth/auth';
+import { initialState as initialAuthState } from '../store/auth/auth';
 import {
   initialState as initialNotificationsState,
   AlertInfo
@@ -20,12 +21,12 @@ export const errorAlertInfo: AlertInfo = {
 
 export const playerOne: Player = {
   id: 1,
-  googleId: 'playerOne'
+  authId: 'playerOne'
 };
 
 export const playerTwo: Player = {
   id: 2,
-  googleId: 'playerTwo'
+  authId: 'playerTwo'
 };
 
 export const makePiece = (type: PieceType, color: PieceColor): Piece => ({
@@ -132,26 +133,24 @@ export const whiteQueenSideCastle: Move = {
   id: 2
 };
 
-export const loginResponse: GoogleLoginRequired = {
-  profileObj: {
-    email: 'test@email.com',
-    givenName: 'given',
-    familyName: 'familyName',
-    googleId: 'id',
-    imageUrl: '',
-    name: 'name'
-  },
-  tokenObj: {
-    access_token: '',
-    login_hint: '',
-    id_token: '',
-    expires_at: 0,
-    expires_in: 10,
-    scope: '',
-    first_issued_at: 0
-  },
-  tokenId: 'test',
-  reloadAuthResponse: jest.fn().mockImplementation(() => ({ expires_in: 10 }))
+export const unauthenticatedAuth0: Auth0ContextInterface = {
+  isAuthenticated: false,
+  getAccessTokenSilently: jest.fn(),
+  getAccessTokenWithPopup: jest.fn(),
+  getIdTokenClaims: jest.fn(),
+  loginWithPopup: jest.fn(),
+  loginWithRedirect: jest.fn(),
+  logout: jest.fn(),
+  isLoading: false,
+  user: {
+    name: 'test name',
+    picture: 'test-picture.jpg'
+  }
+};
+
+export const authenticatedAuth0 = {
+  ...unauthenticatedAuth0,
+  isAuthenticated: true
 };
 
 export const testStore: AppState = {

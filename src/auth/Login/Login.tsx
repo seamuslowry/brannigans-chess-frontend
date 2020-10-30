@@ -1,17 +1,14 @@
 import React from 'react';
 import { Button, ButtonProps } from '@material-ui/core';
-import AuthenticationDialog from '../AuthenticationDialog/AuthenticationDialog';
+import { useAuth0 } from '@auth0/auth0-react';
 
-const Login: React.FC<Omit<ButtonProps, 'onClick'>> = props => {
-  const [open, setOpen] = React.useState(false);
+const Login: React.FC<Omit<ButtonProps, 'onClick' | 'disabled'>> = props => {
+  const { loginWithPopup, isLoading } = useAuth0();
 
   return (
-    <>
-      <Button {...props} onClick={() => setOpen(true)}>
-        Login
-      </Button>
-      <AuthenticationDialog open={open} onClose={() => setOpen(false)} variant="login" />
-    </>
+    <Button {...props} disabled={isLoading} onClick={loginWithPopup}>
+      Login
+    </Button>
   );
 };
 

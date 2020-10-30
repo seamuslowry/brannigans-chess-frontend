@@ -1,11 +1,10 @@
-import { Typography } from '@material-ui/core';
 import React from 'react';
-import { useSelector } from 'react-redux';
+import { Typography } from '@material-ui/core';
 import { Route, RouteProps } from 'react-router-dom';
-import { AppState } from '../../store/store';
+import useLoggedIn from '../../utils/useLoggedIn';
 
 const PrivateRoute: React.FC<RouteProps> = props => {
-  const loggedIn = useSelector<AppState, boolean>(state => !!state.auth.player);
+  const loggedIn = useLoggedIn();
 
   return loggedIn ? <Route {...props} /> : <Typography>Not available until after login</Typography>;
 };

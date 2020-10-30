@@ -7,12 +7,22 @@ import { MemoryRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import PrivateRoute from './PrivateRoute';
 import { AppState } from '../../store/store';
-import { playerOne, testStore } from '../../utils/testData';
+import {
+  authenticatedAuth0,
+  playerOne,
+  testStore,
+  unauthenticatedAuth0
+} from '../../utils/testData';
+import { useAuth0 } from '@auth0/auth0-react';
+
+jest.mock('@auth0/auth0-react');
+const mockedAuth0 = useAuth0 as jest.MockedFunction<typeof useAuth0>;
 
 const mockStore = createMockStore<AppState, ActionCreator<AnyAction>>([thunk]);
 const mockedStore = mockStore(testStore);
 
 beforeEach(() => mockedStore.clearActions());
+beforeEach(() => mockedAuth0.mockImplementation(() => unauthenticatedAuth0));
 
 test('renders nothing when not logged in', () => {
   const { getByText } = render(
@@ -25,6 +35,8 @@ test('renders nothing when not logged in', () => {
 });
 
 test('renders the route when logged in', () => {
+  mockedAuth0.mockImplementation(() => authenticatedAuth0);
+
   const loggedInStore = mockStore({
     ...testStore,
     auth: {

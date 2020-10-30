@@ -18,7 +18,7 @@ export interface Piece {
 }
 
 export interface Player {
-  googleId: string;
+  authId: string;
   id: number;
 }
 

@@ -1,23 +1,17 @@
 interface Configuration {
   serviceUrl: string;
-  clientId: string;
 }
 
-const clientId = '422426494180-ra8k12sftd9bk5nabo6nc0suti8if8f9.apps.googleusercontent.com';
-
 const dev: Configuration = {
-  serviceUrl: 'https://backend-dev.branniganschess.com',
-  clientId
+  serviceUrl: 'https://backend-dev.branniganschess.com'
 };
 
 const prod: Configuration = {
-  serviceUrl: 'https://backend.branniganschess.com',
-  clientId
+  serviceUrl: 'https://backend.branniganschess.com'
 };
 
 const local: Configuration = {
-  serviceUrl: 'http://localhost:8080',
-  clientId
+  serviceUrl: 'http://localhost:8080'
 };
 
 let config: Configuration;
