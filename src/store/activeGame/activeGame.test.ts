@@ -19,10 +19,12 @@ import {
   addMoves,
   ADD_MOVES,
   setGameId,
-  clearMoves
+  clearMoves,
+  getStatusTopic
 } from './activeGame';
 import {
   blackRook,
+  emptyGame,
   makePiece,
   testStore,
   whiteEnPassant,
@@ -38,6 +40,7 @@ import { Move, Piece } from '../../services/ChessService.types';
 import { SEND_ALERT } from '../notifications/notifications';
 import { clickTile, getPieces } from './activeGame.thunk';
 import { waitFor } from '@testing-library/dom';
+import { STOMP_MESSAGE } from '../middleware/stomp/stomp';
 
 const server = setupServer(
   rest.get(`${config.serviceUrl}/pieces/0`, (req, res, ctx) => {
@@ -136,6 +139,38 @@ test('clears taken pieces', () => {
 
   expect(result.takenPieces).toContainEqual(blackRook);
   expect(result.takenPieces).not.toContainEqual(whiteRook);
+});
+
+test('handles a stomp message on the status topic', () => {
+  const stateWithId: ActiveGameState = {
+    ...testStore.activeGame,
+    id: 1
+  };
+  const result = reducer(stateWithId, {
+    type: STOMP_MESSAGE,
+    payload: {
+      topic: getStatusTopic(1),
+      data: JSON.stringify(emptyGame)
+    }
+  });
+
+  expect(result.status).toEqual(emptyGame.status);
+});
+
+test('handles a stomp message on an unrelated topic', () => {
+  const stateWithId: ActiveGameState = {
+    ...testStore.activeGame,
+    id: 1
+  };
+  const result = reducer(stateWithId, {
+    type: STOMP_MESSAGE,
+    payload: {
+      topic: getStatusTopic(-1),
+      data: JSON.stringify(emptyGame)
+    }
+  });
+
+  expect(result).toEqual(stateWithId);
 });
 
 test('clicks an unselected tile', async () => {

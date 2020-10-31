@@ -36,6 +36,7 @@ export interface Game {
   whitePlayer: Player | null;
   blackPlayer: Player | null;
   winner: Player | null;
+  status: GameStatus;
   id: number;
 }
 

@@ -1,5 +1,9 @@
-import { PieceColor, PieceType, Piece, Move } from '../../services/ChessService.types';
+import { PieceColor, PieceType, Piece, Move, GameStatus } from '../../services/ChessService.types';
 import { immutableUpdate } from '../../utils/arrayHelpers';
+import { StompMessage, STOMP_MESSAGE } from '../middleware/stomp/stomp';
+
+// topic options
+export const getStatusTopic = (gameId: number) => `/game/status/${gameId}`;
 
 export const SET_GAME_ID = 'chess/activeGame/SET_GAME_ID';
 export const SELECT_TILE = 'chess/activeGame/SELECT_TILE';
@@ -23,6 +27,7 @@ export interface ActiveGameState {
   selectedPosition?: [number, number];
   takenPieces: Piece[];
   moveList: Move[];
+  status: GameStatus | '';
   id: number;
 }
 
@@ -43,6 +48,7 @@ export const initialState: ActiveGameState = {
   tiles: blankBoard,
   takenPieces: [],
   moveList: [],
+  status: '',
   id: 0
 };
 
@@ -105,7 +111,8 @@ type ActiveGameAction =
   | TakePieces
   | ClearTaken
   | AddMoves
-  | ClearMoves;
+  | ClearMoves
+  | StompMessage;
 
 export const reducer = (
   state: ActiveGameState = initialState,
@@ -162,6 +169,14 @@ export const reducer = (
         ...state,
         moveList: initialState.moveList
       };
+    case STOMP_MESSAGE:
+      if (action.payload.topic === getStatusTopic(state.id)) {
+        return {
+          ...state,
+          status: JSON.parse(action.payload.data).status
+        };
+      }
+      return state;
     case CLEAR_GAME:
       return initialState;
     default:
