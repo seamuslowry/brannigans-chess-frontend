@@ -5,17 +5,19 @@ import { useSelector } from 'react-redux';
 import startCase from 'lodash.startcase';
 import { AppState } from '../../store/store';
 import useSubscription from '../../utils/useSubscription';
+import { getStatusTopic } from '../../store/activeGame/activeGame';
+import { GameStatus as Status } from '../../services/ChessService.types';
 
 interface Props {
   gameId: number;
 }
 
 const GameStatus: React.FC<Props> = ({ gameId }) => {
-  const topic = `/game/status/${gameId}`;
-  const statusMessages = useSubscription(topic);
+  useSubscription(getStatusTopic(gameId));
+
   const connected = useSelector<AppState, boolean>(state => state.socket.connected);
 
-  const gameStatus = !!statusMessages.length && statusMessages[statusMessages.length - 1].data;
+  const gameStatus = useSelector<AppState, Status | ''>(state => state.activeGame.status);
 
   return (
     <Paper>

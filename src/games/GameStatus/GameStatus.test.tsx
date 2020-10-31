@@ -16,15 +16,9 @@ beforeEach(() => mockedStore.clearActions());
 test('shows the most recent status of the game when available', async () => {
   const storeWithStatusMessage = mockStore({
     ...testStore,
-    socket: {
-      ...testStore.socket,
-      connected: true,
-      messages: [
-        {
-          topic: '/game/status/1',
-          data: 'TEST_STATUS'
-        }
-      ]
+    activeGame: {
+      ...testStore.activeGame,
+      status: 'BLACK_TURN'
     }
   });
 
@@ -34,7 +28,7 @@ test('shows the most recent status of the game when available', async () => {
     </Provider>
   );
 
-  const status = await waitFor(() => getByText('Test Status'));
+  const status = await waitFor(() => getByText('Black Turn'));
 
   expect(status).toBeInTheDocument();
 });
