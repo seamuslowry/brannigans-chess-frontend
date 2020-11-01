@@ -7,7 +7,6 @@ import Board from '../Board/Board';
 import MoveList from '../MoveList/MoveList';
 import TakenPieces from '../TakenPieces/TakenPieces';
 import GameStatus from '../GameStatus/GameStatus';
-import JoinOrLeaveButton from '../JoinOrLeaveButton/JoinOrLeaveButton';
 
 interface ExpectedRouteParams {
   id?: string;
@@ -31,14 +30,12 @@ const ActiveGame: React.FC = () => {
     <Grid container justify="space-evenly" spacing={2}>
       <Grid item container xs={12} md={8} wrap="nowrap" justify="center" spacing={1}>
         <Grid item>
-          <JoinOrLeaveButton gameId={gameId} color="WHITE" />
           <TakenPieces gameId={gameId} color="WHITE" />
         </Grid>
         <Grid item>
           <Board gameId={gameId} />
         </Grid>
         <Grid item>
-          <JoinOrLeaveButton gameId={gameId} color="BLACK" />
           <TakenPieces gameId={gameId} color="BLACK" />
         </Grid>
       </Grid>

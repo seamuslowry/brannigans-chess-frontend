@@ -65,14 +65,14 @@ test('shows the white player when available', async () => {
   expect(whitePlayer).toBeInTheDocument();
 });
 
-test('shows OPEN when white player is not taken', async () => {
+test('shows the join button when white player is not taken', async () => {
   const { getAllByText } = render(
     <Provider store={mockedStore}>
       <GameStatus gameId={1} />
     </Provider>
   );
 
-  const playersOpen = await waitFor(() => getAllByText('OPEN'));
+  const playersOpen = await waitFor(() => getAllByText('Play'));
 
   expect(playersOpen).toHaveLength(2);
 });
@@ -97,14 +97,14 @@ test('shows the black player when available', async () => {
   expect(blackPlayer).toBeInTheDocument();
 });
 
-test('shows OPEN when black player is not taken', async () => {
+test('shows join button when black player is not taken', async () => {
   const { getAllByText } = render(
     <Provider store={mockedStore}>
       <GameStatus gameId={1} />
     </Provider>
   );
 
-  const playersOpen = await waitFor(() => getAllByText('OPEN'));
+  const playersOpen = await waitFor(() => getAllByText('Play'));
 
   expect(playersOpen).toHaveLength(2);
 });

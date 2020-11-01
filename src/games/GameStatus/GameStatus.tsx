@@ -7,6 +7,7 @@ import { AppState } from '../../store/store';
 import useSubscription from '../../utils/useSubscription';
 import { getStatusTopic } from '../../store/activeGame/activeGame';
 import { GameStatus as Status, Player } from '../../services/ChessService.types';
+import JoinAndLeaveButton from '../JoinAndLeaveButton/JoinAndLeaveButton';
 
 interface Props {
   gameId: number;
@@ -24,7 +25,7 @@ const GameStatus: React.FC<Props> = ({ gameId }) => {
   return (
     <Paper>
       <Box width="100%" p={2}>
-        <Box pb={1} display="flex" alignItems="center">
+        <Box display="flex" alignItems="center">
           <Typography display="inline" color="secondary">
             CONNECTION:{' '}
           </Typography>
@@ -34,7 +35,7 @@ const GameStatus: React.FC<Props> = ({ gameId }) => {
             <SyncProblem data-testid="sync-disconnected" color="error" />
           )}
         </Box>
-        <Box>
+        <Box pt={1}>
           <Typography display="inline" color="secondary">
             STATUS:{' '}
           </Typography>
@@ -42,17 +43,21 @@ const GameStatus: React.FC<Props> = ({ gameId }) => {
             {gameStatus ? startCase(gameStatus.toLowerCase()) : 'Unknown'}
           </Typography>
         </Box>
-        <Box>
+        <Box py={1}>
           <Typography display="inline" color="secondary">
             WHITE PLAYER:{' '}
           </Typography>
-          <Typography display="inline">{whitePlayer ? whitePlayer.authId : 'OPEN'}</Typography>
+          <Typography display="inline">
+            {whitePlayer && whitePlayer.authId} <JoinAndLeaveButton gameId={gameId} color="WHITE" />
+          </Typography>
         </Box>
         <Box>
           <Typography display="inline" color="secondary">
             BLACK PLAYER:{' '}
           </Typography>
-          <Typography display="inline">{blackPlayer ? blackPlayer.authId : 'OPEN'}</Typography>
+          <Typography display="inline">
+            {blackPlayer && blackPlayer.authId} <JoinAndLeaveButton gameId={gameId} color="BLACK" />
+          </Typography>
         </Box>
       </Box>
     </Paper>
