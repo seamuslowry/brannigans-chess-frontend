@@ -23,7 +23,7 @@ const NavBar: React.FC = () => {
             In the game of chess, you can never let your adversary see your pieces. -Zapp Brannigan
           </Typography>
         </Box>
-        <Box mx={1}>
+        <Box ml={1} mr={2}>
           <UserAvatar />
         </Box>
         <IconButton

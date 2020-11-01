@@ -60,6 +60,11 @@ const createGame = () => chessApi.post<Game>('games/create');
 
 const authenticatePlayer = () => chessApi.get<Player>('players/auth');
 
+const joinGame = (gameId: number, color: PieceColor) =>
+  chessApi.post<Game>(`players/join/${gameId}?color=${color}`);
+
+const leaveGame = (gameId: number) => chessApi.post<Game>(`players/leave/${gameId}`);
+
 export default {
   getGames,
   getPieces,
@@ -67,5 +72,7 @@ export default {
   createGame,
   promote,
   move,
-  authenticatePlayer
+  authenticatePlayer,
+  joinGame,
+  leaveGame
 };

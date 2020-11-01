@@ -5,7 +5,7 @@ import createMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { Provider } from 'react-redux';
 import GameStatus from './GameStatus';
-import { testStore } from '../../utils/testData';
+import { playerOne, testStore } from '../../utils/testData';
 import { AppState } from '../../store/store';
 
 const mockStore = createMockStore<AppState, ActionCreator<AnyAction>>([thunk]);
@@ -16,15 +16,9 @@ beforeEach(() => mockedStore.clearActions());
 test('shows the most recent status of the game when available', async () => {
   const storeWithStatusMessage = mockStore({
     ...testStore,
-    socket: {
-      ...testStore.socket,
-      connected: true,
-      messages: [
-        {
-          topic: '/game/status/1',
-          data: 'TEST_STATUS'
-        }
-      ]
+    activeGame: {
+      ...testStore.activeGame,
+      status: 'BLACK_TURN'
     }
   });
 
@@ -34,7 +28,7 @@ test('shows the most recent status of the game when available', async () => {
     </Provider>
   );
 
-  const status = await waitFor(() => getByText('Test Status'));
+  const status = await waitFor(() => getByText('Black Turn'));
 
   expect(status).toBeInTheDocument();
 });
@@ -49,6 +43,70 @@ test('shows unknown when game status is unavailable', async () => {
   const status = await waitFor(() => getByText('Unknown'));
 
   expect(status).toBeInTheDocument();
+});
+
+test('shows the white player when available', async () => {
+  const storeWithStatusMessage = mockStore({
+    ...testStore,
+    activeGame: {
+      ...testStore.activeGame,
+      whitePlayer: playerOne
+    }
+  });
+
+  const { getByText } = render(
+    <Provider store={storeWithStatusMessage}>
+      <GameStatus gameId={1} />
+    </Provider>
+  );
+
+  const whitePlayer = await waitFor(() => getByText(playerOne.authId));
+
+  expect(whitePlayer).toBeInTheDocument();
+});
+
+test('shows the join button when white player is not taken', async () => {
+  const { getAllByText } = render(
+    <Provider store={mockedStore}>
+      <GameStatus gameId={1} />
+    </Provider>
+  );
+
+  const playersOpen = await waitFor(() => getAllByText('Play'));
+
+  expect(playersOpen).toHaveLength(2);
+});
+
+test('shows the black player when available', async () => {
+  const storeWithStatusMessage = mockStore({
+    ...testStore,
+    activeGame: {
+      ...testStore.activeGame,
+      blackPlayer: playerOne
+    }
+  });
+
+  const { getByText } = render(
+    <Provider store={storeWithStatusMessage}>
+      <GameStatus gameId={1} />
+    </Provider>
+  );
+
+  const blackPlayer = await waitFor(() => getByText(playerOne.authId));
+
+  expect(blackPlayer).toBeInTheDocument();
+});
+
+test('shows join button when black player is not taken', async () => {
+  const { getAllByText } = render(
+    <Provider store={mockedStore}>
+      <GameStatus gameId={1} />
+    </Provider>
+  );
+
+  const playersOpen = await waitFor(() => getAllByText('Play'));
+
+  expect(playersOpen).toHaveLength(2);
 });
 
 test('shows the connection status - disconnected', async () => {

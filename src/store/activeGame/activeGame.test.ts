@@ -19,10 +19,13 @@ import {
   addMoves,
   ADD_MOVES,
   setGameId,
-  clearMoves
+  clearMoves,
+  getStatusTopic
 } from './activeGame';
 import {
   blackRook,
+  emptyGame,
+  fullGame,
   makePiece,
   testStore,
   whiteEnPassant,
@@ -37,6 +40,8 @@ import config from '../../config';
 import { Move, Piece } from '../../services/ChessService.types';
 import { SEND_ALERT } from '../notifications/notifications';
 import { clickTile, getPieces } from './activeGame.thunk';
+import { waitFor } from '@testing-library/dom';
+import { STOMP_MESSAGE } from '../middleware/stomp/stomp';
 
 const server = setupServer(
   rest.get(`${config.serviceUrl}/pieces/0`, (req, res, ctx) => {
@@ -137,6 +142,58 @@ test('clears taken pieces', () => {
   expect(result.takenPieces).not.toContainEqual(whiteRook);
 });
 
+test('handles an empty game stomp message on the status topic', () => {
+  const stateWithId: ActiveGameState = {
+    ...testStore.activeGame,
+    id: 1
+  };
+  const result = reducer(stateWithId, {
+    type: STOMP_MESSAGE,
+    payload: {
+      topic: getStatusTopic(1),
+      data: JSON.stringify(emptyGame)
+    }
+  });
+
+  expect(result.status).toEqual(emptyGame.status);
+  expect(result.whitePlayer).toBeNull();
+  expect(result.blackPlayer).toBeNull();
+});
+
+test('handles an full game stomp message on the status topic', () => {
+  const stateWithId: ActiveGameState = {
+    ...testStore.activeGame,
+    id: 1
+  };
+  const result = reducer(stateWithId, {
+    type: STOMP_MESSAGE,
+    payload: {
+      topic: getStatusTopic(1),
+      data: JSON.stringify(fullGame)
+    }
+  });
+
+  expect(result.status).toEqual(fullGame.status);
+  expect(result.whitePlayer).toEqual(fullGame.whitePlayer);
+  expect(result.blackPlayer).toEqual(fullGame.blackPlayer);
+});
+
+test('handles a stomp message on an unrelated topic', () => {
+  const stateWithId: ActiveGameState = {
+    ...testStore.activeGame,
+    id: 1
+  };
+  const result = reducer(stateWithId, {
+    type: STOMP_MESSAGE,
+    payload: {
+      topic: getStatusTopic(-1),
+      data: JSON.stringify(emptyGame)
+    }
+  });
+
+  expect(result).toEqual(stateWithId);
+});
+
 test('clicks an unselected tile', async () => {
   const storeWithRook = mockStore({
     ...testStore,
@@ -146,7 +203,7 @@ test('clicks an unselected tile', async () => {
     }
   });
 
-  await storeWithRook.dispatch(clickTile(0, 0));
+  await waitFor(() => storeWithRook.dispatch(clickTile(0, 0)));
 
   expect(storeWithRook.getActions()).toContainEqual(selectTile(0, 0, true));
 });
@@ -161,7 +218,7 @@ test('clicks a selected tile', async () => {
     }
   });
 
-  await selectedStore.dispatch(clickTile(0, 0));
+  await waitFor(() => selectedStore.dispatch(clickTile(0, 0)));
 
   expect(selectedStore.getActions()).toContainEqual(selectTile(0, 0, false));
 });
@@ -180,7 +237,7 @@ test('moves a piece', async () => {
     }
   });
 
-  await selectedStore.dispatch(clickTile(whiteMove.dstRow, whiteMove.dstCol));
+  await waitFor(() => selectedStore.dispatch(clickTile(whiteMove.dstRow, whiteMove.dstCol)));
 
   expect(selectedStore.getActions()).toContainEqual(
     selectTile(whiteMove.srcRow, whiteMove.srcCol, false)
@@ -224,7 +281,7 @@ test('moves to take a piece', async () => {
     }
   });
 
-  await selectedStore.dispatch(clickTile(whiteTake.dstRow, whiteTake.dstCol));
+  await waitFor(() => selectedStore.dispatch(clickTile(whiteTake.dstRow, whiteTake.dstCol)));
 
   expect(selectedStore.getActions()).toContainEqual(
     selectTile(whiteTake.srcRow, whiteTake.srcCol, false)
@@ -272,7 +329,9 @@ test('en passants a piece', async () => {
     }
   });
 
-  await selectedStore.dispatch(clickTile(whiteEnPassant.dstRow, whiteEnPassant.dstCol));
+  await waitFor(() =>
+    selectedStore.dispatch(clickTile(whiteEnPassant.dstRow, whiteEnPassant.dstCol))
+  );
 
   expect(selectedStore.getActions()).toContainEqual(
     expect.objectContaining({
@@ -313,7 +372,9 @@ test('king side castles', async () => {
     }
   });
 
-  await selectedStore.dispatch(clickTile(whiteKingSideCastle.dstRow, whiteKingSideCastle.dstCol));
+  await waitFor(() =>
+    selectedStore.dispatch(clickTile(whiteKingSideCastle.dstRow, whiteKingSideCastle.dstCol))
+  );
 
   expect(selectedStore.getActions()).toContainEqual(
     expect.objectContaining({
@@ -357,7 +418,9 @@ test('queen side castles', async () => {
     }
   });
 
-  await selectedStore.dispatch(clickTile(whiteQueenSideCastle.dstRow, whiteQueenSideCastle.dstCol));
+  await waitFor(() =>
+    selectedStore.dispatch(clickTile(whiteQueenSideCastle.dstRow, whiteQueenSideCastle.dstCol))
+  );
 
   expect(selectedStore.getActions()).toContainEqual(
     expect.objectContaining({
@@ -395,7 +458,7 @@ test('fails to move a piece', async () => {
     }
   });
 
-  await selectedStore.dispatch(clickTile(whiteMove.dstRow, whiteMove.dstCol));
+  await waitFor(() => selectedStore.dispatch(clickTile(whiteMove.dstRow, whiteMove.dstCol)));
 
   expect(selectedStore.getActions()).not.toContainEqual(
     selectTile(whiteMove.srcRow, whiteMove.srcCol, false)
@@ -432,7 +495,7 @@ test('handles a network error when moving a piece', async () => {
     }
   });
 
-  await selectedStore.dispatch(clickTile(whiteMove.dstRow, whiteMove.dstCol));
+  await waitFor(() => selectedStore.dispatch(clickTile(whiteMove.dstRow, whiteMove.dstCol)));
 
   expect(selectedStore.getActions()).toContainEqual(
     expect.objectContaining({
@@ -445,7 +508,7 @@ test('handles a network error when moving a piece', async () => {
 });
 
 test('gets pieces', async () => {
-  await mockedStore.dispatch(getPieces(0));
+  await waitFor(() => mockedStore.dispatch(getPieces(0)));
 
   expect(mockedStore.getActions()).toContainEqual(setTile(0, 0, blackRook));
 });
@@ -456,7 +519,7 @@ test('handles an error when getting pieces', async () => {
       return res(ctx.status(500));
     })
   );
-  await mockedStore.dispatch(getPieces(0));
+  await waitFor(() => mockedStore.dispatch(getPieces(0)));
 
   expect(mockedStore.getActions()).not.toContainEqual(setTile(0, 0, blackRook));
   expect(mockedStore.getActions()).toContainEqual(

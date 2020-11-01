@@ -45,7 +45,8 @@ export const emptyGame: Game = {
   uuid: 'empty game',
   whitePlayer: null,
   blackPlayer: null,
-  winner: null
+  winner: null,
+  status: 'WAITING_FOR_PLAYERS'
 };
 
 export const fullGame: Game = {
@@ -53,7 +54,8 @@ export const fullGame: Game = {
   uuid: 'full game',
   whitePlayer: playerOne,
   blackPlayer: playerTwo,
-  winner: playerOne
+  winner: playerOne,
+  status: 'WHITE_TURN'
 };
 
 export const whiteMove: Move = {

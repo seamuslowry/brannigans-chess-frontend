@@ -73,7 +73,7 @@ const GamesList: React.FC = () => {
                 <ListItemText primary={game.uuid} />
                 <ListItemSecondaryAction>
                   <Button component={Link} to={`/game/${game.id}`} color="primary">
-                    Join
+                    View
                   </Button>
                 </ListItemSecondaryAction>
               </ListItem>

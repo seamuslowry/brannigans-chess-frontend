@@ -28,7 +28,7 @@ const ActiveGame: React.FC = () => {
 
   return (
     <Grid container justify="space-evenly" spacing={2}>
-      <Grid item container xs={12} md={8} wrap="nowrap" justify="center">
+      <Grid item container xs={12} md={8} wrap="nowrap" justify="center" spacing={1}>
         <Grid item>
           <TakenPieces gameId={gameId} color="WHITE" />
         </Grid>

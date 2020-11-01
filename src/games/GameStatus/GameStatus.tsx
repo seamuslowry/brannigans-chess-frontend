@@ -5,22 +5,27 @@ import { useSelector } from 'react-redux';
 import startCase from 'lodash.startcase';
 import { AppState } from '../../store/store';
 import useSubscription from '../../utils/useSubscription';
+import { getStatusTopic } from '../../store/activeGame/activeGame';
+import { GameStatus as Status, Player } from '../../services/ChessService.types';
+import JoinAndLeaveButton from '../JoinAndLeaveButton/JoinAndLeaveButton';
 
 interface Props {
   gameId: number;
 }
 
 const GameStatus: React.FC<Props> = ({ gameId }) => {
-  const topic = `/game/status/${gameId}`;
-  const statusMessages = useSubscription(topic);
+  useSubscription(getStatusTopic(gameId));
+
   const connected = useSelector<AppState, boolean>(state => state.socket.connected);
 
-  const gameStatus = !!statusMessages.length && statusMessages[statusMessages.length - 1].data;
+  const gameStatus = useSelector<AppState, Status | ''>(state => state.activeGame.status);
+  const whitePlayer = useSelector<AppState, Player | null>(state => state.activeGame.whitePlayer);
+  const blackPlayer = useSelector<AppState, Player | null>(state => state.activeGame.blackPlayer);
 
   return (
     <Paper>
       <Box width="100%" p={2}>
-        <Box pb={1} display="flex" alignItems="center">
+        <Box display="flex" alignItems="center">
           <Typography display="inline" color="secondary">
             CONNECTION:{' '}
           </Typography>
@@ -30,12 +35,28 @@ const GameStatus: React.FC<Props> = ({ gameId }) => {
             <SyncProblem data-testid="sync-disconnected" color="error" />
           )}
         </Box>
-        <Box>
+        <Box my={1}>
           <Typography display="inline" color="secondary">
             STATUS:{' '}
           </Typography>
           <Typography display="inline">
             {gameStatus ? startCase(gameStatus.toLowerCase()) : 'Unknown'}
+          </Typography>
+        </Box>
+        <Box my={1}>
+          <Typography display="inline" color="secondary">
+            WHITE PLAYER:{' '}
+          </Typography>
+          <Typography display="inline">
+            {whitePlayer && whitePlayer.authId} <JoinAndLeaveButton gameId={gameId} color="WHITE" />
+          </Typography>
+        </Box>
+        <Box>
+          <Typography display="inline" color="secondary">
+            BLACK PLAYER:{' '}
+          </Typography>
+          <Typography display="inline">
+            {blackPlayer && blackPlayer.authId} <JoinAndLeaveButton gameId={gameId} color="BLACK" />
           </Typography>
         </Box>
       </Box>
