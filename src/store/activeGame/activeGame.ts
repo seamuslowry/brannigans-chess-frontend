@@ -1,4 +1,12 @@
-import { PieceColor, PieceType, Piece, Move, GameStatus } from '../../services/ChessService.types';
+import {
+  PieceColor,
+  PieceType,
+  Piece,
+  Move,
+  GameStatus,
+  Player,
+  Game
+} from '../../services/ChessService.types';
 import { immutableUpdate } from '../../utils/arrayHelpers';
 import { StompMessage, STOMP_MESSAGE } from '../middleware/stomp/stomp';
 
@@ -28,6 +36,8 @@ export interface ActiveGameState {
   takenPieces: Piece[];
   moveList: Move[];
   status: GameStatus | '';
+  whitePlayer: Player | null;
+  blackPlayer: Player | null;
   id: number;
 }
 
@@ -49,6 +59,8 @@ export const initialState: ActiveGameState = {
   takenPieces: [],
   moveList: [],
   status: '',
+  whitePlayer: null,
+  blackPlayer: null,
   id: 0
 };
 
@@ -171,9 +183,12 @@ export const reducer = (
       };
     case STOMP_MESSAGE:
       if (action.payload.topic === getStatusTopic(state.id)) {
+        const game: Game = JSON.parse(action.payload.data);
         return {
           ...state,
-          status: JSON.parse(action.payload.data).status
+          status: game.status,
+          whitePlayer: game.whitePlayer,
+          blackPlayer: game.blackPlayer
         };
       }
       return state;
