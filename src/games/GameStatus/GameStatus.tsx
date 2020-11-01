@@ -6,7 +6,7 @@ import startCase from 'lodash.startcase';
 import { AppState } from '../../store/store';
 import useSubscription from '../../utils/useSubscription';
 import { getStatusTopic } from '../../store/activeGame/activeGame';
-import { GameStatus as Status } from '../../services/ChessService.types';
+import { GameStatus as Status, Player } from '../../services/ChessService.types';
 
 interface Props {
   gameId: number;
@@ -18,6 +18,8 @@ const GameStatus: React.FC<Props> = ({ gameId }) => {
   const connected = useSelector<AppState, boolean>(state => state.socket.connected);
 
   const gameStatus = useSelector<AppState, Status | ''>(state => state.activeGame.status);
+  const whitePlayer = useSelector<AppState, Player | null>(state => state.activeGame.whitePlayer);
+  const blackPlayer = useSelector<AppState, Player | null>(state => state.activeGame.blackPlayer);
 
   return (
     <Paper>
@@ -39,6 +41,18 @@ const GameStatus: React.FC<Props> = ({ gameId }) => {
           <Typography display="inline">
             {gameStatus ? startCase(gameStatus.toLowerCase()) : 'Unknown'}
           </Typography>
+        </Box>
+        <Box>
+          <Typography display="inline" color="secondary">
+            WHITE PLAYER:{' '}
+          </Typography>
+          <Typography display="inline">{whitePlayer ? whitePlayer.authId : 'OPEN'}</Typography>
+        </Box>
+        <Box>
+          <Typography display="inline" color="secondary">
+            BLACK PLAYER:{' '}
+          </Typography>
+          <Typography display="inline">{blackPlayer ? blackPlayer.authId : 'OPEN'}</Typography>
         </Box>
       </Box>
     </Paper>
