@@ -35,7 +35,7 @@ const GameStatus: React.FC<Props> = ({ gameId }) => {
             <SyncProblem data-testid="sync-disconnected" color="error" />
           )}
         </Box>
-        <Box pt={1}>
+        <Box my={1}>
           <Typography display="inline" color="secondary">
             STATUS:{' '}
           </Typography>
@@ -43,7 +43,7 @@ const GameStatus: React.FC<Props> = ({ gameId }) => {
             {gameStatus ? startCase(gameStatus.toLowerCase()) : 'Unknown'}
           </Typography>
         </Box>
-        <Box py={1}>
+        <Box my={1}>
           <Typography display="inline" color="secondary">
             WHITE PLAYER:{' '}
           </Typography>
