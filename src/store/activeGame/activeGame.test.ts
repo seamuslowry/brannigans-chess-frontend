@@ -25,6 +25,7 @@ import {
 import {
   blackRook,
   emptyGame,
+  fullGame,
   makePiece,
   testStore,
   whiteEnPassant,
@@ -141,7 +142,7 @@ test('clears taken pieces', () => {
   expect(result.takenPieces).not.toContainEqual(whiteRook);
 });
 
-test('handles a stomp message on the status topic', () => {
+test('handles an empty game stomp message on the status topic', () => {
   const stateWithId: ActiveGameState = {
     ...testStore.activeGame,
     id: 1
@@ -155,6 +156,26 @@ test('handles a stomp message on the status topic', () => {
   });
 
   expect(result.status).toEqual(emptyGame.status);
+  expect(result.whitePlayer).toBeNull();
+  expect(result.blackPlayer).toBeNull();
+});
+
+test('handles an full game stomp message on the status topic', () => {
+  const stateWithId: ActiveGameState = {
+    ...testStore.activeGame,
+    id: 1
+  };
+  const result = reducer(stateWithId, {
+    type: STOMP_MESSAGE,
+    payload: {
+      topic: getStatusTopic(1),
+      data: JSON.stringify(fullGame)
+    }
+  });
+
+  expect(result.status).toEqual(fullGame.status);
+  expect(result.whitePlayer).toEqual(fullGame.whitePlayer);
+  expect(result.blackPlayer).toEqual(fullGame.blackPlayer);
 });
 
 test('handles a stomp message on an unrelated topic', () => {
