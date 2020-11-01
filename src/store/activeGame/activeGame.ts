@@ -10,7 +10,6 @@ import {
 import { immutableUpdate } from '../../utils/arrayHelpers';
 import { StompMessage, STOMP_MESSAGE } from '../middleware/stomp/stomp';
 
-// topic options
 export const getStatusTopic = (gameId: number) => `/game/status/${gameId}`;
 
 export const SET_GAME_ID = 'chess/activeGame/SET_GAME_ID';
