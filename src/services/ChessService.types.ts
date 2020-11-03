@@ -28,6 +28,8 @@ export interface Piece {
 
 export interface Player {
   authId: string;
+  name: string;
+  imageUrl: string;
   id: number;
 }
 

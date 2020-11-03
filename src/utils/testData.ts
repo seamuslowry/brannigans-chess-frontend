@@ -21,12 +21,16 @@ export const errorAlertInfo: AlertInfo = {
 
 export const playerOne: Player = {
   id: 1,
-  authId: 'playerOne'
+  authId: 'playerOne',
+  name: 'Player One',
+  imageUrl: 'www.one.com'
 };
 
 export const playerTwo: Player = {
   id: 2,
-  authId: 'playerTwo'
+  authId: 'playerTwo',
+  name: 'Player Two',
+  imageUrl: 'www.two.com'
 };
 
 export const makePiece = (type: PieceType, color: PieceColor): Piece => ({
