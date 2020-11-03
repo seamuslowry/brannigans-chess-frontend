@@ -9,9 +9,9 @@ import { testStore, whiteMove } from '../../utils/testData';
 import { Move } from '../../services/ChessService.types';
 import config from '../../config';
 import PawnPromotion from './PawnPromotion';
-import { SET_TILE } from '../../store/activeGame/activeGame';
+import { setTile } from '../../store/activeGame/activeGame';
 import { immutableUpdate } from '../../utils/arrayHelpers';
-import { SEND_ALERT } from '../../store/notifications/notifications';
+import { sendAlert } from '../../store/notifications/notifications';
 
 const mockStore = createMockStore([thunk]);
 const mockedStore = mockStore({
@@ -83,7 +83,7 @@ test('promotes a pawn - BLACK', async () => {
   await waitFor(() =>
     expect(blackPawnPromoteStore.getActions()).toContainEqual(
       expect.objectContaining({
-        type: SET_TILE
+        type: setTile.type
       })
     )
   );
@@ -116,7 +116,7 @@ test('handles an error when promoting a pawn - BLACK', async () => {
   await waitFor(() =>
     expect(blackPawnPromoteStore.getActions()).toContainEqual(
       expect.objectContaining({
-        type: SEND_ALERT
+        type: sendAlert.type
       })
     )
   );
@@ -171,7 +171,7 @@ test('promotes a pawn - WHITE', async () => {
   await waitFor(() =>
     expect(whitePawnPromoteStore.getActions()).toContainEqual(
       expect.objectContaining({
-        type: SET_TILE
+        type: setTile.type
       })
     )
   );
@@ -204,7 +204,7 @@ test('handles an error when promoting a pawn - WHITE', async () => {
   await waitFor(() =>
     expect(whitePawnPromoteStore.getActions()).toContainEqual(
       expect.objectContaining({
-        type: SEND_ALERT
+        type: sendAlert.type
       })
     )
   );

@@ -1,3 +1,5 @@
+import { AnyAction, createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import ChessService from '../../services/ChessService';
 import {
   PieceColor,
   PieceType,
@@ -7,20 +9,17 @@ import {
   Player,
   Game
 } from '../../services/ChessService.types';
-import { immutableUpdate } from '../../utils/arrayHelpers';
 import { StompMessage, STOMP_MESSAGE } from '../middleware/stomp/stomp';
 
 export const getStatusTopic = (gameId: number) => `/game/status/${gameId}`;
 
-export const SET_GAME_ID = 'chess/activeGame/SET_GAME_ID';
-export const SELECT_TILE = 'chess/activeGame/SELECT_TILE';
-export const SET_TILE = 'chess/activeGame/SET_TILE';
-export const CLEAR_BOARD = 'chess/activeGame/CLEAR_BOARD';
-export const CLEAR_GAME = 'chess/activeGame/CLEAR_GAME';
-export const TAKE_PIECES = 'chess/activeGame/TAKE_PIECES';
-export const CLEAR_TAKEN = 'chess/activeGame/CLEAR_TAKEN';
-export const ADD_MOVES = 'chess/activeGame/ADD_MOVES';
-export const CLEAR_MOVES = 'chess/activeGame/CLEAR_MOVES';
+export const asyncThunkGetPieces = createAsyncThunk(
+  'chess/activeGame/thunkGetPieces',
+  async (gameId: number) => {
+    const response = await ChessService.getPieces(gameId, undefined, 'ACTIVE');
+    return response.data;
+  }
+);
 
 export interface TileInfo {
   color?: PieceColor;
@@ -63,197 +62,109 @@ export const initialState: ActiveGameState = {
   id: 0
 };
 
-interface SelectTile {
-  type: typeof SELECT_TILE;
-  payload: {
-    row: number;
-    col: number;
-    selected: boolean;
-  };
-}
-
-interface SetTile {
-  type: typeof SET_TILE;
-  payload: {
-    row: number;
-    col: number;
-    piece?: AgnosticPiece;
-  };
-}
-
-interface ClearBoard {
-  type: typeof CLEAR_BOARD;
-}
-
-interface ClearGame {
-  type: typeof CLEAR_GAME;
-}
-
-interface SetGameId {
-  type: typeof SET_GAME_ID;
-  payload: number;
-}
-
-interface TakePieces {
-  type: typeof TAKE_PIECES;
-  payload: Piece[];
-}
-
-interface ClearTaken {
-  type: typeof CLEAR_TAKEN;
-  payload: PieceColor;
-}
-
-interface AddMoves {
-  type: typeof ADD_MOVES;
-  payload: Move[];
-}
-
-interface ClearMoves {
-  type: typeof CLEAR_MOVES;
-}
-
-type ActiveGameAction =
-  | SelectTile
-  | SetTile
-  | ClearBoard
-  | SetGameId
-  | ClearGame
-  | TakePieces
-  | ClearTaken
-  | AddMoves
-  | ClearMoves
-  | StompMessage;
-
-export const reducer = (
-  state: ActiveGameState = initialState,
-  action: ActiveGameAction
-): ActiveGameState => {
-  switch (action.type) {
-    case SET_GAME_ID:
-      return {
-        ...state,
-        id: action.payload
-      };
-    case SELECT_TILE:
-      return {
-        ...state,
-        tiles: immutableUpdate(state.tiles, action.payload.row, action.payload.col, {
-          selected: action.payload.selected
-        }),
-        selectedPosition: action.payload.selected
-          ? [action.payload.row, action.payload.col]
-          : undefined
-      };
-    case SET_TILE:
-      const { piece: setToPiece } = action.payload;
-      return {
-        ...state,
-        tiles: immutableUpdate(state.tiles, action.payload.row, action.payload.col, {
-          color: setToPiece && setToPiece.color,
-          type: setToPiece && setToPiece.type
-        })
-      };
-    case TAKE_PIECES:
-      return {
-        ...state,
-        takenPieces: [...state.takenPieces, ...action.payload]
-      };
-    case ADD_MOVES:
-      return {
-        ...state,
-        moveList: [...state.moveList, ...action.payload]
-      };
-    case CLEAR_BOARD:
-      return {
-        ...state,
-        tiles: initialState.tiles,
-        selectedPosition: initialState.selectedPosition
-      };
-    case CLEAR_TAKEN:
-      return {
-        ...state,
-        takenPieces: state.takenPieces.filter(p => p.color !== action.payload)
-      };
-    case CLEAR_MOVES:
-      return {
-        ...state,
-        moveList: initialState.moveList
-      };
-    case STOMP_MESSAGE:
-      if (action.payload.topic === getStatusTopic(state.id)) {
-        const game: Game = JSON.parse(action.payload.data);
-        return {
-          ...state,
-          status: game.status,
-          whitePlayer: game.whitePlayer,
-          blackPlayer: game.blackPlayer
-        };
-      }
-      return state;
-    case CLEAR_GAME:
-      return initialState;
-    default:
-      return state;
-  }
-};
-
-export const setGameId = (id: number): SetGameId => ({
-  type: SET_GAME_ID,
-  payload: id
-});
-
-export const setTile = (row: number, col: number, piece?: AgnosticPiece): SetTile => ({
-  type: SET_TILE,
-  payload: {
-    row,
-    col,
-    piece
+const activeGameSlice = createSlice({
+  name: 'chess/activeGame',
+  initialState,
+  reducers: {
+    setGameId: (state, action: PayloadAction<number>) => {
+      state.id = action.payload;
+    },
+    selectTile: {
+      reducer: (
+        state,
+        action: PayloadAction<{
+          row: number;
+          col: number;
+          selected: boolean;
+        }>
+      ) => {
+        const { row, col, selected } = action.payload;
+        state.tiles[row][col].selected = selected;
+        state.selectedPosition = selected ? [row, col] : undefined;
+      },
+      prepare: (row: number, col: number, selected: boolean) => ({
+        payload: {
+          row,
+          col,
+          selected
+        }
+      })
+    },
+    setTile: {
+      reducer: (
+        state,
+        action: PayloadAction<{
+          row: number;
+          col: number;
+          piece?: AgnosticPiece;
+        }>
+      ) => {
+        const { row, col, piece } = action.payload;
+        state.tiles[row][col].color = piece?.color;
+        state.tiles[row][col].type = piece?.type;
+      },
+      prepare: (row: number, col: number, piece?: AgnosticPiece) => ({
+        payload: {
+          row,
+          col,
+          piece
+        }
+      })
+    },
+    takePieces: (state, action: PayloadAction<Piece[]>) => {
+      state.takenPieces.push(...action.payload);
+    },
+    addMoves: (state, action: PayloadAction<Move[]>) => {
+      state.moveList.push(...action.payload);
+    },
+    clearBoard: state => {
+      state.tiles = initialState.tiles;
+      state.selectedPosition = initialState.selectedPosition;
+    },
+    clearTaken: (state, action: PayloadAction<PieceColor>) => {
+      state.takenPieces = state.takenPieces.filter(p => p.color !== action.payload);
+    },
+    clearMoves: state => {
+      state.moveList = initialState.moveList;
+    },
+    clearGame: () => initialState
+  },
+  extraReducers: builder => {
+    builder
+      .addCase(asyncThunkGetPieces.fulfilled, (state, action) => {
+        action.payload.forEach(piece => {
+          state.tiles[piece.positionRow][piece.positionCol] = {
+            type: piece.type,
+            color: piece.color,
+            selected: false,
+            moveable: false
+          };
+        });
+      })
+      .addMatcher(
+        (action: AnyAction): action is StompMessage => action.type === STOMP_MESSAGE,
+        (state, action) => {
+          if (action.payload.topic === getStatusTopic(state.id)) {
+            const game: Game = JSON.parse(action.payload.data);
+            state.status = game.status;
+            state.whitePlayer = game.whitePlayer;
+            state.blackPlayer = game.blackPlayer;
+          }
+        }
+      );
   }
 });
 
-export const selectTile = (row: number, col: number, selected: boolean): SelectTile => ({
-  type: SELECT_TILE,
-  payload: {
-    row,
-    col,
-    selected
-  }
-});
+export const {
+  setGameId,
+  selectTile,
+  setTile,
+  takePieces,
+  addMoves,
+  clearBoard,
+  clearTaken,
+  clearMoves,
+  clearGame
+} = activeGameSlice.actions;
 
-export const addMove = (move: Move): AddMoves => ({
-  type: ADD_MOVES,
-  payload: [move]
-});
-
-export const addMoves = (moves: Move[]): AddMoves => ({
-  type: ADD_MOVES,
-  payload: moves
-});
-
-export const takePiece = (piece: Piece): TakePieces => ({
-  type: TAKE_PIECES,
-  payload: [piece]
-});
-
-export const takePieces = (piece: Piece[]): TakePieces => ({
-  type: TAKE_PIECES,
-  payload: piece
-});
-
-export const clearBoard = (): ClearBoard => ({
-  type: CLEAR_BOARD
-});
-
-export const clearGame = (): ClearGame => ({
-  type: CLEAR_GAME
-});
-
-export const clearTaken = (color: PieceColor): ClearTaken => ({
-  type: CLEAR_TAKEN,
-  payload: color
-});
-
-export const clearMoves = (): ClearMoves => ({
-  type: CLEAR_MOVES
-});
+export default activeGameSlice.reducer;

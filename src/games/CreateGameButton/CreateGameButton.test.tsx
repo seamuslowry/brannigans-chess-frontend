@@ -14,7 +14,7 @@ import { Game } from '../../services/ChessService.types';
 import { emptyGame, testStore } from '../../utils/testData';
 import CreateGameButton from './CreateGameButton';
 import { AppState } from '../../store/store';
-import { SEND_ALERT } from '../../store/notifications/notifications';
+import { sendAlert } from '../../store/notifications/notifications';
 
 const mockStore = createMockStore<AppState, ActionCreator<AnyAction>>([thunk]);
 const mockedStore = mockStore(testStore);
@@ -80,5 +80,7 @@ test('fails to create a game', async () => {
   await waitForElementToBeRemoved(() => getByRole('progressbar')); // wait for call to complete
 
   expect(history.location.pathname).not.toEqual(`/game/${emptyGame.id}`);
-  expect(mockedStore.getActions()).toContainEqual(expect.objectContaining({ type: SEND_ALERT }));
+  expect(mockedStore.getActions()).toContainEqual(
+    expect.objectContaining({ type: sendAlert.type })
+  );
 });

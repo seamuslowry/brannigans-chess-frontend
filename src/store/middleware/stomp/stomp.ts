@@ -12,6 +12,11 @@ export const STOMP_CONNECTED = 'middleware/stomp/CONNECTED';
 export const STOMP_CLOSED = 'middleware/stomp/CLOSED';
 export const STOMP_MESSAGE = 'middleware/stomp/MESSAGE';
 
+export interface MessagePayload {
+  topic: string;
+  data: string;
+}
+
 export interface StompConnected {
   type: typeof STOMP_CONNECTED;
 }
@@ -22,10 +27,7 @@ export interface StompDisconnected {
 
 export interface StompMessage {
   type: typeof STOMP_MESSAGE;
-  payload: {
-    topic: string;
-    data: string;
-  };
+  payload: MessagePayload;
 }
 
 interface ConnectStomp {

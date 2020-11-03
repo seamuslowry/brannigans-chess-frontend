@@ -17,8 +17,8 @@ import {
 import { useAuth0 } from '@auth0/auth0-react';
 import config from '../../config';
 import { Player } from '../../services/ChessService.types';
-import { UPDATE_PLAYER } from '../../store/auth/auth';
-import { SEND_ALERT } from '../../store/notifications/notifications';
+import { updatePlayer } from '../../store/auth/auth';
+import { sendAlert } from '../../store/notifications/notifications';
 
 const server = setupServer(
   rest.post(`${config.serviceUrl}/players/auth`, (req, res, ctx) => {
@@ -76,7 +76,7 @@ test('retrieves a player after getting an access token', async () => {
   await waitFor(() =>
     expect(accessTokenStore.getActions()).toContainEqual(
       expect.objectContaining({
-        type: UPDATE_PLAYER
+        type: updatePlayer.type
       })
     )
   );
@@ -105,7 +105,7 @@ test('fails to retrieve a player after getting an access token', async () => {
   await waitFor(() =>
     expect(accessTokenStore.getActions()).toContainEqual(
       expect.objectContaining({
-        type: SEND_ALERT
+        type: sendAlert.type
       })
     )
   );

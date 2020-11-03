@@ -1,7 +1,6 @@
 import { Color } from '@material-ui/lab';
-
-export const SEND_ALERT = 'chess/notifications/SEND_ALERT';
-export const REMOVE_ALERT = 'chess/notifications/REMOVE_ALERT';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { asyncThunkGetPieces } from '../activeGame/activeGame';
 
 export interface AlertInfo {
   message: string;
@@ -16,49 +15,39 @@ export const initialState: NotificationsState = {
   pendingAlerts: []
 };
 
-interface SendAlert {
-  type: typeof SEND_ALERT;
-  payload: AlertInfo;
-}
+const prepareAlertInfo = (message: string, severity: Color = 'error') => ({
+  payload: { message, severity }
+});
 
-interface RemoveAlert {
-  type: typeof REMOVE_ALERT;
-  payload: AlertInfo;
-}
-
-type NotificationsAction = SendAlert | RemoveAlert;
-
-export const reducer = (
-  state: NotificationsState = initialState,
-  action: NotificationsAction
-): NotificationsState => {
-  switch (action.type) {
-    case SEND_ALERT:
-      return {
-        ...state,
-        pendingAlerts: [...state.pendingAlerts, action.payload]
-      };
-    case REMOVE_ALERT:
-      return {
-        ...state,
-        pendingAlerts: state.pendingAlerts.filter(
+const notificationsSlice = createSlice({
+  name: 'chess/notifications',
+  initialState,
+  reducers: {
+    sendAlert: {
+      reducer: (state, action: PayloadAction<AlertInfo>) => {
+        state.pendingAlerts.push(action.payload);
+      },
+      prepare: prepareAlertInfo
+    },
+    removeAlert: {
+      reducer: (state, action: PayloadAction<AlertInfo>) => {
+        state.pendingAlerts = state.pendingAlerts.filter(
           a => !(a.message === action.payload.message && a.severity === action.payload.severity)
-        )
-      };
-    default:
-      return state;
-  }
-};
-
-export const sendAlert = (message: string, severity: Color = 'error'): SendAlert => ({
-  type: SEND_ALERT,
-  payload: {
-    message,
-    severity
+        );
+      },
+      prepare: prepareAlertInfo
+    }
+  },
+  extraReducers: builder => {
+    builder.addCase(asyncThunkGetPieces.rejected, (state, action) => {
+      state.pendingAlerts.push({
+        message: `Could not get pieces for game: ${action.error.message}`,
+        severity: 'error'
+      });
+    });
   }
 });
 
-export const removeAlert = (alert: AlertInfo): RemoveAlert => ({
-  type: REMOVE_ALERT,
-  payload: alert
-});
+export const { sendAlert, removeAlert } = notificationsSlice.actions;
+
+export default notificationsSlice.reducer;

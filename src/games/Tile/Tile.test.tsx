@@ -6,7 +6,7 @@ import thunk from 'redux-thunk';
 import createMockStore from 'redux-mock-store';
 import Tile from './Tile';
 import { testStore } from '../../utils/testData';
-import { SELECT_TILE } from '../../store/activeGame/activeGame';
+import { selectTile } from '../../store/activeGame/activeGame';
 import { AppState } from '../../store/store';
 import { immutableUpdate } from '../../utils/arrayHelpers';
 
@@ -51,7 +51,7 @@ test('selects when clicking piece', async () => {
 
   expect(storeWithPiece.getActions()).toContainEqual(
     expect.objectContaining({
-      type: SELECT_TILE
+      type: selectTile.type
     })
   );
 });

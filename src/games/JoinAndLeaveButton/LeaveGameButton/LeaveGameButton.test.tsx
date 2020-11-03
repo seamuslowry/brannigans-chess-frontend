@@ -11,7 +11,7 @@ import { Game } from '../../../services/ChessService.types';
 import config from '../../../config';
 import { emptyGame, playerOne, playerTwo, testStore } from '../../../utils/testData';
 import LeaveGameButton from './LeaveGameButton';
-import { SEND_ALERT } from '../../../store/notifications/notifications';
+import { sendAlert } from '../../../store/notifications/notifications';
 
 const mockStore = createMockStore<AppState, ActionCreator<AnyAction>>([thunk]);
 const mockedStore = mockStore(testStore);
@@ -43,7 +43,7 @@ test('leaves a white game', async () => {
 
   expect(mockedStore.getActions()).not.toContainEqual(
     expect.objectContaining({
-      type: SEND_ALERT
+      type: sendAlert.type
     })
   );
 });
@@ -63,7 +63,7 @@ test('leaves a black game', async () => {
 
   expect(mockedStore.getActions()).not.toContainEqual(
     expect.objectContaining({
-      type: SEND_ALERT
+      type: sendAlert.type
     })
   );
 });
@@ -89,7 +89,7 @@ test('tries to leave a full game', async () => {
 
   expect(mockedStore.getActions()).toContainEqual(
     expect.objectContaining({
-      type: SEND_ALERT,
+      type: sendAlert.type,
       payload: expect.objectContaining({
         message: expect.stringContaining(errorMessage)
       })
@@ -117,7 +117,7 @@ test('fails to leave a slot', async () => {
 
   expect(mockedStore.getActions()).toContainEqual(
     expect.objectContaining({
-      type: SEND_ALERT,
+      type: sendAlert.type,
       payload: expect.objectContaining({
         message: expect.stringContaining('Error while leaving')
       })

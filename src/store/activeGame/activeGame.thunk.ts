@@ -1,7 +1,7 @@
 import ChessService from '../../services/ChessService';
 import { sendAlert } from '../notifications/notifications';
 import { ThunkResult } from '../store';
-import { selectTile, setTile, addMove, takePiece } from './activeGame';
+import { selectTile, setTile, addMoves, takePieces } from './activeGame';
 
 export const clickTile = (row: number, col: number): ThunkResult<Promise<void>> => (
   dispatch,
@@ -20,8 +20,8 @@ export const clickTile = (row: number, col: number): ThunkResult<Promise<void>> 
         dispatch(selectTile(selectedPosition[0], selectedPosition[1], false));
         dispatch(setTile(move.srcRow, move.srcCol, undefined));
         dispatch(setTile(move.dstRow, move.dstCol, move.movingPiece));
-        dispatch(addMove(move));
-        move.takenPiece && dispatch(takePiece(move.takenPiece));
+        dispatch(addMoves([move]));
+        move.takenPiece && dispatch(takePieces([move.takenPiece]));
         move.moveType === 'EN_PASSANT' && dispatch(setTile(move.srcRow, move.dstCol, undefined));
         if (move.moveType === 'KING_SIDE_CASTLE') {
           dispatch(setTile(move.srcRow, move.dstCol + 1, undefined));
@@ -45,14 +45,14 @@ export const clickTile = (row: number, col: number): ThunkResult<Promise<void>> 
   return Promise.resolve();
 };
 
-export const getPieces = (gameId: number): ThunkResult<void> => async dispatch => {
-  return ChessService.getPieces(gameId, undefined, 'ACTIVE')
-    .then(res => {
-      res.data.forEach(piece => {
-        dispatch(setTile(piece.positionRow, piece.positionCol, piece));
-      });
-    })
-    .catch(e => {
-      dispatch(sendAlert(`Could not get pieces for game: ${e.message}`));
-    });
-};
+// export const getPieces = (gameId: number): ThunkResult<void> => async dispatch => {
+//   return ChessService.getPieces(gameId, undefined, 'ACTIVE')
+//     .then(res => {
+//       res.data.forEach(piece => {
+//         dispatch(setTile(piece.positionRow, piece.positionCol, piece));
+//       });
+//     })
+//     .catch(e => {
+//       dispatch(sendAlert(`Could not get pieces for game: ${e.message}`));
+//     });
+// };

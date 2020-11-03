@@ -1,3 +1,4 @@
+// TODO remove if no longer using
 export const immutableUpdate = <T extends object>(
   array: T[][],
   row: number,
@@ -16,4 +17,5 @@ export const immutableUpdate = <T extends object>(
   ...array.slice(row + 1)
 ];
 
+// TODO remove
 export const flatten = <T>(array: T[][]): T[] => array.reduce((acc, val) => acc.concat(val), []);

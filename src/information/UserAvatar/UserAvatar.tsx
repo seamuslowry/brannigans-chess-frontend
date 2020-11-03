@@ -28,6 +28,7 @@ const UserAvatar: React.FC<Omit<AvatarProps, 'alt' | 'src' | 'className'>> = pro
     const getToken = async () => {
       const token = await getAccessTokenSilently();
       dispatch(updateToken(token));
+      localStorage.setItem('token', token);
     };
 
     getToken();
@@ -35,6 +36,7 @@ const UserAvatar: React.FC<Omit<AvatarProps, 'alt' | 'src' | 'className'>> = pro
 
     return () => {
       clearInterval(interval);
+      localStorage.removeItem('token');
     };
   }, [isAuthenticated, dispatch, getAccessTokenSilently]);
 

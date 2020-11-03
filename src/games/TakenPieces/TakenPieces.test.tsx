@@ -9,8 +9,8 @@ import { blackRook, testStore } from '../../utils/testData';
 import { Piece } from '../../services/ChessService.types';
 import config from '../../config';
 import TakenPieces from './TakenPieces';
-import { CLEAR_TAKEN, TAKE_PIECES } from '../../store/activeGame/activeGame';
-import { SEND_ALERT } from '../../store/notifications/notifications';
+import { clearTaken, takePieces } from '../../store/activeGame/activeGame';
+import { sendAlert } from '../../store/notifications/notifications';
 
 const mockStore = createMockStore([thunk]);
 const mockedStore = mockStore({
@@ -45,7 +45,7 @@ test('gets pieces on mount', async () => {
 
   expect(mockedStore.getActions()).toContainEqual(
     expect.objectContaining({
-      type: TAKE_PIECES
+      type: takePieces.type
     })
   );
 });
@@ -67,7 +67,7 @@ test('handles an error getting pieces on mount', async () => {
 
   expect(mockedStore.getActions()).toContainEqual(
     expect.objectContaining({
-      type: SEND_ALERT
+      type: sendAlert.type
     })
   );
 });
@@ -85,7 +85,7 @@ test('clears pieces on unmount', async () => {
 
   expect(mockedStore.getActions()).toContainEqual(
     expect.objectContaining({
-      type: CLEAR_TAKEN
+      type: clearTaken.type
     })
   );
 });

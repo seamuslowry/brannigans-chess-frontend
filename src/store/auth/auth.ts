@@ -1,7 +1,5 @@
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Player } from '../../services/ChessService.types';
-
-export const UPDATE_TOKEN = 'chess/auth/UPDATE_TOKEN';
-export const UPDATE_PLAYER = 'chess/auth/UPDATE_PLAYER';
 
 export interface AuthState {
   player?: Player;
@@ -10,41 +8,19 @@ export interface AuthState {
 
 export const initialState: AuthState = {};
 
-interface UpdatePlayer {
-  type: typeof UPDATE_PLAYER;
-  payload: Player;
-}
-
-interface UpdateToken {
-  type: typeof UPDATE_TOKEN;
-  payload: string;
-}
-
-type AuthAction = UpdateToken | UpdatePlayer;
-
-export const reducer = (state: AuthState = initialState, action: AuthAction): AuthState => {
-  switch (action.type) {
-    case UPDATE_TOKEN:
-      return {
-        ...state,
-        token: action.payload
-      };
-    case UPDATE_PLAYER:
-      return {
-        ...state,
-        player: action.payload
-      };
-    default:
-      return state;
+const authSlice = createSlice({
+  name: 'chess/auth',
+  initialState,
+  reducers: {
+    updateToken: (state, action: PayloadAction<string>) => {
+      state.token = action.payload;
+    },
+    updatePlayer: (state, action: PayloadAction<Player>) => {
+      state.player = action.payload;
+    }
   }
-};
-
-export const updateToken = (payload: string): UpdateToken => ({
-  type: UPDATE_TOKEN,
-  payload
 });
 
-export const updatePlayer = (payload: Player): UpdatePlayer => ({
-  type: UPDATE_PLAYER,
-  payload
-});
+export const { updatePlayer, updateToken } = authSlice.actions;
+
+export default authSlice.reducer;

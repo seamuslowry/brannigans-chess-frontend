@@ -16,7 +16,7 @@ const Notifications: React.FC = () => {
     if (alerts.length && !displayAlert) {
       // Set a new snack when we don't have an active one
       setDisplayAlert({ ...alerts[0] });
-      dispatch(removeAlert(alerts[0]));
+      dispatch(removeAlert(alerts[0].message, alerts[0].severity));
       setOpen(true);
     } else if (alerts.length && displayAlert && open) {
       // Close an active snack when a new one is added
