@@ -69,3 +69,8 @@ export interface PieceIdentitifierDto {
   row: number;
   col: number;
 }
+
+export interface AdditionalPlayerInfo {
+  name: string;
+  imageUrl: string;
+}
