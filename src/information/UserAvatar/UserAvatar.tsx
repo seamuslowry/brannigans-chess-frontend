@@ -40,14 +40,17 @@ const UserAvatar: React.FC<Omit<AvatarProps, 'alt' | 'src' | 'className'>> = pro
 
   React.useEffect(() => {
     accessToken &&
-      ChessService.authenticatePlayer()
+      ChessService.authenticatePlayer({
+        imageUrl: user.picture,
+        name: user.name
+      })
         .then(res => {
           dispatch(updatePlayer(res.data));
         })
         .catch(e => {
           dispatch(sendAlert(`Error finding Player: ${e.message}`));
         });
-  }, [accessToken, dispatch]);
+  }, [accessToken, dispatch, user]);
 
   return loggedIn && user ? (
     <Avatar alt={user.name} src={user.picture} className={classes.small} />
