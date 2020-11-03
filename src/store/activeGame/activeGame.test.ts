@@ -16,8 +16,7 @@ import reducer, {
   setGameId,
   clearMoves,
   getStatusTopic,
-  asyncThunkGetPieces as getPieces,
-  asyncThunkGetPieces
+  getPieces
 } from './activeGame';
 import {
   blackRook,
@@ -500,7 +499,7 @@ test('dispatches an error when failing to get pieces', async () => {
 
   expect(mockedStore.getActions()).toContainEqual(
     expect.objectContaining({
-      type: asyncThunkGetPieces.rejected.type
+      type: getPieces.rejected.type
     })
   );
 });

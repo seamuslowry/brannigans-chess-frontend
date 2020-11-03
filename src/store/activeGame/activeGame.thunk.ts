@@ -44,15 +44,3 @@ export const clickTile = (row: number, col: number): ThunkResult<Promise<void>> 
 
   return Promise.resolve();
 };
-
-// export const getPieces = (gameId: number): ThunkResult<void> => async dispatch => {
-//   return ChessService.getPieces(gameId, undefined, 'ACTIVE')
-//     .then(res => {
-//       res.data.forEach(piece => {
-//         dispatch(setTile(piece.positionRow, piece.positionCol, piece));
-//       });
-//     })
-//     .catch(e => {
-//       dispatch(sendAlert(`Could not get pieces for game: ${e.message}`));
-//     });
-// };

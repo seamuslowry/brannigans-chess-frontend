@@ -1,6 +1,6 @@
 import { Color } from '@material-ui/lab';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { asyncThunkGetPieces } from '../activeGame/activeGame';
+import { getPieces } from '../activeGame/activeGame';
 
 export interface AlertInfo {
   message: string;
@@ -39,7 +39,7 @@ const notificationsSlice = createSlice({
     }
   },
   extraReducers: builder => {
-    builder.addCase(asyncThunkGetPieces.rejected, (state, action) => {
+    builder.addCase(getPieces.rejected, (state, action) => {
       state.pendingAlerts.push({
         message: `Could not get pieces for game: ${action.error.message}`,
         severity: 'error'

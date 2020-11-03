@@ -1,5 +1,5 @@
 import { errorAlertInfo, successAlertInfo } from '../../utils/testData';
-import { asyncThunkGetPieces } from '../activeGame/activeGame';
+import { getPieces } from '../activeGame/activeGame';
 import reducer, { initialState, sendAlert, AlertInfo, removeAlert } from './notifications';
 
 test('sends an alert', () => {
@@ -35,7 +35,7 @@ test('removes an alert', () => {
 
 test('shows a notification on piece retrieval failure', async () => {
   const message = 'test message';
-  const result = reducer(undefined, asyncThunkGetPieces.rejected(new Error(message), '', 0));
+  const result = reducer(undefined, getPieces.rejected(new Error(message), '', 0));
 
   expect(result.pendingAlerts).toContainEqual(
     expect.objectContaining({

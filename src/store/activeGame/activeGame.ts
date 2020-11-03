@@ -13,7 +13,7 @@ import { StompMessage, STOMP_MESSAGE } from '../middleware/stomp/stomp';
 
 export const getStatusTopic = (gameId: number) => `/game/status/${gameId}`;
 
-export const asyncThunkGetPieces = createAsyncThunk(
+export const getPieces = createAsyncThunk(
   'chess/activeGame/thunkGetPieces',
   async (gameId: number) => {
     const response = await ChessService.getPieces(gameId, undefined, 'ACTIVE');
@@ -131,7 +131,7 @@ const activeGameSlice = createSlice({
   },
   extraReducers: builder => {
     builder
-      .addCase(asyncThunkGetPieces.fulfilled, (state, action) => {
+      .addCase(getPieces.fulfilled, (state, action) => {
         action.payload.forEach(piece => {
           state.tiles[piece.positionRow][piece.positionCol] = {
             type: piece.type,
