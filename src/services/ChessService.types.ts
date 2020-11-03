@@ -28,6 +28,8 @@ export interface Piece {
 
 export interface Player {
   authId: string;
+  name: string;
+  imageUrl: string;
   id: number;
 }
 
@@ -68,4 +70,9 @@ export interface PieceIdentitifierDto {
   gameId: number;
   row: number;
   col: number;
+}
+
+export interface AdditionalPlayerInfo {
+  name: string;
+  imageUrl: string;
 }

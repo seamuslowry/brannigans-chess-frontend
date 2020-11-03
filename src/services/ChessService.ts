@@ -1,5 +1,6 @@
 import { chessApi } from './Api';
 import {
+  AdditionalPlayerInfo,
   Game,
   Move,
   PageRequest,
@@ -58,7 +59,8 @@ const promote = (type: PieceType, dto: PieceIdentitifierDto) =>
 
 const createGame = () => chessApi.post<Game>('games/create');
 
-const authenticatePlayer = () => chessApi.get<Player>('players/auth');
+const authenticatePlayer = (playerInfo: AdditionalPlayerInfo) =>
+  chessApi.post<Player>('players/auth', playerInfo);
 
 const joinGame = (gameId: number, color: PieceColor) =>
   chessApi.post<Game>(`players/join/${gameId}?color=${color}`);

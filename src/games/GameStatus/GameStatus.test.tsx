@@ -60,7 +60,7 @@ test('shows the white player when available', async () => {
     </Provider>
   );
 
-  const whitePlayer = await waitFor(() => getByText(playerOne.authId));
+  const whitePlayer = await waitFor(() => getByText(playerOne.name));
 
   expect(whitePlayer).toBeInTheDocument();
 });
@@ -92,7 +92,7 @@ test('shows the black player when available', async () => {
     </Provider>
   );
 
-  const blackPlayer = await waitFor(() => getByText(playerOne.authId));
+  const blackPlayer = await waitFor(() => getByText(playerOne.name));
 
   expect(blackPlayer).toBeInTheDocument();
 });

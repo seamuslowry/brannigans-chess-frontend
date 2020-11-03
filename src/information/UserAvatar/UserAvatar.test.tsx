@@ -21,7 +21,7 @@ import { UPDATE_PLAYER } from '../../store/auth/auth';
 import { SEND_ALERT } from '../../store/notifications/notifications';
 
 const server = setupServer(
-  rest.get(`${config.serviceUrl}/players/auth`, (req, res, ctx) => {
+  rest.post(`${config.serviceUrl}/players/auth`, (req, res, ctx) => {
     return res(ctx.json<Player>(playerOne));
   })
 );
@@ -91,7 +91,7 @@ test('fails to retrieve a player after getting an access token', async () => {
     }
   });
   server.use(
-    rest.get(`${config.serviceUrl}/players/auth`, (req, res, ctx) => {
+    rest.post(`${config.serviceUrl}/players/auth`, (req, res, ctx) => {
       return res(ctx.status(403));
     })
   );

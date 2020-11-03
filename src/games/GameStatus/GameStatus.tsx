@@ -48,7 +48,7 @@ const GameStatus: React.FC<Props> = ({ gameId }) => {
             WHITE PLAYER:{' '}
           </Typography>
           <Typography display="inline">
-            {whitePlayer && whitePlayer.authId} <JoinAndLeaveButton gameId={gameId} color="WHITE" />
+            {whitePlayer && whitePlayer.name} <JoinAndLeaveButton gameId={gameId} color="WHITE" />
           </Typography>
         </Box>
         <Box>
@@ -56,7 +56,7 @@ const GameStatus: React.FC<Props> = ({ gameId }) => {
             BLACK PLAYER:{' '}
           </Typography>
           <Typography display="inline">
-            {blackPlayer && blackPlayer.authId} <JoinAndLeaveButton gameId={gameId} color="BLACK" />
+            {blackPlayer && blackPlayer.name} <JoinAndLeaveButton gameId={gameId} color="BLACK" />
           </Typography>
         </Box>
       </Box>
