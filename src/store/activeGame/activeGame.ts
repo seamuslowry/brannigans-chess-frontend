@@ -10,11 +10,44 @@ import {
   Game
 } from '../../services/ChessService.types';
 import { StompMessage, STOMP_MESSAGE } from '../middleware/stomp/stomp';
-import { clickTile } from './activeGame.thunk';
+import { AppState } from '../store';
 
 export const getStatusTopic = (gameId: number) => `/game/status/${gameId}`;
 
-// TODO move to .thunk file if can't mave clickTile here
+export interface TilePosition {
+  row: number;
+  col: number;
+}
+
+export const clickTile = createAsyncThunk<null | boolean | Move, TilePosition, { state: AppState }>(
+  'chess/activeGame/clickTile',
+  async (position: TilePosition, { getState }) => {
+    const { row, col } = position;
+    const { selectedPosition, id: gameId, tiles } = getState().activeGame;
+
+    if (selectedPosition && selectedPosition[0] === row && selectedPosition[1] === col) {
+      return false;
+    } else if (selectedPosition) {
+      try {
+        const response = await ChessService.move(
+          gameId,
+          selectedPosition[0],
+          selectedPosition[1],
+          row,
+          col
+        );
+        return response.data;
+      } catch (e) {
+        throw new Error(e.response?.data || e.message);
+      }
+    } else if (tiles[row][col].type) {
+      return true;
+    }
+
+    return null;
+  }
+);
+
 export const getPieces = createAsyncThunk('chess/activeGame/getPieces', async (gameId: number) => {
   const response = await ChessService.getPieces(gameId, undefined, 'ACTIVE');
   return response.data;

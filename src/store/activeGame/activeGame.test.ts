@@ -34,7 +34,7 @@ import { AppState } from '../store';
 import { immutableUpdate } from '../../utils/arrayHelpers';
 import config from '../../config';
 import { Move, Piece } from '../../services/ChessService.types';
-import { clickTile } from './activeGame.thunk';
+import { clickTile } from './activeGame';
 import { waitFor } from '@testing-library/dom';
 import { STOMP_MESSAGE } from '../middleware/stomp/stomp';
 

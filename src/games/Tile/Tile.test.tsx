@@ -6,7 +6,7 @@ import thunk from 'redux-thunk';
 import createMockStore from 'redux-mock-store';
 import Tile from './Tile';
 import { testStore } from '../../utils/testData';
-import { clickTile } from '../../store/activeGame/activeGame.thunk';
+import { clickTile } from '../../store/activeGame/activeGame';
 import { AppState } from '../../store/store';
 import { immutableUpdate } from '../../utils/arrayHelpers';
 
