@@ -114,7 +114,7 @@ export const whiteEnPassant: Move = {
   dstRow: 2,
   dstCol: 2,
   moveType: 'EN_PASSANT',
-  id: 2
+  id: 5
 };
 
 export const whiteKingSideCastle: Move = {
@@ -125,7 +125,7 @@ export const whiteKingSideCastle: Move = {
   dstRow: 7,
   dstCol: 6,
   moveType: 'KING_SIDE_CASTLE',
-  id: 2
+  id: 6
 };
 
 export const whiteQueenSideCastle: Move = {
@@ -136,7 +136,7 @@ export const whiteQueenSideCastle: Move = {
   dstRow: 7,
   dstCol: 2,
   moveType: 'QUEEN_SIDE_CASTLE',
-  id: 2
+  id: 7
 };
 
 export const unauthenticatedAuth0: Auth0ContextInterface = {

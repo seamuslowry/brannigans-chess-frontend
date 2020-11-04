@@ -67,7 +67,7 @@ test('sets the global game id', () => {
 test('clears all moves', () => {
   const result = reducer(undefined, clearMoves());
 
-  expect(result.moveList).toEqual([]);
+  expect(result.moves.ids).toEqual([]);
 });
 
 test('selects a tile', () => {
@@ -92,13 +92,13 @@ test('sets a tile', () => {
 test('records a move', () => {
   const result = reducer(undefined, addMoves([whiteMove]));
 
-  expect(result.moveList).toContainEqual(whiteMove);
+  expect(result.moves.ids).toContainEqual(whiteMove.id);
 });
 
 test('records moves', () => {
   const result = reducer(undefined, addMoves([whiteMove]));
 
-  expect(result.moveList).toContainEqual(whiteMove);
+  expect(result.moves.ids).toContainEqual(whiteMove.id);
 });
 
 test('takes a piece', () => {
@@ -298,7 +298,7 @@ test('moves a piece - reducer', async () => {
   expect(result.tiles[whiteMove.srcRow][whiteMove.srcCol].type).toBeUndefined();
   expect(result.tiles[whiteMove.dstRow][whiteMove.dstCol].type).toEqual(whiteMove.movingPiece.type);
   expect(result.takenPieces).toHaveLength(0);
-  expect(result.moveList).toContainEqual(whiteMove);
+  expect(result.moves.ids).toContainEqual(whiteMove.id);
 });
 
 test('moves to take a piece - action', async () => {
@@ -341,7 +341,7 @@ test('moves to take a piece - reducer', async () => {
   expect(result.tiles[whiteTake.srcRow][whiteTake.srcCol].type).toBeUndefined();
   expect(result.tiles[whiteTake.dstRow][whiteTake.dstCol].type).toEqual(whiteMove.movingPiece.type);
   expect(result.takenPieces).toContainEqual(whiteTake.takenPiece);
-  expect(result.moveList).toContainEqual(whiteTake);
+  expect(result.moves.ids).toContainEqual(whiteTake.id);
 });
 
 test('en passants a piece - action', async () => {
@@ -391,7 +391,7 @@ test('en passants a piece - reducer', async () => {
     whiteEnPassant.movingPiece.type
   );
   expect(result.takenPieces).toContainEqual(whiteEnPassant.takenPiece);
-  expect(result.moveList).toContainEqual(whiteEnPassant);
+  expect(result.moves.ids).toContainEqual(whiteEnPassant.id);
 });
 
 test('king side castles - action', async () => {
@@ -457,7 +457,7 @@ test('king side castles - reducer', async () => {
     'ROOK'
   );
   expect(result.takenPieces).toHaveLength(0);
-  expect(result.moveList).toContainEqual(whiteKingSideCastle);
+  expect(result.moves.ids).toContainEqual(whiteKingSideCastle.id);
 });
 
 test('queen side castles - action', async () => {
@@ -527,7 +527,7 @@ test('queen side castles - reducer', async () => {
     'ROOK'
   );
   expect(result.takenPieces).toHaveLength(0);
-  expect(result.moveList).toContainEqual(whiteQueenSideCastle);
+  expect(result.moves.ids).toContainEqual(whiteQueenSideCastle.id);
 });
 
 test('moves a piece - invalid move', async () => {

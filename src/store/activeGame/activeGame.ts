@@ -1,4 +1,10 @@
-import { AnyAction, createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import {
+  AnyAction,
+  createAsyncThunk,
+  createEntityAdapter,
+  createSlice,
+  PayloadAction
+} from '@reduxjs/toolkit';
 import ChessService from '../../services/ChessService';
 import {
   PieceColor,
@@ -60,12 +66,15 @@ export interface TileInfo {
   moveable: boolean;
 }
 
+const movesAdapter = createEntityAdapter<Move>();
+const initialMoveState = movesAdapter.getInitialState();
+
 export interface ActiveGameState {
   tiles: TileInfo[][];
   // TODO refactor to use TilePosition interface
   selectedPosition?: [number, number];
   takenPieces: Piece[];
-  moveList: Move[];
+  moves: typeof initialMoveState;
   status: GameStatus | '';
   whitePlayer: Player | null;
   blackPlayer: Player | null;
@@ -88,7 +97,7 @@ interface AgnosticPiece {
 export const initialState: ActiveGameState = {
   tiles: blankBoard,
   takenPieces: [],
-  moveList: [],
+  moves: initialMoveState,
   status: '',
   whitePlayer: null,
   blackPlayer: null,
@@ -148,7 +157,7 @@ const activeGameSlice = createSlice({
       state.takenPieces.push(...action.payload);
     },
     addMoves: (state, action: PayloadAction<Move[]>) => {
-      state.moveList.push(...action.payload);
+      state.moves = movesAdapter.upsertMany(state.moves, action.payload);
     },
     clearBoard: state => {
       state.tiles = initialState.tiles;
@@ -158,7 +167,7 @@ const activeGameSlice = createSlice({
       state.takenPieces = state.takenPieces.filter(p => p.color !== action.payload);
     },
     clearMoves: state => {
-      state.moveList = initialState.moveList;
+      state.moves = initialState.moves;
     },
     clearGame: () => initialState
   },
@@ -194,7 +203,7 @@ const activeGameSlice = createSlice({
             type: move.movingPiece.type,
             color: move.movingPiece.color
           };
-          state.moveList.push(move);
+          state.moves = movesAdapter.upsertOne(state.moves, move);
           move.takenPiece && state.takenPieces.push(move.takenPiece);
           if (move.moveType === 'EN_PASSANT') {
             state.tiles[move.srcRow][move.dstCol] = { ...blankTile };
@@ -236,5 +245,9 @@ export const {
   clearMoves,
   clearGame
 } = activeGameSlice.actions;
+
+export const { selectAll: selectAllMoves } = movesAdapter.getSelectors<AppState>(
+  state => state.activeGame.moves
+);
 
 export default activeGameSlice.reducer;
