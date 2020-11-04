@@ -17,7 +17,12 @@ const mockedStore = mockStore({
   ...testStore,
   activeGame: {
     ...testStore.activeGame,
-    moveList: [whiteMove]
+    moves: {
+      ids: [whiteMove.id],
+      entities: {
+        [whiteMove.id]: { ...whiteMove }
+      }
+    }
   }
 });
 

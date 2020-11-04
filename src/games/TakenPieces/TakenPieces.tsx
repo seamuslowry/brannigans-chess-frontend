@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Piece as PieceType, PieceColor } from '../../services/ChessService.types';
 import ChessService from '../../services/ChessService';
 import Piece from '../Piece/Piece';
-import { clearTaken, takePieces } from '../../store/activeGame/activeGame';
+import { clearTaken, makeGetTakenPieces, addPieces } from '../../store/activeGame/activeGame';
 import { sendAlert } from '../../store/notifications/notifications';
 import { AppState } from '../../store/store';
 import usePieceSize from '../../utils/usePieceSize';
@@ -24,7 +24,7 @@ const TakenPieces: React.FC<Props> = ({ gameId, color }) => {
     setLoading(true);
     ChessService.getPieces(gameId, color, 'TAKEN')
       .then(res => {
-        dispatch(takePieces(res.data));
+        dispatch(addPieces(res.data));
       })
       .catch(e => {
         dispatch(sendAlert(`Could not find ${color} taken pieces: ${e.message}`));
@@ -38,9 +38,7 @@ const TakenPieces: React.FC<Props> = ({ gameId, color }) => {
     };
   }, [gameId, color, dispatch]);
 
-  const pieces = useSelector<AppState, PieceType[]>(state =>
-    state.activeGame.takenPieces.filter(p => p.color === color)
-  );
+  const pieces = useSelector<AppState, PieceType[]>(makeGetTakenPieces(color));
 
   return (
     <Box

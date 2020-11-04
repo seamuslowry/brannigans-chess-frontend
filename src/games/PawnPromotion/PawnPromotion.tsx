@@ -3,8 +3,8 @@ import { Dialog, DialogActions, DialogTitle, IconButton } from '@material-ui/cor
 import { useDispatch, useSelector } from 'react-redux';
 import Piece from '../Piece/Piece';
 import { AppState } from '../../store/store';
-import { PieceColor, PieceType } from '../../services/ChessService.types';
-import { setTile, TileInfo } from '../../store/activeGame/activeGame';
+import { PieceColor, PieceType, Piece as PieceEntity } from '../../services/ChessService.types';
+import { makeGetPromatablePawn, addPieces } from '../../store/activeGame/activeGame';
 import { sendAlert } from '../../store/notifications/notifications';
 import ChessService from '../../services/ChessService';
 
@@ -24,31 +24,34 @@ interface Props {
 
 const PawnPromotion: React.FC<Props> = ({ color, gameId }) => {
   const { row } = variants[color];
-  const [open, setOpen] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
   const dispatch = useDispatch();
 
-  const tiles = useSelector<AppState, TileInfo[][]>(state => state.activeGame.tiles);
+  const getPromotablePawn = React.useMemo(makeGetPromatablePawn, []);
 
-  const promoteCol = tiles[row].findIndex(i => i.type === 'PAWN');
+  const pawn = useSelector<AppState, PieceEntity | undefined>(state =>
+    getPromotablePawn(state, row)
+  );
 
-  // when websockets and game status comes in, drive off game status, not last move
-  React.useEffect(() => {
-    if (promoteCol >= 0) {
-      setOpen(true);
-    }
-  }, [promoteCol]);
+  if (!pawn) return null;
 
   const handleSelection = (type: PieceType) => () => {
     setLoading(true);
     ChessService.promote(type, {
-      col: promoteCol,
+      col: pawn.positionCol,
       row,
       gameId
     })
       .then(res => {
-        dispatch(setTile(res.data.positionRow, res.data.positionCol, res.data));
-        setOpen(false);
+        dispatch(
+          addPieces([
+            res.data,
+            {
+              ...pawn,
+              status: 'REMOVED'
+            }
+          ])
+        );
       })
       .catch(e => {
         dispatch(sendAlert(`Failed to promote the piece: ${e.message}`));
@@ -60,7 +63,7 @@ const PawnPromotion: React.FC<Props> = ({ color, gameId }) => {
 
   return (
     <>
-      <Dialog open={open}>
+      <Dialog open>
         <DialogTitle>Pawn Promotion</DialogTitle>
         <DialogActions>
           <IconButton disabled={loading} onClick={handleSelection('QUEEN')}>

@@ -5,26 +5,33 @@ import createMockStore from 'redux-mock-store';
 import { rest } from 'msw';
 import { setupServer } from 'msw/node';
 import thunk from 'redux-thunk';
-import { blackRook, testStore } from '../../utils/testData';
+import { makePiece, testStore } from '../../utils/testData';
 import { Piece } from '../../services/ChessService.types';
 import config from '../../config';
 import TakenPieces from './TakenPieces';
-import { clearTaken, takePieces } from '../../store/activeGame/activeGame';
+import { clearTaken, addPieces } from '../../store/activeGame/activeGame';
 import { sendAlert } from '../../store/notifications/notifications';
+
+const takenBlackRook = makePiece('ROOK', 'BLACK', 0, 0, 'TAKEN');
 
 const mockStore = createMockStore([thunk]);
 const mockedStore = mockStore({
   ...testStore,
   activeGame: {
     ...testStore.activeGame,
-    takenPieces: [blackRook]
+    pieces: {
+      ids: [takenBlackRook.id],
+      entities: {
+        [takenBlackRook.id]: { ...takenBlackRook }
+      }
+    }
   }
 });
 
 const server = setupServer(
   rest.get(`${config.serviceUrl}/pieces/0`, (req, res, ctx) => {
     return res(
-      ctx.json<Piece[]>([blackRook])
+      ctx.json<Piece[]>([takenBlackRook])
     );
   })
 );
@@ -45,7 +52,7 @@ test('gets pieces on mount', async () => {
 
   expect(mockedStore.getActions()).toContainEqual(
     expect.objectContaining({
-      type: takePieces.type
+      type: addPieces.type
     })
   );
 });
