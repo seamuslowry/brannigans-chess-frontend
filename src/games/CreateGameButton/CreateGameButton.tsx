@@ -2,9 +2,9 @@ import React from 'react';
 import { CircularProgress, Fab, makeStyles } from '@material-ui/core';
 import { Add } from '@material-ui/icons';
 import { useHistory } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
 import ChessService from '../../services/ChessService';
 import { sendAlert } from '../../store/notifications/notifications';
+import { useAppDispatch } from '../../store/store';
 
 const useStyles = makeStyles(theme => ({
   fab: {
@@ -17,7 +17,7 @@ const useStyles = makeStyles(theme => ({
 const CreateGameButton: React.FC = () => {
   const classes = useStyles();
   const history = useHistory();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const [loading, setLoading] = React.useState(false);
 

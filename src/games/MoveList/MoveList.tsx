@@ -1,10 +1,10 @@
 import React from 'react';
 import { Box, CircularProgress, makeStyles, Paper } from '@material-ui/core';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { Move as MoveType, PieceColor } from '../../services/ChessService.types';
 import { addMoves, clearMoves, selectAllMoves } from '../../store/activeGame/activeGame';
 import { sendAlert } from '../../store/notifications/notifications';
-import { AppState } from '../../store/store';
+import { AppState, useAppDispatch } from '../../store/store';
 import Move from '../Move/Move';
 import ChessService from '../../services/ChessService';
 
@@ -21,7 +21,7 @@ const useStyles = makeStyles({
 });
 
 const MoveList: React.FC<Props> = ({ gameId, color }) => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const classes = useStyles();
 
   const [loading, setLoading] = React.useState(false);

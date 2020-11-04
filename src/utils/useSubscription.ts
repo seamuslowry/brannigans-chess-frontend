@@ -1,10 +1,10 @@
 import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { MessagePayload, subscribe, unsubscribe } from '../store/middleware/stomp/stomp';
-import { AppState } from '../store/store';
+import { AppState, useAppDispatch } from '../store/store';
 
 const useSubscription = (topic: string) => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   React.useEffect(() => {
     dispatch(subscribe(topic));

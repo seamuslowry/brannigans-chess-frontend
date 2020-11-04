@@ -1,8 +1,8 @@
 import React from 'react';
 import { Dialog, DialogActions, DialogTitle, IconButton } from '@material-ui/core';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import Piece from '../Piece/Piece';
-import { AppState } from '../../store/store';
+import { AppState, useAppDispatch } from '../../store/store';
 import { PieceColor, PieceType, Piece as PieceEntity } from '../../services/ChessService.types';
 import { makeGetPromatablePawn, addPieces } from '../../store/activeGame/activeGame';
 import { sendAlert } from '../../store/notifications/notifications';
@@ -25,7 +25,7 @@ interface Props {
 const PawnPromotion: React.FC<Props> = ({ color, gameId }) => {
   const { row } = variants[color];
   const [loading, setLoading] = React.useState(false);
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const getPromotablePawn = React.useMemo(makeGetPromatablePawn, []);
 

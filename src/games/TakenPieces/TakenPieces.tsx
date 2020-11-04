@@ -1,12 +1,12 @@
 import React from 'react';
 import { Box, CircularProgress } from '@material-ui/core';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { Piece as PieceType, PieceColor } from '../../services/ChessService.types';
 import ChessService from '../../services/ChessService';
 import Piece from '../Piece/Piece';
 import { clearTaken, makeGetTakenPieces, addPieces } from '../../store/activeGame/activeGame';
 import { sendAlert } from '../../store/notifications/notifications';
-import { AppState } from '../../store/store';
+import { AppState, useAppDispatch } from '../../store/store';
 import usePieceSize from '../../utils/usePieceSize';
 
 interface Props {
@@ -15,7 +15,7 @@ interface Props {
 }
 
 const TakenPieces: React.FC<Props> = ({ gameId, color }) => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const pieceSize = usePieceSize();
 
   const [loading, setLoading] = React.useState(false);

@@ -1,9 +1,9 @@
 import React from 'react';
 import { Avatar, AvatarProps, makeStyles } from '@material-ui/core';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useAuth0 } from '@auth0/auth0-react';
 import { updatePlayer, updateToken } from '../../store/auth/auth';
-import { AppState } from '../../store/store';
+import { AppState, useAppDispatch } from '../../store/store';
 import ChessService from '../../services/ChessService';
 import { sendAlert } from '../../store/notifications/notifications';
 import useLoggedIn from '../../utils/useLoggedIn';
@@ -20,7 +20,7 @@ const UserAvatar: React.FC<Omit<AvatarProps, 'alt' | 'src' | 'className'>> = pro
   const accessToken = useSelector<AppState, string | undefined>(state => state.auth.token);
   const loggedIn = useLoggedIn();
 
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const classes = useStyles();
 
   React.useEffect(() => {
