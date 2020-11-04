@@ -190,6 +190,25 @@ test('handles a stomp message on an unrelated topic', () => {
   expect(result).toEqual(stateWithId);
 });
 
+test('clicks an unselectable tile - action', async () => {
+  await waitFor(() => mockedStore.dispatch(clickTile({ row: 0, col: 0 })));
+
+  expect(mockedStore.getActions()).toContainEqual(
+    expect.objectContaining({
+      type: clickTile.fulfilled.type,
+      payload: null
+    })
+  );
+});
+
+test('clicks an unselectable tile - reducer', async () => {
+  const position = { row: 0, col: 0 };
+  const result = reducer(undefined, clickTile.fulfilled(null, '', position));
+
+  expect(result.tiles[position.row][position.col].selected).toBe(false);
+  expect(result.selectedPosition).toBeUndefined();
+});
+
 test('clicks an unselected tile - action', async () => {
   const storeWithRook = mockStore({
     ...testStore,
@@ -509,6 +528,66 @@ test('queen side castles - reducer', async () => {
   );
   expect(result.takenPieces).toHaveLength(0);
   expect(result.moveList).toContainEqual(whiteQueenSideCastle);
+});
+
+test('moves a piece - invalid move', async () => {
+  const message = 'invalid move message';
+  server.use(
+    rest.post(`${config.serviceUrl}/moves/0`, (req, res, ctx) => {
+      return res(ctx.status(400), ctx.json(message));
+    })
+  );
+
+  const selectedStore = mockStore({
+    ...testStore,
+    activeGame: {
+      ...testStore.activeGame,
+      selectedPosition: [whiteMove.srcRow, whiteMove.srcCol]
+    }
+  });
+
+  await waitFor(() =>
+    selectedStore.dispatch(clickTile({ row: whiteMove.dstRow, col: whiteMove.dstCol }))
+  );
+
+  expect(selectedStore.getActions()).toContainEqual(
+    expect.objectContaining({
+      type: clickTile.rejected.type,
+      error: expect.objectContaining({
+        message
+      })
+    })
+  );
+});
+
+test('moves a piece - network error', async () => {
+  const message = 'Network Error';
+  server.use(
+    rest.post(`${config.serviceUrl}/moves/0`, (req, res, ctx) => {
+      return res.networkError(message);
+    })
+  );
+
+  const selectedStore = mockStore({
+    ...testStore,
+    activeGame: {
+      ...testStore.activeGame,
+      selectedPosition: [whiteMove.srcRow, whiteMove.srcCol]
+    }
+  });
+
+  await waitFor(() =>
+    selectedStore.dispatch(clickTile({ row: whiteMove.dstRow, col: whiteMove.dstCol }))
+  );
+
+  expect(selectedStore.getActions()).toContainEqual(
+    expect.objectContaining({
+      type: clickTile.rejected.type,
+      error: expect.objectContaining({
+        message
+      })
+    })
+  );
 });
 
 test('tries to get pieces', async () => {

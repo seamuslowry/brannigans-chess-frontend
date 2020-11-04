@@ -8,7 +8,7 @@ export interface TilePosition {
   col: number;
 }
 
-export const clickTile = createAsyncThunk<void | boolean | Move, TilePosition, { state: AppState }>(
+export const clickTile = createAsyncThunk<null | boolean | Move, TilePosition, { state: AppState }>(
   'chess/activeGame/clickTile',
   async (position: TilePosition, { getState }) => {
     const { row, col } = position;
@@ -17,19 +17,22 @@ export const clickTile = createAsyncThunk<void | boolean | Move, TilePosition, {
     if (selectedPosition && selectedPosition[0] === row && selectedPosition[1] === col) {
       return false;
     } else if (selectedPosition) {
-      const response = await ChessService.move(
-        gameId,
-        selectedPosition[0],
-        selectedPosition[1],
-        row,
-        col
-      );
-      return response.data;
+      try {
+        const response = await ChessService.move(
+          gameId,
+          selectedPosition[0],
+          selectedPosition[1],
+          row,
+          col
+        );
+        return response.data;
+      } catch (e) {
+        throw new Error(e.response?.data || e.message);
+      }
     } else if (tiles[row][col].type) {
       return true;
     }
 
-    // TODO is this necessary?
-    return Promise.resolve();
+    return null;
   }
 );

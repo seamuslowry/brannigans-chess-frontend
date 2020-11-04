@@ -48,8 +48,7 @@ const notificationsSlice = createSlice({
     });
     builder.addCase(clickTile.rejected, (state, action) => {
       state.pendingAlerts.push({
-        // TODO handle service response body error
-        message: `Could move move: ${action.error.message}`,
+        message: `${action.error.message}`,
         severity: 'error'
       });
     });
