@@ -5,14 +5,14 @@ import { rest } from 'msw';
 import { setupServer } from 'msw/node';
 import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router-dom';
-import thunk from 'redux-thunk';
+import { getDefaultMiddleware } from '@reduxjs/toolkit';
 import { clearGame, setGameId } from '../../store/activeGame/activeGame';
 import { testStore } from '../../utils/testData';
 import ActiveGame from './ActiveGame';
 import config from '../../config';
 import { Move, Piece } from '../../services/ChessService.types';
 
-const mockStore = createMockStore([thunk]);
+const mockStore = createMockStore(getDefaultMiddleware());
 const mockedStore = mockStore(testStore);
 
 beforeEach(() => mockedStore.clearActions());

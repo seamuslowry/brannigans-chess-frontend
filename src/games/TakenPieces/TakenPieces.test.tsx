@@ -4,7 +4,7 @@ import { Provider } from 'react-redux';
 import createMockStore from 'redux-mock-store';
 import { rest } from 'msw';
 import { setupServer } from 'msw/node';
-import thunk from 'redux-thunk';
+import { getDefaultMiddleware } from '@reduxjs/toolkit';
 import { makePiece, testStore } from '../../utils/testData';
 import { Piece } from '../../services/ChessService.types';
 import config from '../../config';
@@ -14,7 +14,7 @@ import { sendAlert } from '../../store/notifications/notifications';
 
 const takenBlackRook = makePiece('ROOK', 'BLACK', 0, 0, 'TAKEN');
 
-const mockStore = createMockStore([thunk]);
+const mockStore = createMockStore(getDefaultMiddleware());
 const mockedStore = mockStore({
   ...testStore,
   activeGame: {

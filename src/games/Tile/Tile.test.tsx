@@ -1,15 +1,14 @@
 import React from 'react';
 import { fireEvent, render } from '@testing-library/react';
-import { ActionCreator, AnyAction } from 'redux';
+import { ActionCreator, AnyAction, getDefaultMiddleware } from '@reduxjs/toolkit';
 import { Provider } from 'react-redux';
-import thunk from 'redux-thunk';
 import createMockStore from 'redux-mock-store';
 import Tile from './Tile';
 import { blackRook, testStore } from '../../utils/testData';
 import { clickTile } from '../../store/activeGame/activeGame';
 import { AppState } from '../../store/store';
 
-const mockStore = createMockStore<AppState, ActionCreator<AnyAction>>([thunk]);
+const mockStore = createMockStore<AppState, ActionCreator<AnyAction>>(getDefaultMiddleware());
 const mockedStore = mockStore(testStore);
 
 beforeEach(() => mockedStore.clearActions());

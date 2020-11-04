@@ -2,9 +2,8 @@ import React from 'react';
 import { render, waitFor, fireEvent } from '@testing-library/react';
 import { rest } from 'msw';
 import { setupServer } from 'msw/node';
-import { ActionCreator, AnyAction } from 'redux';
+import { ActionCreator, AnyAction, getDefaultMiddleware } from '@reduxjs/toolkit';
 import createMockStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
 import { Provider } from 'react-redux';
 import { AppState } from '@auth0/auth0-react/dist/auth0-provider';
 import { Game } from '../../../services/ChessService.types';
@@ -13,7 +12,7 @@ import { fullGame, playerOne, testStore } from '../../../utils/testData';
 import JoinGameButton from './JoinGameButton';
 import { sendAlert } from '../../../store/notifications/notifications';
 
-const mockStore = createMockStore<AppState, ActionCreator<AnyAction>>([thunk]);
+const mockStore = createMockStore<AppState, ActionCreator<AnyAction>>(getDefaultMiddleware());
 const mockedStore = mockStore(testStore);
 
 beforeEach(() => mockedStore.clearActions());

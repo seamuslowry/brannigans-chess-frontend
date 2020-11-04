@@ -1,4 +1,4 @@
-import { Middleware } from 'redux';
+import { Middleware } from '@reduxjs/toolkit';
 import GameStompClient from './gameStompClient';
 
 // should be handled by the middleware alone

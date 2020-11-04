@@ -4,7 +4,7 @@ import { Provider } from 'react-redux';
 import createMockStore from 'redux-mock-store';
 import { rest } from 'msw';
 import { setupServer } from 'msw/node';
-import thunk from 'redux-thunk';
+import { getDefaultMiddleware } from '@reduxjs/toolkit';
 import { makePiece, testStore, whiteMove } from '../../utils/testData';
 import { Move } from '../../services/ChessService.types';
 import config from '../../config';
@@ -12,7 +12,7 @@ import PawnPromotion from './PawnPromotion';
 import { addPieces } from '../../store/activeGame/activeGame';
 import { sendAlert } from '../../store/notifications/notifications';
 
-const mockStore = createMockStore([thunk]);
+const mockStore = createMockStore(getDefaultMiddleware());
 const mockedStore = mockStore(testStore);
 
 const blackPawn = makePiece('PAWN', 'BLACK');

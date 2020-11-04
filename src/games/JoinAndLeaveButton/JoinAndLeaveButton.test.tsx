@@ -1,14 +1,13 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-import { ActionCreator, AnyAction } from 'redux';
+import { ActionCreator, AnyAction, getDefaultMiddleware } from '@reduxjs/toolkit';
 import createMockStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
 import { Provider } from 'react-redux';
 import { AppState } from '@auth0/auth0-react/dist/auth0-provider';
 import JoinAndLeaveButton from './JoinAndLeaveButton';
 import { playerOne, testStore } from '../../utils/testData';
 
-const mockStore = createMockStore<AppState, ActionCreator<AnyAction>>([thunk]);
+const mockStore = createMockStore<AppState, ActionCreator<AnyAction>>(getDefaultMiddleware());
 const mockedStore = mockStore(testStore);
 
 beforeEach(() => mockedStore.clearActions());

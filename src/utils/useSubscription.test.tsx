@@ -1,15 +1,14 @@
 import React from 'react';
 import { renderHook } from '@testing-library/react-hooks';
 import { Provider } from 'react-redux';
-import { ActionCreator, AnyAction } from 'redux';
+import { ActionCreator, AnyAction, getDefaultMiddleware } from '@reduxjs/toolkit';
 import createMockStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
 import { AppState } from '../store/store';
 import { testStore } from './testData';
 import useSubscription from './useSubscription';
 import { subscribe, unsubscribe } from '../store/middleware/stomp/stomp';
 
-const mockStore = createMockStore<AppState, ActionCreator<AnyAction>>([thunk]);
+const mockStore = createMockStore<AppState, ActionCreator<AnyAction>>(getDefaultMiddleware());
 const mockedStore = mockStore(testStore);
 
 beforeEach(() => mockedStore.clearActions());

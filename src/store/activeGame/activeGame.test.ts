@@ -1,7 +1,6 @@
-import { ActionCreator, AnyAction } from 'redux';
+import { ActionCreator, AnyAction, getDefaultMiddleware } from '@reduxjs/toolkit';
 import { rest } from 'msw';
 import { setupServer } from 'msw/node';
-import thunk from 'redux-thunk';
 import createMockStore from 'redux-mock-store';
 import reducer, {
   clearBoard,
@@ -50,7 +49,7 @@ beforeAll(() => server.listen());
 afterEach(() => server.resetHandlers());
 afterAll(() => server.close());
 
-const mockStore = createMockStore<AppState, ActionCreator<AnyAction>>([thunk]);
+const mockStore = createMockStore<AppState, ActionCreator<AnyAction>>(getDefaultMiddleware());
 const mockedStore = mockStore(testStore);
 
 beforeEach(() => mockedStore.clearActions());
