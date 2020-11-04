@@ -1,6 +1,7 @@
 import { Color } from '@material-ui/lab';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { getPieces } from '../activeGame/activeGame';
+import { clickTile } from '../activeGame/activeGame.thunk';
 
 export interface AlertInfo {
   message: string;
@@ -42,6 +43,13 @@ const notificationsSlice = createSlice({
     builder.addCase(getPieces.rejected, (state, action) => {
       state.pendingAlerts.push({
         message: `Could not get pieces for game: ${action.error.message}`,
+        severity: 'error'
+      });
+    });
+    builder.addCase(clickTile.rejected, (state, action) => {
+      state.pendingAlerts.push({
+        // TODO handle service response body error
+        message: `Could move move: ${action.error.message}`,
         severity: 'error'
       });
     });

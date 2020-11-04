@@ -1,5 +1,6 @@
 import { errorAlertInfo, successAlertInfo } from '../../utils/testData';
 import { getPieces } from '../activeGame/activeGame';
+import { clickTile } from '../activeGame/activeGame.thunk';
 import reducer, { initialState, sendAlert, AlertInfo, removeAlert } from './notifications';
 
 test('sends an alert', () => {
@@ -36,6 +37,17 @@ test('removes an alert', () => {
 test('shows a notification on piece retrieval failure', async () => {
   const message = 'test message';
   const result = reducer(undefined, getPieces.rejected(new Error(message), '', 0));
+
+  expect(result.pendingAlerts).toContainEqual(
+    expect.objectContaining({
+      message: expect.stringContaining(message)
+    })
+  );
+});
+
+test('shows a notification on an attempted move failure', async () => {
+  const message = 'test message';
+  const result = reducer(undefined, clickTile.rejected(new Error(message), '', { row: 0, col: 0 }));
 
   expect(result.pendingAlerts).toContainEqual(
     expect.objectContaining({

@@ -52,7 +52,7 @@ const Tile: React.FC<Props> = ({ row, col }) => {
   const bgColor = getBgColor(theme, row, col, selected);
 
   const handleClick = () => {
-    dispatch(clickTile(row, col));
+    dispatch(clickTile({ row, col }));
   };
 
   return (

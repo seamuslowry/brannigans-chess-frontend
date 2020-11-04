@@ -10,16 +10,15 @@ import {
   Game
 } from '../../services/ChessService.types';
 import { StompMessage, STOMP_MESSAGE } from '../middleware/stomp/stomp';
+import { clickTile } from './activeGame.thunk';
 
 export const getStatusTopic = (gameId: number) => `/game/status/${gameId}`;
 
-export const getPieces = createAsyncThunk(
-  'chess/activeGame/thunkGetPieces',
-  async (gameId: number) => {
-    const response = await ChessService.getPieces(gameId, undefined, 'ACTIVE');
-    return response.data;
-  }
-);
+// TODO move to .thunk file if can't mave clickTile here
+export const getPieces = createAsyncThunk('chess/activeGame/getPieces', async (gameId: number) => {
+  const response = await ChessService.getPieces(gameId, undefined, 'ACTIVE');
+  return response.data;
+});
 
 export interface TileInfo {
   color?: PieceColor;
@@ -30,6 +29,7 @@ export interface TileInfo {
 
 export interface ActiveGameState {
   tiles: TileInfo[][];
+  // TODO refactor to use TilePosition interface
   selectedPosition?: [number, number];
   takenPieces: Piece[];
   moveList: Move[];
@@ -140,6 +140,43 @@ const activeGameSlice = createSlice({
             moveable: false
           };
         });
+      })
+      .addCase(clickTile.fulfilled, (state, action) => {
+        const { row, col } = action.meta.arg;
+        if (action.payload === false) {
+          state.tiles[row][col].selected = false;
+          state.selectedPosition = undefined;
+        } else if (action.payload === true) {
+          state.tiles[row][col].selected = true;
+          state.selectedPosition = [row, col];
+        } else if (action.payload) {
+          // TODO improve this whole thing with an entity manager and selectors for Piece and Move
+          const move = action.payload;
+          state.selectedPosition = undefined;
+          state.tiles[move.srcRow][move.srcCol] = {
+            ...blankTile
+          };
+          state.tiles[move.dstRow][move.dstCol] = {
+            ...blankTile,
+            type: move.movingPiece.type,
+            color: move.movingPiece.color
+          };
+          state.moveList.push(move);
+          move.takenPiece && state.takenPieces.push(move.takenPiece);
+          if (move.moveType === 'EN_PASSANT') {
+            state.tiles[move.srcRow][move.dstCol] = { ...blankTile };
+          }
+          if (move.moveType === 'KING_SIDE_CASTLE') {
+            const oldCastle = state.tiles[move.srcRow][move.dstCol + 1];
+            state.tiles[move.srcRow][move.dstCol - 1] = { ...oldCastle };
+            state.tiles[move.srcRow][move.dstCol + 1] = { ...blankTile };
+          }
+          if (move.moveType === 'QUEEN_SIDE_CASTLE') {
+            const oldCastle = state.tiles[move.srcRow][move.dstCol - 2];
+            state.tiles[move.srcRow][move.dstCol + 1] = { ...oldCastle };
+            state.tiles[move.srcRow][move.dstCol - 2] = { ...blankTile };
+          }
+        }
       })
       .addMatcher(
         (action: AnyAction): action is StompMessage => action.type === STOMP_MESSAGE,
