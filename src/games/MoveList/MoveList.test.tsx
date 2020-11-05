@@ -5,7 +5,7 @@ import createMockStore from 'redux-mock-store';
 import { rest } from 'msw';
 import { setupServer } from 'msw/node';
 import { getDefaultMiddleware } from '@reduxjs/toolkit';
-import { testStore, whiteMove } from '../../utils/testData';
+import { mockEntityAdapterState, testStore, whiteMove } from '../../utils/testData';
 import { Move } from '../../services/ChessService.types';
 import config from '../../config';
 import MoveList from './MoveList';
@@ -17,12 +17,7 @@ const mockedStore = mockStore({
   ...testStore,
   activeGame: {
     ...testStore.activeGame,
-    moves: {
-      ids: [whiteMove.id],
-      entities: {
-        [whiteMove.id]: { ...whiteMove }
-      }
-    }
+    moves: mockEntityAdapterState(whiteMove)
   }
 });
 

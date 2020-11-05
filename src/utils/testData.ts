@@ -41,6 +41,11 @@ export const playerTwo: Player = {
   imageUrl: 'www.two.com'
 };
 
+export const mockEntityAdapterState = <T extends { id: number }>(...testEntities: T[]) => ({
+  ids: testEntities.map(e => e.id),
+  entities: testEntities.reduce((obj, key) => ({ ...obj, [key.id]: { ...key } }), {})
+});
+
 let testPieceId = 1000;
 export const makePiece = (
   type: PieceType,

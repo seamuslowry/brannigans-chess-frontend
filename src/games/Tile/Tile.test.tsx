@@ -4,7 +4,7 @@ import { ActionCreator, AnyAction, getDefaultMiddleware } from '@reduxjs/toolkit
 import { Provider } from 'react-redux';
 import createMockStore from 'redux-mock-store';
 import Tile from './Tile';
-import { blackRook, testStore } from '../../utils/testData';
+import { blackRook, mockEntityAdapterState, testStore } from '../../utils/testData';
 import { clickTile } from '../../store/activeGame/activeGame';
 import { AppState } from '../../store/store';
 
@@ -79,12 +79,7 @@ test('renders a piece', async () => {
     ...testStore,
     activeGame: {
       ...testStore.activeGame,
-      pieces: {
-        ids: [blackRook.id],
-        entities: {
-          [blackRook.id]: blackRook
-        }
-      }
+      pieces: mockEntityAdapterState(blackRook)
     }
   });
 

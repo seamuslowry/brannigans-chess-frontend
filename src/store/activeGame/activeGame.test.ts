@@ -21,6 +21,7 @@ import {
   emptyGame,
   fullGame,
   makePiece,
+  mockEntityAdapterState,
   testStore,
   whiteEnPassant,
   whiteKingSideCastle,
@@ -91,14 +92,7 @@ test('clears the board', () => {
   const result = reducer(
     {
       ...initialState,
-      pieces: {
-        ids: [activePiece.id, whiteTakenPiece.id, blackTakenPiece.id],
-        entities: {
-          [activePiece.id]: activePiece,
-          [whiteTakenPiece.id]: whiteTakenPiece,
-          [blackTakenPiece.id]: blackTakenPiece
-        }
-      }
+      pieces: mockEntityAdapterState(activePiece, whiteTakenPiece, blackTakenPiece)
     },
     clearBoard()
   );
@@ -121,13 +115,7 @@ test('clears taken pieces', () => {
 
   const stateWithTakenPieces: ActiveGameState = {
     ...testStore.activeGame,
-    pieces: {
-      ids: [takenBlackRook.id, takenWhiteRook.id],
-      entities: {
-        [takenBlackRook.id]: { ...takenBlackRook },
-        [takenWhiteRook.id]: { ...takenWhiteRook }
-      }
-    }
+    pieces: mockEntityAdapterState(takenBlackRook, takenWhiteRook)
   };
   const result = reducer(stateWithTakenPieces, clearTaken('WHITE'));
 
@@ -430,13 +418,7 @@ test('king side castles - reducer', async () => {
   const result = reducer(
     {
       ...initialState,
-      pieces: {
-        ids: [whiteKingSideCastle.movingPiece.id, whiteRook.id],
-        entities: {
-          [whiteKingSideCastle.movingPiece.id]: { ...whiteKingSideCastle.movingPiece },
-          [whiteRook.id]: whiteRook
-        }
-      }
+      pieces: mockEntityAdapterState(whiteKingSideCastle.movingPiece, whiteRook)
     },
     clickTile.fulfilled(whiteKingSideCastle, '', position)
   );
@@ -497,13 +479,7 @@ test('queen side castles - reducer', async () => {
   const result = reducer(
     {
       ...initialState,
-      pieces: {
-        ids: [whiteQueenSideCastle.movingPiece.id, whiteRook.id],
-        entities: {
-          [whiteQueenSideCastle.movingPiece.id]: { ...whiteQueenSideCastle.movingPiece },
-          [whiteRook.id]: whiteRook
-        }
-      }
+      pieces: mockEntityAdapterState(whiteQueenSideCastle.movingPiece, whiteRook)
     },
     clickTile.fulfilled(whiteQueenSideCastle, '', position)
   );

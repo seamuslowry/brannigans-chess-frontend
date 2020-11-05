@@ -5,7 +5,7 @@ import createMockStore from 'redux-mock-store';
 import { rest } from 'msw';
 import { setupServer } from 'msw/node';
 import { getDefaultMiddleware } from '@reduxjs/toolkit';
-import { makePiece, testStore } from '../../utils/testData';
+import { makePiece, mockEntityAdapterState, testStore } from '../../utils/testData';
 import { Piece } from '../../services/ChessService.types';
 import config from '../../config';
 import TakenPieces from './TakenPieces';
@@ -19,12 +19,7 @@ const mockedStore = mockStore({
   ...testStore,
   activeGame: {
     ...testStore.activeGame,
-    pieces: {
-      ids: [takenBlackRook.id],
-      entities: {
-        [takenBlackRook.id]: { ...takenBlackRook }
-      }
-    }
+    pieces: mockEntityAdapterState(takenBlackRook)
   }
 });
 

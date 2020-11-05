@@ -5,7 +5,7 @@ import createMockStore from 'redux-mock-store';
 import { rest } from 'msw';
 import { setupServer } from 'msw/node';
 import { getDefaultMiddleware } from '@reduxjs/toolkit';
-import { makePiece, testStore, whiteMove } from '../../utils/testData';
+import { makePiece, mockEntityAdapterState, testStore, whiteMove } from '../../utils/testData';
 import { Move } from '../../services/ChessService.types';
 import config from '../../config';
 import PawnPromotion from './PawnPromotion';
@@ -15,21 +15,12 @@ import { sendAlert } from '../../store/notifications/notifications';
 const mockStore = createMockStore(getDefaultMiddleware());
 const mockedStore = mockStore(testStore);
 
-const blackPawn = makePiece('PAWN', 'BLACK');
+const blackPawn = makePiece('PAWN', 'BLACK', 7, 0);
 const blackPawnPromoteStore = mockStore({
   ...testStore,
   activeGame: {
     ...testStore.activeGame,
-    pieces: {
-      ids: [blackPawn.id],
-      entities: {
-        [blackPawn.id]: {
-          ...blackPawn,
-          positionRow: 7,
-          positionCol: 0
-        }
-      }
-    }
+    pieces: mockEntityAdapterState(blackPawn)
   }
 });
 
@@ -38,16 +29,7 @@ const whitePawnPromoteStore = mockStore({
   ...testStore,
   activeGame: {
     ...testStore.activeGame,
-    pieces: {
-      ids: [whitePawn.id],
-      entities: {
-        [whitePawn.id]: {
-          ...whitePawn,
-          positionRow: 0,
-          positionCol: 0
-        }
-      }
-    }
+    pieces: mockEntityAdapterState(whitePawn)
   }
 });
 
