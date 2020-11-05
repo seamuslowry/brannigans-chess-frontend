@@ -6,6 +6,8 @@ import {
   createSlice,
   PayloadAction
 } from '@reduxjs/toolkit';
+import { AppState } from '../store';
+import { StompMessage, STOMP_MESSAGE } from '../middleware/stomp/stomp';
 import ChessService from '../../services/ChessService';
 import {
   PieceColor,
@@ -15,8 +17,6 @@ import {
   Player,
   Game
 } from '../../services/ChessService.types';
-import { StompMessage, STOMP_MESSAGE } from '../middleware/stomp/stomp';
-import { AppState } from '../store';
 
 export const getStatusTopic = (gameId: number) => `/game/status/${gameId}`;
 

@@ -199,12 +199,7 @@ test('clicks an unselected tile - action', async () => {
     ...testStore,
     activeGame: {
       ...testStore.activeGame,
-      pieces: {
-        ids: [piece.id],
-        entities: {
-          [piece.id]: piece
-        }
-      }
+      pieces: mockEntityAdapterState(piece)
     }
   });
 
