@@ -4,20 +4,32 @@ import { Provider } from 'react-redux';
 import createMockStore from 'redux-mock-store';
 import { rest } from 'msw';
 import { setupServer } from 'msw/node';
-import thunk from 'redux-thunk';
-import { testStore, whiteMove } from '../../utils/testData';
+import { getDefaultMiddleware } from '@reduxjs/toolkit';
+import { makePiece, mockEntityAdapterState, testStore, whiteMove } from '../../utils/testData';
 import { Move } from '../../services/ChessService.types';
 import config from '../../config';
 import PawnPromotion from './PawnPromotion';
-import { SET_TILE } from '../../store/activeGame/activeGame';
-import { immutableUpdate } from '../../utils/arrayHelpers';
-import { SEND_ALERT } from '../../store/notifications/notifications';
+import { addPieces } from '../../store/activeGame/activeGame';
+import { sendAlert } from '../../store/notifications/notifications';
 
-const mockStore = createMockStore([thunk]);
-const mockedStore = mockStore({
+const mockStore = createMockStore(getDefaultMiddleware());
+const mockedStore = mockStore(testStore);
+
+const blackPawn = makePiece('PAWN', 'BLACK', 7, 0);
+const blackPawnPromoteStore = mockStore({
   ...testStore,
   activeGame: {
-    ...testStore.activeGame
+    ...testStore.activeGame,
+    pieces: mockEntityAdapterState(blackPawn)
+  }
+});
+
+const whitePawn = makePiece('PAWN', 'WHITE');
+const whitePawnPromoteStore = mockStore({
+  ...testStore,
+  activeGame: {
+    ...testStore.activeGame,
+    pieces: mockEntityAdapterState(whitePawn)
   }
 });
 
@@ -45,14 +57,6 @@ test('does not open when there is no pawn on the final row - BLACK', async () =>
 });
 
 test('opens when there is a pawn on the final row - BLACK', async () => {
-  const blackPawnPromoteStore = mockStore({
-    ...testStore,
-    activeGame: {
-      ...testStore.activeGame,
-      tiles: immutableUpdate(testStore.activeGame.tiles, 7, 0, { type: 'PAWN', color: 'BLACK' })
-    }
-  });
-
   const { getByAltText } = render(
     <Provider store={blackPawnPromoteStore}>
       <PawnPromotion gameId={0} color="BLACK" />
@@ -63,14 +67,6 @@ test('opens when there is a pawn on the final row - BLACK', async () => {
 });
 
 test('promotes a pawn - BLACK', async () => {
-  const blackPawnPromoteStore = mockStore({
-    ...testStore,
-    activeGame: {
-      ...testStore.activeGame,
-      tiles: immutableUpdate(testStore.activeGame.tiles, 7, 0, { type: 'PAWN', color: 'BLACK' })
-    }
-  });
-
   const { getByAltText } = render(
     <Provider store={blackPawnPromoteStore}>
       <PawnPromotion gameId={0} color="BLACK" />
@@ -83,7 +79,7 @@ test('promotes a pawn - BLACK', async () => {
   await waitFor(() =>
     expect(blackPawnPromoteStore.getActions()).toContainEqual(
       expect.objectContaining({
-        type: SET_TILE
+        type: addPieces.type
       })
     )
   );
@@ -96,14 +92,6 @@ test('handles an error when promoting a pawn - BLACK', async () => {
     })
   );
 
-  const blackPawnPromoteStore = mockStore({
-    ...testStore,
-    activeGame: {
-      ...testStore.activeGame,
-      tiles: immutableUpdate(testStore.activeGame.tiles, 7, 0, { type: 'PAWN', color: 'BLACK' })
-    }
-  });
-
   const { getByAltText } = render(
     <Provider store={blackPawnPromoteStore}>
       <PawnPromotion gameId={0} color="BLACK" />
@@ -116,7 +104,7 @@ test('handles an error when promoting a pawn - BLACK', async () => {
   await waitFor(() =>
     expect(blackPawnPromoteStore.getActions()).toContainEqual(
       expect.objectContaining({
-        type: SEND_ALERT
+        type: sendAlert.type
       })
     )
   );
@@ -133,14 +121,6 @@ test('does not open when there is no pawn on the final row - BLACK', async () =>
 });
 
 test('opens when there is a pawn on the final row - WHITE', async () => {
-  const whitePawnPromoteStore = mockStore({
-    ...testStore,
-    activeGame: {
-      ...testStore.activeGame,
-      tiles: immutableUpdate(testStore.activeGame.tiles, 0, 0, { type: 'PAWN', color: 'WHITE' })
-    }
-  });
-
   const { getByAltText } = render(
     <Provider store={whitePawnPromoteStore}>
       <PawnPromotion gameId={0} color="WHITE" />
@@ -151,14 +131,6 @@ test('opens when there is a pawn on the final row - WHITE', async () => {
 });
 
 test('promotes a pawn - WHITE', async () => {
-  const whitePawnPromoteStore = mockStore({
-    ...testStore,
-    activeGame: {
-      ...testStore.activeGame,
-      tiles: immutableUpdate(testStore.activeGame.tiles, 0, 0, { type: 'PAWN', color: 'WHITE' })
-    }
-  });
-
   const { getByAltText } = render(
     <Provider store={whitePawnPromoteStore}>
       <PawnPromotion gameId={0} color="WHITE" />
@@ -171,7 +143,7 @@ test('promotes a pawn - WHITE', async () => {
   await waitFor(() =>
     expect(whitePawnPromoteStore.getActions()).toContainEqual(
       expect.objectContaining({
-        type: SET_TILE
+        type: addPieces.type
       })
     )
   );
@@ -184,14 +156,6 @@ test('handles an error when promoting a pawn - WHITE', async () => {
     })
   );
 
-  const whitePawnPromoteStore = mockStore({
-    ...testStore,
-    activeGame: {
-      ...testStore.activeGame,
-      tiles: immutableUpdate(testStore.activeGame.tiles, 0, 0, { type: 'PAWN', color: 'WHITE' })
-    }
-  });
-
   const { getByAltText } = render(
     <Provider store={whitePawnPromoteStore}>
       <PawnPromotion gameId={0} color="WHITE" />
@@ -204,7 +168,7 @@ test('handles an error when promoting a pawn - WHITE', async () => {
   await waitFor(() =>
     expect(whitePawnPromoteStore.getActions()).toContainEqual(
       expect.objectContaining({
-        type: SEND_ALERT
+        type: sendAlert.type
       })
     )
   );

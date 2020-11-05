@@ -4,27 +4,29 @@ import { Provider } from 'react-redux';
 import createMockStore from 'redux-mock-store';
 import { rest } from 'msw';
 import { setupServer } from 'msw/node';
-import thunk from 'redux-thunk';
-import { blackRook, testStore } from '../../utils/testData';
+import { getDefaultMiddleware } from '@reduxjs/toolkit';
+import { makePiece, mockEntityAdapterState, testStore } from '../../utils/testData';
 import { Piece } from '../../services/ChessService.types';
 import config from '../../config';
 import TakenPieces from './TakenPieces';
-import { CLEAR_TAKEN, TAKE_PIECES } from '../../store/activeGame/activeGame';
-import { SEND_ALERT } from '../../store/notifications/notifications';
+import { clearTaken, addPieces } from '../../store/activeGame/activeGame';
+import { sendAlert } from '../../store/notifications/notifications';
 
-const mockStore = createMockStore([thunk]);
+const takenBlackRook = makePiece('ROOK', 'BLACK', 0, 0, 'TAKEN');
+
+const mockStore = createMockStore(getDefaultMiddleware());
 const mockedStore = mockStore({
   ...testStore,
   activeGame: {
     ...testStore.activeGame,
-    takenPieces: [blackRook]
+    pieces: mockEntityAdapterState(takenBlackRook)
   }
 });
 
 const server = setupServer(
   rest.get(`${config.serviceUrl}/pieces/0`, (req, res, ctx) => {
     return res(
-      ctx.json<Piece[]>([blackRook])
+      ctx.json<Piece[]>([takenBlackRook])
     );
   })
 );
@@ -45,7 +47,7 @@ test('gets pieces on mount', async () => {
 
   expect(mockedStore.getActions()).toContainEqual(
     expect.objectContaining({
-      type: TAKE_PIECES
+      type: addPieces.type
     })
   );
 });
@@ -67,7 +69,7 @@ test('handles an error getting pieces on mount', async () => {
 
   expect(mockedStore.getActions()).toContainEqual(
     expect.objectContaining({
-      type: SEND_ALERT
+      type: sendAlert.type
     })
   );
 });
@@ -85,7 +87,7 @@ test('clears pieces on unmount', async () => {
 
   expect(mockedStore.getActions()).toContainEqual(
     expect.objectContaining({
-      type: CLEAR_TAKEN
+      type: clearTaken.type
     })
   );
 });

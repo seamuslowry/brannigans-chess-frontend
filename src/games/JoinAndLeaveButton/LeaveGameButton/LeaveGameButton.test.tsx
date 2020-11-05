@@ -2,18 +2,17 @@ import React from 'react';
 import { render, waitFor, fireEvent } from '@testing-library/react';
 import { rest } from 'msw';
 import { setupServer } from 'msw/node';
-import { ActionCreator, AnyAction } from 'redux';
+import { ActionCreator, AnyAction, getDefaultMiddleware } from '@reduxjs/toolkit';
 import createMockStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
 import { Provider } from 'react-redux';
 import { AppState } from '@auth0/auth0-react/dist/auth0-provider';
 import { Game } from '../../../services/ChessService.types';
 import config from '../../../config';
 import { emptyGame, playerOne, playerTwo, testStore } from '../../../utils/testData';
 import LeaveGameButton from './LeaveGameButton';
-import { SEND_ALERT } from '../../../store/notifications/notifications';
+import { sendAlert } from '../../../store/notifications/notifications';
 
-const mockStore = createMockStore<AppState, ActionCreator<AnyAction>>([thunk]);
+const mockStore = createMockStore<AppState, ActionCreator<AnyAction>>(getDefaultMiddleware());
 const mockedStore = mockStore(testStore);
 
 beforeEach(() => mockedStore.clearActions());
@@ -43,7 +42,7 @@ test('leaves a white game', async () => {
 
   expect(mockedStore.getActions()).not.toContainEqual(
     expect.objectContaining({
-      type: SEND_ALERT
+      type: sendAlert.type
     })
   );
 });
@@ -63,7 +62,7 @@ test('leaves a black game', async () => {
 
   expect(mockedStore.getActions()).not.toContainEqual(
     expect.objectContaining({
-      type: SEND_ALERT
+      type: sendAlert.type
     })
   );
 });
@@ -89,7 +88,7 @@ test('tries to leave a full game', async () => {
 
   expect(mockedStore.getActions()).toContainEqual(
     expect.objectContaining({
-      type: SEND_ALERT,
+      type: sendAlert.type,
       payload: expect.objectContaining({
         message: expect.stringContaining(errorMessage)
       })
@@ -117,7 +116,7 @@ test('fails to leave a slot', async () => {
 
   expect(mockedStore.getActions()).toContainEqual(
     expect.objectContaining({
-      type: SEND_ALERT,
+      type: sendAlert.type,
       payload: expect.objectContaining({
         message: expect.stringContaining('Error while leaving')
       })

@@ -4,20 +4,20 @@ import { Provider } from 'react-redux';
 import createMockStore from 'redux-mock-store';
 import { rest } from 'msw';
 import { setupServer } from 'msw/node';
-import thunk from 'redux-thunk';
-import { testStore, whiteMove } from '../../utils/testData';
+import { getDefaultMiddleware } from '@reduxjs/toolkit';
+import { mockEntityAdapterState, testStore, whiteMove } from '../../utils/testData';
 import { Move } from '../../services/ChessService.types';
 import config from '../../config';
 import MoveList from './MoveList';
-import { ADD_MOVES, CLEAR_MOVES } from '../../store/activeGame/activeGame';
-import { SEND_ALERT } from '../../store/notifications/notifications';
+import { addMoves, clearMoves } from '../../store/activeGame/activeGame';
+import { sendAlert } from '../../store/notifications/notifications';
 
-const mockStore = createMockStore([thunk]);
+const mockStore = createMockStore(getDefaultMiddleware());
 const mockedStore = mockStore({
   ...testStore,
   activeGame: {
     ...testStore.activeGame,
-    moveList: [whiteMove]
+    moves: mockEntityAdapterState(whiteMove)
   }
 });
 
@@ -45,7 +45,7 @@ test('gets moves on mount', async () => {
 
   expect(mockedStore.getActions()).toContainEqual(
     expect.objectContaining({
-      type: ADD_MOVES
+      type: addMoves.type
     })
   );
 });
@@ -67,7 +67,7 @@ test('handles an error getting moves on mount', async () => {
 
   expect(mockedStore.getActions()).toContainEqual(
     expect.objectContaining({
-      type: SEND_ALERT
+      type: sendAlert.type
     })
   );
 });
@@ -85,7 +85,7 @@ test('clears moves on unmount', async () => {
 
   expect(mockedStore.getActions()).toContainEqual(
     expect.objectContaining({
-      type: CLEAR_MOVES
+      type: clearMoves.type
     })
   );
 });

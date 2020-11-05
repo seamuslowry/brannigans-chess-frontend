@@ -3,9 +3,8 @@ import { rest } from 'msw';
 import { setupServer } from 'msw/node';
 import { Provider } from 'react-redux';
 import { render, waitFor } from '@testing-library/react';
-import { ActionCreator, AnyAction } from 'redux';
+import { ActionCreator, AnyAction, getDefaultMiddleware } from '@reduxjs/toolkit';
 import createMockStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
 import { AppState } from '../../store/store';
 import UserAvatar from './UserAvatar';
 import {
@@ -17,8 +16,8 @@ import {
 import { useAuth0 } from '@auth0/auth0-react';
 import config from '../../config';
 import { Player } from '../../services/ChessService.types';
-import { UPDATE_PLAYER } from '../../store/auth/auth';
-import { SEND_ALERT } from '../../store/notifications/notifications';
+import { updatePlayer } from '../../store/auth/auth';
+import { sendAlert } from '../../store/notifications/notifications';
 
 const server = setupServer(
   rest.post(`${config.serviceUrl}/players/auth`, (req, res, ctx) => {
@@ -35,7 +34,7 @@ const mockedAuth0 = useAuth0 as jest.MockedFunction<typeof useAuth0>;
 
 beforeEach(() => mockedAuth0.mockImplementation(() => authenticatedAuth0));
 
-const mockStore = createMockStore<AppState, ActionCreator<AnyAction>>([thunk]);
+const mockStore = createMockStore<AppState, ActionCreator<AnyAction>>(getDefaultMiddleware());
 const mockedStore = mockStore(testStore);
 
 test('renders nothing when not logged in', () => {
@@ -76,7 +75,7 @@ test('retrieves a player after getting an access token', async () => {
   await waitFor(() =>
     expect(accessTokenStore.getActions()).toContainEqual(
       expect.objectContaining({
-        type: UPDATE_PLAYER
+        type: updatePlayer.type
       })
     )
   );
@@ -105,7 +104,7 @@ test('fails to retrieve a player after getting an access token', async () => {
   await waitFor(() =>
     expect(accessTokenStore.getActions()).toContainEqual(
       expect.objectContaining({
-        type: SEND_ALERT
+        type: sendAlert.type
       })
     )
   );

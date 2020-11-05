@@ -2,9 +2,8 @@ import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { render } from '@testing-library/react';
-import { ActionCreator, AnyAction } from 'redux';
+import { ActionCreator, AnyAction, getDefaultMiddleware } from '@reduxjs/toolkit';
 import createMockStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
 import { AppState } from '../../store/store';
 import NavBar from './NavBar';
 import {
@@ -20,7 +19,7 @@ const mockedAuth0 = useAuth0 as jest.MockedFunction<typeof useAuth0>;
 
 beforeEach(() => mockedAuth0.mockImplementation(() => unauthenticatedAuth0));
 
-const mockStore = createMockStore<AppState, ActionCreator<AnyAction>>([thunk]);
+const mockStore = createMockStore<AppState, ActionCreator<AnyAction>>(getDefaultMiddleware());
 const mockedStore = mockStore(testStore);
 
 test('renders the insirational quote', () => {

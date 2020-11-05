@@ -1,8 +1,7 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-import { ActionCreator, AnyAction } from 'redux';
+import { ActionCreator, AnyAction, getDefaultMiddleware } from '@reduxjs/toolkit';
 import createMockStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
 import { MemoryRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import PrivateRoute from './PrivateRoute';
@@ -18,7 +17,7 @@ import { useAuth0 } from '@auth0/auth0-react';
 jest.mock('@auth0/auth0-react');
 const mockedAuth0 = useAuth0 as jest.MockedFunction<typeof useAuth0>;
 
-const mockStore = createMockStore<AppState, ActionCreator<AnyAction>>([thunk]);
+const mockStore = createMockStore<AppState, ActionCreator<AnyAction>>(getDefaultMiddleware());
 const mockedStore = mockStore(testStore);
 
 beforeEach(() => mockedStore.clearActions());

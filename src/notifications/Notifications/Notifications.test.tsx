@@ -2,13 +2,12 @@ import React from 'react';
 import { render, waitFor, fireEvent, waitForElementToBeRemoved } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import createMockStore from 'redux-mock-store';
-import { ActionCreator, AnyAction } from 'redux';
-import thunk from 'redux-thunk';
+import { ActionCreator, AnyAction, getDefaultMiddleware } from '@reduxjs/toolkit';
 import Notifications from './Notifications';
 import { AppState } from '../../store/store';
 import { errorAlertInfo, successAlertInfo, testStore } from '../../utils/testData';
 
-const mockStore = createMockStore<AppState, ActionCreator<AnyAction>>([thunk]);
+const mockStore = createMockStore<AppState, ActionCreator<AnyAction>>(getDefaultMiddleware());
 const mockedStore = mockStore(testStore);
 
 test('renders no notifications by default', async () => {

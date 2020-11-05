@@ -1,14 +1,11 @@
-import { AnyAction, applyMiddleware, combineReducers, createStore } from 'redux';
-import thunk, { ThunkAction, ThunkMiddleware } from 'redux-thunk';
-import { composeWithDevTools } from 'redux-devtools-extension';
-import { reducer as activeGameReducer, ActiveGameState } from './activeGame/activeGame';
-import { reducer as notificationsReducer, NotificationsState } from './notifications/notifications';
-import { reducer as socketReducer, SocketState } from './socket/socket';
-import { reducer as authReducer, AuthState } from './auth/auth';
+import activeGameReducer, { ActiveGameState } from './activeGame/activeGame';
+import notificationsReducer, { NotificationsState } from './notifications/notifications';
+import socketReducer, { SocketState } from './socket/socket';
+import authReducer, { AuthState } from './auth/auth';
 import createStompMiddleware from './middleware/stomp/stomp';
 import config from '../config';
-
-export type ThunkResult<R> = ThunkAction<R, AppState, undefined, AnyAction>;
+import { configureStore } from '@reduxjs/toolkit';
+import { useDispatch } from 'react-redux';
 
 export interface AppState {
   activeGame: ActiveGameState;
@@ -17,19 +14,17 @@ export interface AppState {
   socket: SocketState;
 }
 
-const rootReducer = combineReducers<AppState>({
-  activeGame: activeGameReducer,
-  auth: authReducer,
-  notifications: notificationsReducer,
-  socket: socketReducer
+export const store = configureStore({
+  reducer: {
+    activeGame: activeGameReducer,
+    auth: authReducer,
+    notifications: notificationsReducer,
+    socket: socketReducer
+  },
+  devTools: config.reduxDevtools,
+  middleware: getDefaultMiddleware =>
+    getDefaultMiddleware().concat(createStompMiddleware(`${config.serviceUrl}/ws`))
 });
 
-export const store = createStore(
-  rootReducer,
-  composeWithDevTools(
-    applyMiddleware(
-      thunk as ThunkMiddleware<AppState, AnyAction>,
-      createStompMiddleware(`${config.serviceUrl}/ws`)
-    )
-  )
-);
+type AppDispatch = typeof store.dispatch;
+export const useAppDispatch = () => useDispatch<AppDispatch>();

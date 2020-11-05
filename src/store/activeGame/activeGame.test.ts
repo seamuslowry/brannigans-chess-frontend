@@ -1,32 +1,27 @@
-import { ActionCreator, AnyAction } from 'redux';
+import { ActionCreator, AnyAction, getDefaultMiddleware } from '@reduxjs/toolkit';
 import { rest } from 'msw';
 import { setupServer } from 'msw/node';
-import thunk from 'redux-thunk';
 import createMockStore from 'redux-mock-store';
-import {
-  reducer,
-  selectTile,
-  setTile,
+import reducer, {
   clearBoard,
   initialState,
   clearGame,
   ActiveGameState,
   clearTaken,
-  takePiece,
-  takePieces,
-  TAKE_PIECES,
-  addMove,
   addMoves,
-  ADD_MOVES,
   setGameId,
   clearMoves,
-  getStatusTopic
+  getStatusTopic,
+  getPieces,
+  addPieces,
+  clickTile
 } from './activeGame';
 import {
   blackRook,
   emptyGame,
   fullGame,
   makePiece,
+  mockEntityAdapterState,
   testStore,
   whiteEnPassant,
   whiteKingSideCastle,
@@ -35,11 +30,8 @@ import {
   whiteTake
 } from '../../utils/testData';
 import { AppState } from '../store';
-import { immutableUpdate } from '../../utils/arrayHelpers';
 import config from '../../config';
 import { Move, Piece } from '../../services/ChessService.types';
-import { SEND_ALERT } from '../notifications/notifications';
-import { clickTile, getPieces } from './activeGame.thunk';
 import { waitFor } from '@testing-library/dom';
 import { STOMP_MESSAGE } from '../middleware/stomp/stomp';
 
@@ -54,13 +46,14 @@ const server = setupServer(
   })
 );
 
-const mockStore = createMockStore<AppState, ActionCreator<AnyAction>>([thunk]);
-const mockedStore = mockStore(testStore);
-
-beforeEach(() => mockedStore.clearActions());
 beforeAll(() => server.listen());
 afterEach(() => server.resetHandlers());
 afterAll(() => server.close());
+
+const mockStore = createMockStore<AppState, ActionCreator<AnyAction>>(getDefaultMiddleware());
+const mockedStore = mockStore(testStore);
+
+beforeEach(() => mockedStore.clearActions());
 
 test('sets the global game id', () => {
   const result = reducer(undefined, setGameId(1));
@@ -71,56 +64,42 @@ test('sets the global game id', () => {
 test('clears all moves', () => {
   const result = reducer(undefined, clearMoves());
 
-  expect(result.moveList).toEqual([]);
-});
-
-test('selects a tile', () => {
-  const result = reducer(undefined, selectTile(0, 0, true));
-
-  expect(result.tiles[0][0].selected).toBeTruthy();
-});
-
-test('unselects a tile', () => {
-  const result = reducer(undefined, selectTile(0, 0, false));
-
-  expect(result.tiles[0][0].selected).toBeFalsy();
-});
-
-test('sets a tile', () => {
-  const result = reducer(undefined, setTile(0, 0, blackRook));
-
-  expect(result.tiles[0][0].color).toEqual(blackRook.color);
-  expect(result.tiles[0][0].type).toEqual(blackRook.type);
+  expect(result.moves.ids).toEqual([]);
 });
 
 test('records a move', () => {
-  const result = reducer(undefined, addMove(whiteMove));
+  const result = reducer(undefined, addMoves([whiteMove]));
 
-  expect(result.moveList).toContainEqual(whiteMove);
+  expect(result.moves.ids).toContainEqual(whiteMove.id);
 });
 
 test('records moves', () => {
   const result = reducer(undefined, addMoves([whiteMove]));
 
-  expect(result.moveList).toContainEqual(whiteMove);
+  expect(result.moves.ids).toContainEqual(whiteMove.id);
 });
 
-test('takes a piece', () => {
-  const result = reducer(undefined, takePiece(blackRook));
+test('adds pieces', () => {
+  const result = reducer(undefined, addPieces([blackRook]));
 
-  expect(result.takenPieces).toContainEqual(blackRook);
-});
-
-test('takes pieces', () => {
-  const result = reducer(undefined, takePieces([blackRook]));
-
-  expect(result.takenPieces).toContainEqual(blackRook);
+  expect(result.pieces.ids).toContain(blackRook.id);
 });
 
 test('clears the board', () => {
-  const result = reducer(undefined, clearBoard());
+  const activePiece = makePiece('ROOK', 'WHITE');
+  const whiteTakenPiece = makePiece('ROOK', 'WHITE', 0, 0, 'TAKEN');
+  const blackTakenPiece = makePiece('ROOK', 'BLACK', 0, 0, 'TAKEN');
+  const result = reducer(
+    {
+      ...initialState,
+      pieces: mockEntityAdapterState(activePiece, whiteTakenPiece, blackTakenPiece)
+    },
+    clearBoard()
+  );
 
-  expect(result.tiles).toEqual(initialState.tiles);
+  expect(result.pieces.ids).not.toContain(activePiece.id);
+  expect(result.pieces.ids).toContain(whiteTakenPiece.id);
+  expect(result.pieces.ids).toContain(blackTakenPiece.id);
   expect(result.selectedPosition).toEqual(initialState.selectedPosition);
 });
 
@@ -131,15 +110,17 @@ test('clears the game', () => {
 });
 
 test('clears taken pieces', () => {
-  const whiteRook = makePiece('ROOK', 'WHITE');
+  const takenWhiteRook = makePiece('ROOK', 'WHITE', 0, 0, 'TAKEN');
+  const takenBlackRook = makePiece('ROOK', 'BLACK', 7, 0, 'TAKEN');
+
   const stateWithTakenPieces: ActiveGameState = {
     ...testStore.activeGame,
-    takenPieces: [blackRook, whiteRook]
+    pieces: mockEntityAdapterState(takenBlackRook, takenWhiteRook)
   };
   const result = reducer(stateWithTakenPieces, clearTaken('WHITE'));
 
-  expect(result.takenPieces).toContainEqual(blackRook);
-  expect(result.takenPieces).not.toContainEqual(whiteRook);
+  expect(result.pieces.ids).toContain(takenBlackRook.id);
+  expect(result.pieces.ids).not.toContain(takenWhiteRook.id);
 });
 
 test('handles an empty game stomp message on the status topic', () => {
@@ -194,74 +175,118 @@ test('handles a stomp message on an unrelated topic', () => {
   expect(result).toEqual(stateWithId);
 });
 
-test('clicks an unselected tile', async () => {
+test('clicks an unselectable tile - action', async () => {
+  await waitFor(() => mockedStore.dispatch(clickTile({ row: 0, col: 0 })));
+
+  expect(mockedStore.getActions()).toContainEqual(
+    expect.objectContaining({
+      type: clickTile.fulfilled.type,
+      payload: null
+    })
+  );
+});
+
+test('clicks an unselectable tile - reducer', async () => {
+  const position = { row: 0, col: 0 };
+  const result = reducer(undefined, clickTile.fulfilled(null, '', position));
+
+  expect(result.selectedPosition).toBeUndefined();
+});
+
+test('clicks an unselected tile - action', async () => {
+  const piece = makePiece('ROOK', 'WHITE', 0, 0);
   const storeWithRook = mockStore({
     ...testStore,
     activeGame: {
       ...testStore.activeGame,
-      tiles: immutableUpdate(testStore.activeGame.tiles, 0, 0, { type: 'ROOK', color: 'BLACK' })
+      pieces: {
+        ids: [piece.id],
+        entities: {
+          [piece.id]: piece
+        }
+      }
     }
   });
 
-  await waitFor(() => storeWithRook.dispatch(clickTile(0, 0)));
+  await waitFor(() => storeWithRook.dispatch(clickTile({ row: 0, col: 0 })));
 
-  expect(storeWithRook.getActions()).toContainEqual(selectTile(0, 0, true));
-});
-
-test('clicks a selected tile', async () => {
-  const selectedStore = mockStore({
-    ...testStore,
-    activeGame: {
-      ...testStore.activeGame,
-      selectedPosition: [0, 0],
-      tiles: immutableUpdate(testStore.activeGame.tiles, 0, 0, { selected: true })
-    }
-  });
-
-  await waitFor(() => selectedStore.dispatch(clickTile(0, 0)));
-
-  expect(selectedStore.getActions()).toContainEqual(selectTile(0, 0, false));
-});
-
-test('moves a piece', async () => {
-  const selectedStore = mockStore({
-    ...testStore,
-    activeGame: {
-      ...testStore.activeGame,
-      selectedPosition: [whiteMove.srcRow, whiteMove.srcCol],
-      tiles: immutableUpdate(testStore.activeGame.tiles, whiteMove.srcRow, whiteMove.srcCol, {
-        type: whiteMove.movingPiece.type,
-        color: whiteMove.movingPiece.color,
-        selected: true
-      })
-    }
-  });
-
-  await waitFor(() => selectedStore.dispatch(clickTile(whiteMove.dstRow, whiteMove.dstCol)));
-
-  expect(selectedStore.getActions()).toContainEqual(
-    selectTile(whiteMove.srcRow, whiteMove.srcCol, false)
-  );
-  expect(selectedStore.getActions()).toContainEqual(
-    setTile(whiteMove.srcRow, whiteMove.srcCol, undefined)
-  );
-  expect(selectedStore.getActions()).toContainEqual(
-    setTile(whiteMove.dstRow, whiteMove.dstCol, whiteMove.movingPiece)
-  );
-  expect(selectedStore.getActions()).toContainEqual(
+  expect(storeWithRook.getActions()).toContainEqual(
     expect.objectContaining({
-      type: ADD_MOVES,
-      payload: [whiteMove]
-    })
-  );
-  expect(selectedStore.getActions()).not.toContainEqual(
-    expect.objectContaining({
-      type: TAKE_PIECES
+      type: clickTile.fulfilled.type,
+      payload: true
     })
   );
 });
 
-test('moves to take a piece', async () => {
+test('clicks an unselected tile - reducer', async () => {
+  const position = { row: 0, col: 0 };
+  const result = reducer(undefined, clickTile.fulfilled(true, '', position));
+
+  expect(result.selectedPosition).toEqual(position);
+});
+
+test('clicks a selected tile - action', async () => {
+  const selectedStore = mockStore({
+    ...testStore,
+    activeGame: {
+      ...testStore.activeGame,
+      selectedPosition: { row: 0, col: 0 }
+    }
+  });
+
+  await waitFor(() => selectedStore.dispatch(clickTile({ row: 0, col: 0 })));
+
+  expect(selectedStore.getActions()).toContainEqual(
+    expect.objectContaining({
+      type: clickTile.fulfilled.type,
+      payload: false
+    })
+  );
+});
+
+test('clicks a selected tile - reducer', async () => {
+  const position = { row: 0, col: 0 };
+  const result = reducer(undefined, clickTile.fulfilled(false, '', position));
+
+  expect(result.selectedPosition).toBeUndefined();
+});
+
+test('moves a piece - action', async () => {
+  const selectedStore = mockStore({
+    ...testStore,
+    activeGame: {
+      ...testStore.activeGame,
+      selectedPosition: { row: whiteMove.srcRow, col: whiteMove.srcCol }
+    }
+  });
+
+  await waitFor(() =>
+    selectedStore.dispatch(clickTile({ row: whiteMove.dstRow, col: whiteMove.dstCol }))
+  );
+
+  expect(selectedStore.getActions()).toContainEqual(
+    expect.objectContaining({
+      type: clickTile.fulfilled.type,
+      payload: { ...whiteMove }
+    })
+  );
+});
+
+test('moves a piece - reducer', async () => {
+  const position = { row: whiteMove.dstRow, col: whiteMove.dstCol };
+  const result = reducer(undefined, clickTile.fulfilled(whiteMove, '', position));
+
+  expect(result.selectedPosition).toBeUndefined();
+  expect(result.pieces.entities[whiteMove.movingPiece.id]).toEqual(
+    expect.objectContaining({
+      positionRow: whiteMove.dstRow,
+      positionCol: whiteMove.dstCol
+    })
+  );
+  expect(result.moves.ids).toContainEqual(whiteMove.id);
+});
+
+test('moves to take a piece - action', async () => {
   server.use(
     rest.post(`${config.serviceUrl}/moves/0`, (req, res, ctx) => {
       return res(ctx.json(whiteTake));
@@ -272,39 +297,42 @@ test('moves to take a piece', async () => {
     ...testStore,
     activeGame: {
       ...testStore.activeGame,
-      selectedPosition: [whiteTake.srcRow, whiteTake.srcCol],
-      tiles: immutableUpdate(testStore.activeGame.tiles, whiteTake.srcRow, whiteTake.srcCol, {
-        type: whiteTake.movingPiece.type,
-        color: whiteTake.movingPiece.color,
-        selected: true
-      })
+      selectedPosition: { row: whiteTake.srcRow, col: whiteTake.srcCol }
     }
   });
 
-  await waitFor(() => selectedStore.dispatch(clickTile(whiteTake.dstRow, whiteTake.dstCol)));
-
-  expect(selectedStore.getActions()).toContainEqual(
-    selectTile(whiteTake.srcRow, whiteTake.srcCol, false)
-  );
-  expect(selectedStore.getActions()).toContainEqual(
-    setTile(whiteTake.srcRow, whiteTake.srcCol, undefined)
-  );
-  expect(selectedStore.getActions()).toContainEqual(
-    setTile(whiteTake.dstRow, whiteTake.dstCol, whiteTake.movingPiece)
+  await waitFor(() =>
+    selectedStore.dispatch(clickTile({ row: whiteTake.dstRow, col: whiteTake.dstCol }))
   );
 
   expect(selectedStore.getActions()).toContainEqual(
     expect.objectContaining({
-      type: ADD_MOVES,
-      payload: [whiteTake]
+      type: clickTile.fulfilled.type,
+      payload: { ...whiteTake }
     })
-  );
-  expect(selectedStore.getActions()).toContainEqual(
-    whiteTake.takenPiece && takePiece(whiteTake.takenPiece)
   );
 });
 
-test('en passants a piece', async () => {
+test('moves to take a piece - reducer', async () => {
+  const position = { row: whiteTake.dstRow, col: whiteTake.dstCol };
+  const result = reducer(undefined, clickTile.fulfilled(whiteTake, '', position));
+
+  expect(result.selectedPosition).toBeUndefined();
+  expect(result.pieces.entities[whiteTake.movingPiece.id]).toEqual(
+    expect.objectContaining({
+      positionRow: whiteTake.dstRow,
+      positionCol: whiteTake.dstCol
+    })
+  );
+  expect(result.pieces.entities[whiteTake.takenPiece?.id || -1]).toEqual(
+    expect.objectContaining({
+      status: 'TAKEN'
+    })
+  );
+  expect(result.moves.ids).toContainEqual(whiteTake.id);
+});
+
+test('en passants a piece - action', async () => {
   server.use(
     rest.post(`${config.serviceUrl}/moves/0`, (req, res, ctx) => {
       return res(ctx.json(whiteEnPassant));
@@ -315,39 +343,42 @@ test('en passants a piece', async () => {
     ...testStore,
     activeGame: {
       ...testStore.activeGame,
-      selectedPosition: [whiteEnPassant.srcRow, whiteEnPassant.srcCol],
-      tiles: immutableUpdate(
-        testStore.activeGame.tiles,
-        whiteEnPassant.srcRow,
-        whiteEnPassant.srcCol,
-        {
-          type: whiteEnPassant.movingPiece.type,
-          color: whiteEnPassant.movingPiece.color,
-          selected: true
-        }
-      )
+      selectedPosition: { row: whiteEnPassant.srcRow, col: whiteEnPassant.srcCol }
     }
   });
 
   await waitFor(() =>
-    selectedStore.dispatch(clickTile(whiteEnPassant.dstRow, whiteEnPassant.dstCol))
+    selectedStore.dispatch(clickTile({ row: whiteEnPassant.dstRow, col: whiteEnPassant.dstCol }))
   );
 
   expect(selectedStore.getActions()).toContainEqual(
     expect.objectContaining({
-      type: ADD_MOVES,
-      payload: [whiteEnPassant]
+      type: clickTile.fulfilled.type,
+      payload: { ...whiteEnPassant }
     })
-  );
-  expect(selectedStore.getActions()).toContainEqual(
-    whiteEnPassant.takenPiece && takePiece(whiteEnPassant.takenPiece)
-  );
-  expect(selectedStore.getActions()).toContainEqual(
-    setTile(whiteEnPassant.srcRow, whiteEnPassant.dstCol, undefined)
   );
 });
 
-test('king side castles', async () => {
+test('en passants a piece - reducer', async () => {
+  const position = { row: whiteEnPassant.dstRow, col: whiteEnPassant.dstCol };
+  const result = reducer(undefined, clickTile.fulfilled(whiteEnPassant, '', position));
+
+  expect(result.selectedPosition).toBeUndefined();
+  expect(result.pieces.entities[whiteEnPassant.movingPiece.id]).toEqual(
+    expect.objectContaining({
+      positionRow: whiteEnPassant.dstRow,
+      positionCol: whiteEnPassant.dstCol
+    })
+  );
+  expect(result.pieces.entities[whiteEnPassant.takenPiece?.id || -1]).toEqual(
+    expect.objectContaining({
+      status: 'TAKEN'
+    })
+  );
+  expect(result.moves.ids).toContainEqual(whiteEnPassant.id);
+});
+
+test('king side castles - action', async () => {
   server.use(
     rest.post(`${config.serviceUrl}/moves/0`, (req, res, ctx) => {
       return res(ctx.json(whiteKingSideCastle));
@@ -358,42 +389,57 @@ test('king side castles', async () => {
     ...testStore,
     activeGame: {
       ...testStore.activeGame,
-      selectedPosition: [whiteKingSideCastle.srcRow, whiteKingSideCastle.srcCol],
-      tiles: immutableUpdate(
-        testStore.activeGame.tiles,
-        whiteKingSideCastle.srcRow,
-        whiteKingSideCastle.srcCol,
-        {
-          type: whiteKingSideCastle.movingPiece.type,
-          color: whiteKingSideCastle.movingPiece.color,
-          selected: true
-        }
-      )
+      selectedPosition: { row: whiteKingSideCastle.srcRow, col: whiteKingSideCastle.srcCol }
     }
   });
 
   await waitFor(() =>
-    selectedStore.dispatch(clickTile(whiteKingSideCastle.dstRow, whiteKingSideCastle.dstCol))
+    selectedStore.dispatch(
+      clickTile({ row: whiteKingSideCastle.dstRow, col: whiteKingSideCastle.dstCol })
+    )
   );
 
   expect(selectedStore.getActions()).toContainEqual(
     expect.objectContaining({
-      type: ADD_MOVES,
-      payload: [whiteKingSideCastle]
-    })
-  );
-  expect(selectedStore.getActions()).toContainEqual(
-    setTile(whiteKingSideCastle.srcRow, whiteKingSideCastle.dstCol + 1, undefined)
-  );
-  expect(selectedStore.getActions()).toContainEqual(
-    setTile(whiteKingSideCastle.srcRow, whiteKingSideCastle.dstCol - 1, {
-      type: 'ROOK',
-      color: 'WHITE'
+      type: clickTile.fulfilled.type,
+      payload: { ...whiteKingSideCastle }
     })
   );
 });
 
-test('queen side castles', async () => {
+test('king side castles - reducer', async () => {
+  const position = { row: whiteKingSideCastle.dstRow, col: whiteKingSideCastle.dstCol };
+  const whiteRook = makePiece(
+    'ROOK',
+    'BLACK',
+    whiteKingSideCastle.dstRow,
+    whiteKingSideCastle.dstCol + 1
+  );
+  const result = reducer(
+    {
+      ...initialState,
+      pieces: mockEntityAdapterState(whiteKingSideCastle.movingPiece, whiteRook)
+    },
+    clickTile.fulfilled(whiteKingSideCastle, '', position)
+  );
+
+  expect(result.selectedPosition).toBeUndefined();
+  expect(result.pieces.entities[whiteKingSideCastle.movingPiece.id]).toEqual(
+    expect.objectContaining({
+      positionRow: whiteKingSideCastle.dstRow,
+      positionCol: whiteKingSideCastle.dstCol
+    })
+  );
+  expect(result.pieces.entities[whiteRook.id]).toEqual(
+    expect.objectContaining({
+      positionRow: whiteKingSideCastle.dstRow,
+      positionCol: whiteKingSideCastle.dstCol - 1
+    })
+  );
+  expect(result.moves.ids).toContainEqual(whiteKingSideCastle.id);
+});
+
+test('queen side castles - action', async () => {
   server.use(
     rest.post(`${config.serviceUrl}/moves/0`, (req, res, ctx) => {
       return res(ctx.json(whiteQueenSideCastle));
@@ -404,116 +450,127 @@ test('queen side castles', async () => {
     ...testStore,
     activeGame: {
       ...testStore.activeGame,
-      selectedPosition: [whiteQueenSideCastle.srcRow, whiteQueenSideCastle.srcCol],
-      tiles: immutableUpdate(
-        testStore.activeGame.tiles,
-        whiteQueenSideCastle.srcRow,
-        whiteQueenSideCastle.srcCol,
-        {
-          type: whiteQueenSideCastle.movingPiece.type,
-          color: whiteQueenSideCastle.movingPiece.color,
-          selected: true
-        }
-      )
+      selectedPosition: { row: whiteQueenSideCastle.srcRow, col: whiteQueenSideCastle.srcCol }
     }
   });
 
   await waitFor(() =>
-    selectedStore.dispatch(clickTile(whiteQueenSideCastle.dstRow, whiteQueenSideCastle.dstCol))
+    selectedStore.dispatch(
+      clickTile({ row: whiteQueenSideCastle.dstRow, col: whiteQueenSideCastle.dstCol })
+    )
   );
 
   expect(selectedStore.getActions()).toContainEqual(
     expect.objectContaining({
-      type: ADD_MOVES,
-      payload: [whiteQueenSideCastle]
-    })
-  );
-  expect(selectedStore.getActions()).toContainEqual(
-    setTile(whiteQueenSideCastle.srcRow, whiteQueenSideCastle.dstCol - 2, undefined)
-  );
-  expect(selectedStore.getActions()).toContainEqual(
-    setTile(whiteQueenSideCastle.srcRow, whiteQueenSideCastle.dstCol + 1, {
-      type: 'ROOK',
-      color: 'WHITE'
+      type: clickTile.fulfilled.type,
+      payload: { ...whiteQueenSideCastle }
     })
   );
 });
 
-test('fails to move a piece', async () => {
+test('queen side castles - reducer', async () => {
+  const position = { row: whiteQueenSideCastle.dstRow, col: whiteQueenSideCastle.dstCol };
+  const whiteRook = makePiece(
+    'ROOK',
+    'WHITE',
+    whiteQueenSideCastle.dstRow,
+    whiteQueenSideCastle.dstCol - 2
+  );
+  const result = reducer(
+    {
+      ...initialState,
+      pieces: mockEntityAdapterState(whiteQueenSideCastle.movingPiece, whiteRook)
+    },
+    clickTile.fulfilled(whiteQueenSideCastle, '', position)
+  );
+
+  expect(result.selectedPosition).toBeUndefined();
+  expect(result.pieces.entities[whiteQueenSideCastle.movingPiece.id]).toEqual(
+    expect.objectContaining({
+      positionRow: whiteQueenSideCastle.dstRow,
+      positionCol: whiteQueenSideCastle.dstCol
+    })
+  );
+  expect(result.pieces.entities[whiteRook.id]).toEqual(
+    expect.objectContaining({
+      positionRow: whiteQueenSideCastle.dstRow,
+      positionCol: whiteQueenSideCastle.dstCol + 1
+    })
+  );
+  expect(result.moves.ids).toContainEqual(whiteQueenSideCastle.id);
+});
+
+test('moves a piece - invalid move', async () => {
+  const message = 'invalid move message';
   server.use(
     rest.post(`${config.serviceUrl}/moves/0`, (req, res, ctx) => {
-      return res(ctx.status(400));
+      return res(ctx.status(400), ctx.json(message));
     })
   );
+
   const selectedStore = mockStore({
     ...testStore,
     activeGame: {
       ...testStore.activeGame,
-      selectedPosition: [whiteMove.srcRow, whiteMove.srcCol],
-      tiles: immutableUpdate(testStore.activeGame.tiles, whiteMove.srcRow, whiteMove.srcCol, {
-        type: whiteMove.movingPiece.type,
-        color: whiteMove.movingPiece.color,
-        selected: true
-      })
+      selectedPosition: { row: whiteMove.srcRow, col: whiteMove.srcCol }
     }
   });
 
-  await waitFor(() => selectedStore.dispatch(clickTile(whiteMove.dstRow, whiteMove.dstCol)));
+  await waitFor(() =>
+    selectedStore.dispatch(clickTile({ row: whiteMove.dstRow, col: whiteMove.dstCol }))
+  );
 
-  expect(selectedStore.getActions()).not.toContainEqual(
-    selectTile(whiteMove.srcRow, whiteMove.srcCol, false)
-  );
-  expect(selectedStore.getActions()).not.toContainEqual(
-    setTile(whiteMove.srcRow, whiteMove.srcCol, undefined)
-  );
-  expect(selectedStore.getActions()).not.toContainEqual(
-    setTile(whiteMove.dstRow, whiteMove.dstCol, whiteMove.movingPiece)
-  );
   expect(selectedStore.getActions()).toContainEqual(
     expect.objectContaining({
-      type: SEND_ALERT
+      type: clickTile.rejected.type,
+      error: expect.objectContaining({
+        message
+      })
     })
   );
 });
 
-test('handles a network error when moving a piece', async () => {
+test('moves a piece - network error', async () => {
+  const message = 'Network Error';
   server.use(
-    rest.post(`${config.serviceUrl}/moves/0`, (req, res) => {
-      return res.networkError('Network error');
+    rest.post(`${config.serviceUrl}/moves/0`, (req, res, ctx) => {
+      return res.networkError(message);
     })
   );
+
   const selectedStore = mockStore({
     ...testStore,
     activeGame: {
       ...testStore.activeGame,
-      selectedPosition: [whiteMove.srcRow, whiteMove.srcCol],
-      tiles: immutableUpdate(testStore.activeGame.tiles, whiteMove.srcRow, whiteMove.srcCol, {
-        type: whiteMove.movingPiece.type,
-        color: whiteMove.movingPiece.color,
-        selected: true
-      })
+      selectedPosition: { row: whiteMove.srcRow, col: whiteMove.srcCol }
     }
   });
 
-  await waitFor(() => selectedStore.dispatch(clickTile(whiteMove.dstRow, whiteMove.dstCol)));
+  await waitFor(() =>
+    selectedStore.dispatch(clickTile({ row: whiteMove.dstRow, col: whiteMove.dstCol }))
+  );
 
   expect(selectedStore.getActions()).toContainEqual(
     expect.objectContaining({
-      type: SEND_ALERT,
-      payload: expect.objectContaining({
-        message: expect.stringContaining('Network Error')
+      type: clickTile.rejected.type,
+      error: expect.objectContaining({
+        message
       })
     })
   );
 });
 
-test('gets pieces', async () => {
+test('tries to get pieces', async () => {
   await waitFor(() => mockedStore.dispatch(getPieces(0)));
 
-  expect(mockedStore.getActions()).toContainEqual(setTile(0, 0, blackRook));
+  expect(mockedStore.getActions()).toContainEqual(
+    expect.objectContaining({
+      type: getPieces.fulfilled.type
+    })
+  );
 });
 
-test('handles an error when getting pieces', async () => {
+test('dispatches an error when failing to get pieces', async () => {
   server.use(
     rest.get(`${config.serviceUrl}/pieces/0`, (req, res, ctx) => {
       return res(ctx.status(500));
@@ -521,10 +578,15 @@ test('handles an error when getting pieces', async () => {
   );
   await waitFor(() => mockedStore.dispatch(getPieces(0)));
 
-  expect(mockedStore.getActions()).not.toContainEqual(setTile(0, 0, blackRook));
   expect(mockedStore.getActions()).toContainEqual(
     expect.objectContaining({
-      type: SEND_ALERT
+      type: getPieces.rejected.type
     })
   );
+});
+
+test('handles successful piece retrival', async () => {
+  const result = reducer(undefined, getPieces.fulfilled([blackRook], '', 0));
+
+  expect(result.pieces.ids).toContain(blackRook.id);
 });

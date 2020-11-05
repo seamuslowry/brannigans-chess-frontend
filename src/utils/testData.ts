@@ -1,5 +1,13 @@
 import { Auth0ContextInterface } from '@auth0/auth0-react';
-import { Game, Move, Piece, PieceColor, PieceType, Player } from '../services/ChessService.types';
+import {
+  Game,
+  Move,
+  Piece,
+  PieceColor,
+  PieceStatus,
+  PieceType,
+  Player
+} from '../services/ChessService.types';
 import { initialState as initialActiveGameState } from '../store/activeGame/activeGame';
 import { initialState as initialAuthState } from '../store/auth/auth';
 import {
@@ -33,13 +41,25 @@ export const playerTwo: Player = {
   imageUrl: 'www.two.com'
 };
 
-export const makePiece = (type: PieceType, color: PieceColor): Piece => ({
+export const mockEntityAdapterState = <T extends { id: number }>(...testEntities: T[]) => ({
+  ids: testEntities.map(e => e.id),
+  entities: testEntities.reduce((obj, key) => ({ ...obj, [key.id]: { ...key } }), {})
+});
+
+let testPieceId = 1000;
+export const makePiece = (
+  type: PieceType,
+  color: PieceColor,
+  row: number = 0,
+  col: number = 0,
+  status: PieceStatus = 'ACTIVE'
+): Piece => ({
   color,
   type,
-  positionCol: 0,
-  positionRow: 0,
-  status: 'ACTIVE',
-  id: Number(Math.random() * 1000)
+  positionCol: col,
+  positionRow: row,
+  status: status,
+  id: ++testPieceId
 });
 
 export const blackRook: Piece = makePiece('ROOK', 'BLACK');
@@ -63,7 +83,7 @@ export const fullGame: Game = {
 };
 
 export const whiteMove: Move = {
-  movingPiece: makePiece('ROOK', 'WHITE'),
+  movingPiece: makePiece('ROOK', 'WHITE', 4, 0),
   takenPiece: null,
   srcRow: 7,
   srcCol: 0,
@@ -74,8 +94,8 @@ export const whiteMove: Move = {
 };
 
 export const whiteTake: Move = {
-  movingPiece: makePiece('ROOK', 'WHITE'),
-  takenPiece: makePiece('ROOK', 'BLACK'),
+  movingPiece: makePiece('ROOK', 'WHITE', 4, 0),
+  takenPiece: makePiece('ROOK', 'BLACK', 4, 0, 'TAKEN'),
   srcRow: 7,
   srcCol: 0,
   dstRow: 4,
@@ -85,7 +105,7 @@ export const whiteTake: Move = {
 };
 
 export const blackMove: Move = {
-  movingPiece: makePiece('ROOK', 'BLACK'),
+  movingPiece: makePiece('ROOK', 'BLACK', 4, 0),
   takenPiece: null,
   srcRow: 0,
   srcCol: 0,
@@ -96,8 +116,8 @@ export const blackMove: Move = {
 };
 
 export const blackTake: Move = {
-  movingPiece: makePiece('ROOK', 'BLACK'),
-  takenPiece: makePiece('ROOK', 'WHITE'),
+  movingPiece: makePiece('ROOK', 'BLACK', 4, 0),
+  takenPiece: makePiece('ROOK', 'WHITE', 4, 0, 'TAKEN'),
   srcRow: 0,
   srcCol: 0,
   dstRow: 4,
@@ -107,36 +127,36 @@ export const blackTake: Move = {
 };
 
 export const whiteEnPassant: Move = {
-  movingPiece: makePiece('PAWN', 'WHITE'),
-  takenPiece: makePiece('PAWN', 'BLACK'),
+  movingPiece: makePiece('PAWN', 'WHITE', 2, 2, 'ACTIVE'),
+  takenPiece: makePiece('PAWN', 'BLACK', 2, 2, 'TAKEN'),
   srcRow: 3,
   srcCol: 3,
   dstRow: 2,
   dstCol: 2,
   moveType: 'EN_PASSANT',
-  id: 2
+  id: 5
 };
 
 export const whiteKingSideCastle: Move = {
-  movingPiece: makePiece('KING', 'WHITE'),
+  movingPiece: makePiece('KING', 'WHITE', 7, 6),
   takenPiece: null,
   srcRow: 7,
   srcCol: 4,
   dstRow: 7,
   dstCol: 6,
   moveType: 'KING_SIDE_CASTLE',
-  id: 2
+  id: 6
 };
 
 export const whiteQueenSideCastle: Move = {
-  movingPiece: makePiece('KING', 'WHITE'),
+  movingPiece: makePiece('KING', 'WHITE', 7, 2),
   takenPiece: null,
   srcRow: 7,
   srcCol: 4,
   dstRow: 7,
   dstCol: 2,
   moveType: 'QUEEN_SIDE_CASTLE',
-  id: 2
+  id: 7
 };
 
 export const unauthenticatedAuth0: Auth0ContextInterface = {

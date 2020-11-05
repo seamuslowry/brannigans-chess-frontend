@@ -1,5 +1,10 @@
-import { STOMP_CLOSED, STOMP_CONNECTED, STOMP_MESSAGE } from '../middleware/stomp/stomp';
-import { reducer, Message } from './socket';
+import {
+  STOMP_CLOSED,
+  STOMP_CONNECTED,
+  STOMP_MESSAGE,
+  MessagePayload
+} from '../middleware/stomp/stomp';
+import reducer from './socket';
 
 test('marks as connected', () => {
   const result = reducer(undefined, { type: STOMP_CONNECTED });
@@ -14,7 +19,7 @@ test('marks as disconnected', () => {
 });
 
 test('receives a message', () => {
-  const message: Message = { topic: 'topic/1', data: 'topic1data' };
+  const message: MessagePayload = { topic: 'topic/1', data: 'topic1data' };
 
   const result = reducer(undefined, {
     type: STOMP_MESSAGE,

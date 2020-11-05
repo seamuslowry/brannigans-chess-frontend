@@ -1,4 +1,6 @@
+import { AnyAction, createSlice } from '@reduxjs/toolkit';
 import {
+  MessagePayload,
   StompConnected,
   StompDisconnected,
   StompMessage,
@@ -7,13 +9,8 @@ import {
   STOMP_MESSAGE
 } from '../middleware/stomp/stomp';
 
-export interface Message {
-  topic: string;
-  data: string;
-}
-
 export interface SocketState {
-  messages: Message[];
+  messages: MessagePayload[];
   connected: boolean;
 }
 
@@ -22,26 +19,31 @@ export const initialState: SocketState = {
   connected: false
 };
 
-type SocketAction = StompConnected | StompDisconnected | StompMessage;
-
-export const reducer = (state: SocketState = initialState, action: SocketAction): SocketState => {
-  switch (action.type) {
-    case STOMP_CONNECTED:
-      return {
-        ...state,
-        connected: true
-      };
-    case STOMP_CLOSED:
-      return {
-        ...state,
-        connected: false
-      };
-    case STOMP_MESSAGE:
-      return {
-        ...state,
-        messages: [...state.messages, action.payload]
-      };
-    default:
-      return state;
+const socketSlice = createSlice({
+  name: 'chess/socket',
+  initialState,
+  reducers: {},
+  extraReducers: builder => {
+    builder
+      .addMatcher(
+        (action: AnyAction): action is StompMessage => action.type === STOMP_MESSAGE,
+        (state, action) => {
+          state.messages.push(action.payload);
+        }
+      )
+      .addMatcher(
+        (action: AnyAction): action is StompConnected => action.type === STOMP_CONNECTED,
+        state => {
+          state.connected = true;
+        }
+      )
+      .addMatcher(
+        (action: AnyAction): action is StompDisconnected => action.type === STOMP_CLOSED,
+        state => {
+          state.connected = false;
+        }
+      );
   }
-};
+});
+
+export default socketSlice.reducer;

@@ -5,14 +5,14 @@ import { rest } from 'msw';
 import { setupServer } from 'msw/node';
 import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router-dom';
-import thunk from 'redux-thunk';
-import { CLEAR_GAME, SET_GAME_ID } from '../../store/activeGame/activeGame';
+import { getDefaultMiddleware } from '@reduxjs/toolkit';
+import { clearGame, setGameId } from '../../store/activeGame/activeGame';
 import { testStore } from '../../utils/testData';
 import ActiveGame from './ActiveGame';
 import config from '../../config';
 import { Move, Piece } from '../../services/ChessService.types';
 
-const mockStore = createMockStore([thunk]);
+const mockStore = createMockStore(getDefaultMiddleware());
 const mockedStore = mockStore(testStore);
 
 beforeEach(() => mockedStore.clearActions());
@@ -44,7 +44,7 @@ test('sets and unsets the game id', async () => {
   expect(container).toBeInTheDocument();
   expect(mockedStore.getActions()).toContainEqual(
     expect.objectContaining({
-      type: SET_GAME_ID,
+      type: setGameId.type,
       payload: 1
     })
   );
@@ -55,7 +55,7 @@ test('sets and unsets the game id', async () => {
 
   expect(mockedStore.getActions()).toContainEqual(
     expect.objectContaining({
-      type: CLEAR_GAME
+      type: clearGame.type
     })
   );
 });

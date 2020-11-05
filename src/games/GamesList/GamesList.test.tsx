@@ -4,9 +4,8 @@ import { rest } from 'msw';
 import { setupServer } from 'msw/node';
 import { act } from 'react-test-renderer';
 import { MemoryRouter } from 'react-router-dom';
-import { ActionCreator, AnyAction } from 'redux';
+import { ActionCreator, AnyAction, getDefaultMiddleware } from '@reduxjs/toolkit';
 import createMockStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
 import { Provider } from 'react-redux';
 import GamesList from './GamesList';
 import { Game, PageResponse } from '../../services/ChessService.types';
@@ -14,7 +13,7 @@ import config from '../../config';
 import { emptyGame, testStore } from '../../utils/testData';
 import { AppState } from '../../store/store';
 
-const mockStore = createMockStore<AppState, ActionCreator<AnyAction>>([thunk]);
+const mockStore = createMockStore<AppState, ActionCreator<AnyAction>>(getDefaultMiddleware());
 const mockedStore = mockStore(testStore);
 
 beforeEach(() => mockedStore.clearActions());

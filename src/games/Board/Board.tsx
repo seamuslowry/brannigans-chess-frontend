@@ -1,11 +1,10 @@
 import React from 'react';
 import { Box } from '@material-ui/core';
-import { useDispatch } from 'react-redux';
 import Tile from '../Tile/Tile';
-import { clearBoard } from '../../store/activeGame/activeGame';
-import { getPieces } from '../../store/activeGame/activeGame.thunk';
+import { clearBoard, getPieces } from '../../store/activeGame/activeGame';
 import usePieceSize from '../../utils/usePieceSize';
 import PawnPromotion from '../PawnPromotion/PawnPromotion';
+import { useAppDispatch } from '../../store/store';
 
 interface Props {
   gameId: number;
@@ -13,7 +12,7 @@ interface Props {
 
 const Board: React.FC<Props> = ({ gameId }) => {
   const array = Array.from(Array(8).keys());
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const pieceSize = usePieceSize();
 
   React.useEffect(() => {

@@ -1,11 +1,11 @@
 import React from 'react';
 import { Button, ButtonProps } from '@material-ui/core';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import ChessService from '../../../services/ChessService';
 import { sendAlert } from '../../../store/notifications/notifications';
 import { AxiosError } from 'axios';
 import { PieceColor, Player } from '../../../services/ChessService.types';
-import { AppState } from '../../../store/store';
+import { AppState, useAppDispatch } from '../../../store/store';
 
 interface Props {
   gameId: number;
@@ -17,7 +17,7 @@ const LeaveGameButton: React.FC<Omit<ButtonProps, 'disabled' | 'onClick'> & Prop
   pieceColor,
   ...rest
 }) => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const [loading, setLoading] = React.useState(false);
   const fullGame = useSelector<AppState, boolean>(

@@ -4,13 +4,13 @@ import { Provider } from 'react-redux';
 import createMockStore from 'redux-mock-store';
 import { rest } from 'msw';
 import { setupServer } from 'msw/node';
-import thunk from 'redux-thunk';
+import { getDefaultMiddleware } from '@reduxjs/toolkit';
 import { testStore } from '../../utils/testData';
 import { Piece } from '../../services/ChessService.types';
 import config from '../../config';
 import Board from './Board';
 
-const mockStore = createMockStore([thunk]);
+const mockStore = createMockStore(getDefaultMiddleware());
 const mockedStore = mockStore(testStore);
 
 const server = setupServer(

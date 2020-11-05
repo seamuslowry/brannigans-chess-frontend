@@ -1,6 +1,5 @@
 import axios from 'axios';
 import config from '../config';
-import { store } from '../store/store';
 
 export const chessApi = axios.create({
   baseURL: config.serviceUrl
@@ -8,7 +7,7 @@ export const chessApi = axios.create({
 
 // Add a request interceptor
 chessApi.interceptors.request.use(axiosConfig => {
-  const { token } = store.getState().auth;
+  const token = localStorage.getItem('token');
 
   if (!token) return axiosConfig;
 

@@ -1,21 +1,19 @@
 import React from 'react';
 import { fireEvent, render } from '@testing-library/react';
-import { ActionCreator, AnyAction } from 'redux';
+import { ActionCreator, AnyAction, getDefaultMiddleware } from '@reduxjs/toolkit';
 import { Provider } from 'react-redux';
-import thunk from 'redux-thunk';
 import createMockStore from 'redux-mock-store';
 import Tile from './Tile';
-import { testStore } from '../../utils/testData';
-import { SELECT_TILE } from '../../store/activeGame/activeGame';
+import { blackRook, mockEntityAdapterState, testStore } from '../../utils/testData';
+import { clickTile } from '../../store/activeGame/activeGame';
 import { AppState } from '../../store/store';
-import { immutableUpdate } from '../../utils/arrayHelpers';
 
-const mockStore = createMockStore<AppState, ActionCreator<AnyAction>>([thunk]);
+const mockStore = createMockStore<AppState, ActionCreator<AnyAction>>(getDefaultMiddleware());
 const mockedStore = mockStore(testStore);
 
 beforeEach(() => mockedStore.clearActions());
 
-test('does nothing when clicking empty', async () => {
+test('clicks a tile', async () => {
   const { getByTestId } = render(
     <Provider store={mockedStore}>
       <Tile row={0} col={0} />
@@ -25,33 +23,72 @@ test('does nothing when clicking empty', async () => {
   const tile = getByTestId('tile-0-0');
   fireEvent.click(tile);
 
-  expect(mockedStore.getActions()).toHaveLength(0);
+  expect(mockedStore.getActions()).toContainEqual(
+    expect.objectContaining({
+      type: clickTile.pending.type
+    })
+  );
 });
 
-test('selects when clicking piece', async () => {
-  const storeWithPiece = mockStore({
+test('renders selected', async () => {
+  const selectedTileStore = mockStore({
     ...testStore,
     activeGame: {
       ...testStore.activeGame,
-      tiles: immutableUpdate(testStore.activeGame.tiles, 1, 0, {
-        type: 'PAWN',
-        color: 'BLACK',
-        selected: true
-      })
+      selectedPosition: { row: 0, col: 0 }
     }
   });
+
   const { getByTestId } = render(
-    <Provider store={storeWithPiece}>
-      <Tile row={1} col={0} />
+    <Provider store={selectedTileStore}>
+      <Tile row={0} col={0} />
     </Provider>
   );
 
-  const tile = getByTestId('tile-1-0');
-  fireEvent.click(tile);
+  const tile = getByTestId('tile-0-0');
+  // MUI default selected color
+  expect(tile).toHaveStyle('background-color: rgba(0, 0, 0, 0.08)');
+});
 
-  expect(storeWithPiece.getActions()).toContainEqual(
-    expect.objectContaining({
-      type: SELECT_TILE
-    })
+test('renders secondary color', async () => {
+  const { getByTestId } = render(
+    <Provider store={mockedStore}>
+      <Tile row={0} col={0} />
+    </Provider>
   );
+
+  const tile = getByTestId('tile-0-0');
+  // MUI default secondary color
+  expect(tile).toHaveStyle('background-color: rgb(255, 64, 129)');
+});
+
+test('renders primary color', async () => {
+  const { getByTestId } = render(
+    <Provider store={mockedStore}>
+      <Tile row={0} col={1} />
+    </Provider>
+  );
+
+  const tile = getByTestId('tile-0-1');
+  // MUI default primary color
+  expect(tile).toHaveStyle('background-color: rgb(63, 81, 181)');
+});
+
+test('renders a piece', async () => {
+  const withPieceStore = mockStore({
+    ...testStore,
+    activeGame: {
+      ...testStore.activeGame,
+      pieces: mockEntityAdapterState(blackRook)
+    }
+  });
+
+  const { getByAltText } = render(
+    <Provider store={withPieceStore}>
+      <Tile row={0} col={0} />
+    </Provider>
+  );
+
+  const tile = getByAltText('BLACK-ROOK');
+  expect(tile).toBeInTheDocument();
 });

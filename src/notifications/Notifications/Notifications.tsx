@@ -1,12 +1,12 @@
 import { Snackbar } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
 import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { AlertInfo, removeAlert } from '../../store/notifications/notifications';
-import { AppState } from '../../store/store';
+import { AppState, useAppDispatch } from '../../store/store';
 
 const Notifications: React.FC = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const [displayAlert, setDisplayAlert] = React.useState<AlertInfo | undefined>(undefined);
   const [open, setOpen] = React.useState<boolean>(false);
 
@@ -16,7 +16,7 @@ const Notifications: React.FC = () => {
     if (alerts.length && !displayAlert) {
       // Set a new snack when we don't have an active one
       setDisplayAlert({ ...alerts[0] });
-      dispatch(removeAlert(alerts[0]));
+      dispatch(removeAlert(alerts[0].message, alerts[0].severity));
       setOpen(true);
     } else if (alerts.length && displayAlert && open) {
       // Close an active snack when a new one is added
