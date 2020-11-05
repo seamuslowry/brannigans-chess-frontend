@@ -1,8 +1,7 @@
 import React from 'react';
 import { Box } from '@material-ui/core';
 import Tile from '../Tile/Tile';
-import { clearBoard } from '../../store/activeGame/activeGame';
-import { getPieces } from '../../store/activeGame/activeGame';
+import { clearBoard, getPieces } from '../../store/activeGame/activeGame';
 import usePieceSize from '../../utils/usePieceSize';
 import PawnPromotion from '../PawnPromotion/PawnPromotion';
 import { useAppDispatch } from '../../store/store';

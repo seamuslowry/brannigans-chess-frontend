@@ -13,7 +13,8 @@ import reducer, {
   clearMoves,
   getStatusTopic,
   getPieces,
-  addPieces
+  addPieces,
+  clickTile
 } from './activeGame';
 import {
   blackRook,
@@ -30,7 +31,6 @@ import {
 import { AppState } from '../store';
 import config from '../../config';
 import { Move, Piece } from '../../services/ChessService.types';
-import { clickTile } from './activeGame';
 import { waitFor } from '@testing-library/dom';
 import { STOMP_MESSAGE } from '../middleware/stomp/stomp';
 

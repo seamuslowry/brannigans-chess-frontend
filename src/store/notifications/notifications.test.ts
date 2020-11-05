@@ -1,6 +1,5 @@
 import { errorAlertInfo, successAlertInfo } from '../../utils/testData';
-import { getPieces } from '../activeGame/activeGame';
-import { clickTile } from '../activeGame/activeGame';
+import { getPieces, clickTile } from '../activeGame/activeGame';
 import reducer, { initialState, sendAlert, AlertInfo, removeAlert } from './notifications';
 
 test('sends an alert', () => {

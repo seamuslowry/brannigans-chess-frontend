@@ -1,7 +1,6 @@
 import { Color } from '@material-ui/lab';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { getPieces } from '../activeGame/activeGame';
-import { clickTile } from '../activeGame/activeGame';
+import { getPieces, clickTile } from '../activeGame/activeGame';
 
 export interface AlertInfo {
   message: string;
