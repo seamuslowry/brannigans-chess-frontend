@@ -38,7 +38,8 @@ const TakenPieces: React.FC<Props> = ({ gameId, color }) => {
     };
   }, [gameId, color, dispatch]);
 
-  const pieces = useSelector<AppState, PieceEntity[]>(makeGetTakenPieces(color));
+  const getTakenPieces = React.useMemo(makeGetTakenPieces, []);
+  const pieces = useSelector<AppState, PieceEntity[]>(state => getTakenPieces(state, color));
 
   return (
     <Box

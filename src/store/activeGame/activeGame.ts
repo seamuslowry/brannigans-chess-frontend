@@ -193,9 +193,11 @@ const { selectAll: selectAllPieces } = piecesAdapter.getSelectors<AppState>(
   state => state.activeGame.pieces
 );
 
-export const makeGetTakenPieces = (color: PieceColor) =>
-  createSelector(selectAllPieces, pieces =>
-    pieces.filter(p => p.color === color && p.status === 'TAKEN')
+export const makeGetTakenPieces = () =>
+  createSelector(
+    selectAllPieces,
+    (_: AppState, color: PieceColor) => color,
+    (pieces, color) => pieces.filter(p => p.color === color && p.status === 'TAKEN')
   );
 
 export const makeGetActivePiece = () =>
@@ -210,7 +212,7 @@ export const makeGetActivePiece = () =>
   );
 
 export const makeGetSelected = () =>
-  createSelector<AppState, TilePosition, TilePosition | undefined, TilePosition, boolean>(
+  createSelector(
     state => state.activeGame.selectedPosition,
     (_: AppState, position: TilePosition) => position,
     (selectedPostion, givenPosition) =>
@@ -220,7 +222,7 @@ export const makeGetSelected = () =>
   );
 
 export const makeGetPromatablePawn = () =>
-  createSelector<AppState, number, Piece[], number, Piece | undefined>(
+  createSelector(
     selectAllPieces,
     (_: AppState, row: number) => row,
     (pieces, row) =>
