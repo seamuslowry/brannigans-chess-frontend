@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, CircularProgress, makeStyles, Paper } from '@material-ui/core';
 import { useSelector } from 'react-redux';
-import { Move as MoveType, PieceColor } from '../../services/ChessService.types';
+import { Move as MoveEntity, PieceColor } from '../../services/ChessService.types';
 import { addMoves, clearMoves, selectAllMoves } from '../../store/activeGame/activeGame';
 import { sendAlert } from '../../store/notifications/notifications';
 import { AppState, useAppDispatch } from '../../store/store';
@@ -46,7 +46,7 @@ const MoveList: React.FC<Props> = ({ gameId, color }) => {
     };
   }, [gameId, color, dispatch]);
 
-  const moves = useSelector<AppState, MoveType[]>(selectAllMoves);
+  const moves = useSelector<AppState, MoveEntity[]>(selectAllMoves);
 
   React.useEffect(() => {
     moves.length && ref.current && (ref.current.scrollTop = ref.current.scrollHeight);

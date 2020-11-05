@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, CircularProgress } from '@material-ui/core';
 import { useSelector } from 'react-redux';
-import { Piece as PieceType, PieceColor } from '../../services/ChessService.types';
+import { Piece as PieceEntity, PieceColor } from '../../services/ChessService.types';
 import ChessService from '../../services/ChessService';
 import Piece from '../Piece/Piece';
 import { clearTaken, makeGetTakenPieces, addPieces } from '../../store/activeGame/activeGame';
@@ -38,7 +38,7 @@ const TakenPieces: React.FC<Props> = ({ gameId, color }) => {
     };
   }, [gameId, color, dispatch]);
 
-  const pieces = useSelector<AppState, PieceType[]>(makeGetTakenPieces(color));
+  const pieces = useSelector<AppState, PieceEntity[]>(makeGetTakenPieces(color));
 
   return (
     <Box

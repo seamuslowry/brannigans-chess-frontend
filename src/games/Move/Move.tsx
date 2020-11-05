@@ -1,13 +1,13 @@
 import React from 'react';
 import { Box, Typography, useTheme } from '@material-ui/core';
-import { Move as MoveType, MoveType as TypeOfMove } from '../../services/ChessService.types';
+import { Move as MoveEntity, MoveType } from '../../services/ChessService.types';
 import Piece from '../Piece/Piece';
 
 interface Props {
-  move: MoveType;
+  move: MoveEntity;
 }
 
-const getMoveDescriptor = (type: TypeOfMove) => {
+const getMoveDescriptor = (type: MoveType) => {
   switch (type) {
     case 'EN_PASSANT':
       return 'EP';
