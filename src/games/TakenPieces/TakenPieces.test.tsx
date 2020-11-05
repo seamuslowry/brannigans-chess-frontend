@@ -9,8 +9,7 @@ import { makePiece, mockEntityAdapterState, testStore } from '../../utils/testDa
 import { Piece } from '../../services/ChessService.types';
 import config from '../../config';
 import TakenPieces from './TakenPieces';
-import { clearTaken, addPieces } from '../../store/activeGame/activeGame';
-import { sendAlert } from '../../store/notifications/notifications';
+import { clearTaken, getPieces } from '../../store/activeGame/activeGame';
 
 const takenBlackRook = makePiece('ROOK', 'BLACK', 0, 0, 'TAKEN');
 
@@ -47,7 +46,7 @@ test('gets pieces on mount', async () => {
 
   expect(mockedStore.getActions()).toContainEqual(
     expect.objectContaining({
-      type: addPieces.type
+      type: getPieces.fulfilled.type
     })
   );
 });
@@ -69,7 +68,7 @@ test('handles an error getting pieces on mount', async () => {
 
   expect(mockedStore.getActions()).toContainEqual(
     expect.objectContaining({
-      type: sendAlert.type
+      type: getPieces.rejected.type
     })
   );
 });

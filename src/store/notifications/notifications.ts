@@ -40,8 +40,12 @@ const notificationsSlice = createSlice({
   },
   extraReducers: builder => {
     builder.addCase(getPieces.rejected, (state, action) => {
+      const { color = '', status = '' } = action.meta.arg;
+
+      const metadataString = ` ${color} ${status}`.trimEnd();
+
       state.pendingAlerts.push({
-        message: `Could not get pieces for game: ${action.error.message}`,
+        message: `Could not find${metadataString} pieces: ${action.error.message}`,
         severity: 'error'
       });
     });

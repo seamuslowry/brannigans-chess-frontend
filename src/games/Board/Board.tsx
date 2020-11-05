@@ -5,6 +5,7 @@ import { clearBoard, getPieces } from '../../store/activeGame/activeGame';
 import usePieceSize from '../../utils/usePieceSize';
 import PawnPromotion from '../PawnPromotion/PawnPromotion';
 import { useAppDispatch } from '../../store/store';
+import useGameColor from '../../utils/useGameColor';
 
 interface Props {
   gameId: number;
@@ -14,13 +15,14 @@ const Board: React.FC<Props> = ({ gameId }) => {
   const array = Array.from(Array(8).keys());
   const dispatch = useAppDispatch();
   const pieceSize = usePieceSize();
+  const color = useGameColor();
 
   React.useEffect(() => {
-    dispatch(getPieces(gameId));
+    dispatch(getPieces({ gameId, color }));
     return () => {
       dispatch(clearBoard());
     };
-  }, [gameId, dispatch]);
+  }, [gameId, color, dispatch]);
 
   return (
     <>
