@@ -7,7 +7,6 @@ import MoveList from '../MoveList/MoveList';
 import TakenPieces from '../TakenPieces/TakenPieces';
 import GameStatus from '../GameStatus/GameStatus';
 import { useAppDispatch } from '../../store/store';
-import useGameColor from '../../utils/useGameColor';
 
 interface ExpectedRouteParams {
   id?: string;
