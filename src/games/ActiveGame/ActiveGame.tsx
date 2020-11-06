@@ -7,6 +7,7 @@ import MoveList from '../MoveList/MoveList';
 import TakenPieces from '../TakenPieces/TakenPieces';
 import GameStatus from '../GameStatus/GameStatus';
 import { useAppDispatch } from '../../store/store';
+import useGameColor from '../../utils/useGameColor';
 
 interface ExpectedRouteParams {
   id?: string;
@@ -26,6 +27,8 @@ const ActiveGame: React.FC = () => {
     };
   }, [gameId, dispatch]);
 
+  const color = useGameColor();
+
   return (
     <Grid container justify="space-evenly" spacing={2}>
       <Grid item container xs={12} md={8} wrap="nowrap" justify="center" spacing={1}>
@@ -44,7 +47,7 @@ const ActiveGame: React.FC = () => {
           <GameStatus gameId={gameId} />
         </Grid>
         <Grid item xs={12}>
-          <MoveList gameId={gameId} />
+          <MoveList gameId={gameId} color={color} />
         </Grid>
       </Grid>
     </Grid>
