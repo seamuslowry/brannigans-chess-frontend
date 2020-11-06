@@ -35,7 +35,7 @@ test('removes an alert', () => {
 
 test('shows a notification on piece retrieval failure', async () => {
   const message = 'test message';
-  const result = reducer(undefined, getPieces.rejected(new Error(message), '', 0));
+  const result = reducer(undefined, getPieces.rejected(new Error(message), '', { gameId: 0 }));
 
   expect(result.pendingAlerts).toContainEqual(
     expect.objectContaining({

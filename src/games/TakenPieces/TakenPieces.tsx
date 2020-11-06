@@ -2,10 +2,8 @@ import React from 'react';
 import { Box, CircularProgress } from '@material-ui/core';
 import { useSelector } from 'react-redux';
 import { Piece as PieceEntity, PieceColor } from '../../services/ChessService.types';
-import ChessService from '../../services/ChessService';
 import Piece from '../Piece/Piece';
-import { clearTaken, makeGetTakenPieces, addPieces } from '../../store/activeGame/activeGame';
-import { sendAlert } from '../../store/notifications/notifications';
+import { clearTaken, makeGetTakenPieces, getPieces } from '../../store/activeGame/activeGame';
 import { AppState, useAppDispatch } from '../../store/store';
 import usePieceSize from '../../utils/usePieceSize';
 
@@ -22,16 +20,7 @@ const TakenPieces: React.FC<Props> = ({ gameId, color }) => {
 
   React.useEffect(() => {
     setLoading(true);
-    ChessService.getPieces(gameId, color, 'TAKEN')
-      .then(res => {
-        dispatch(addPieces(res.data));
-      })
-      .catch(e => {
-        dispatch(sendAlert(`Could not find ${color} taken pieces: ${e.message}`));
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+    dispatch(getPieces({ gameId, color, status: 'TAKEN' })).finally(() => setLoading(false));
 
     return () => {
       dispatch(clearTaken(color));

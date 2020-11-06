@@ -15,7 +15,8 @@ import {
   Move,
   GameStatus,
   Player,
-  Game
+  Game,
+  PieceStatus
 } from '../../services/ChessService.types';
 
 export const getStatusTopic = (gameId: number) => `/game/status/${gameId}`;
@@ -56,10 +57,21 @@ export const clickTile = createAsyncThunk<null | boolean | Move, TilePosition, {
   }
 );
 
-export const getPieces = createAsyncThunk('chess/activeGame/getPieces', async (gameId: number) => {
-  const response = await ChessService.getPieces(gameId, undefined, 'ACTIVE');
-  return response.data;
-});
+export const getPieces = createAsyncThunk(
+  'chess/activeGame/getPieces',
+  async ({
+    gameId,
+    color,
+    status
+  }: {
+    gameId: number;
+    color?: PieceColor;
+    status?: PieceStatus;
+  }) => {
+    const response = await ChessService.getPieces(gameId, color, status);
+    return response.data;
+  }
+);
 
 const movesAdapter = createEntityAdapter<Move>();
 const initialMovesState = movesAdapter.getInitialState();

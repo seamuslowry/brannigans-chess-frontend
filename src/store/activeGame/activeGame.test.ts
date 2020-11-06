@@ -556,7 +556,7 @@ test('moves a piece - network error', async () => {
 });
 
 test('tries to get pieces', async () => {
-  await waitFor(() => mockedStore.dispatch(getPieces(0)));
+  await waitFor(() => mockedStore.dispatch(getPieces({ gameId: 0 })));
 
   expect(mockedStore.getActions()).toContainEqual(
     expect.objectContaining({
@@ -571,7 +571,7 @@ test('dispatches an error when failing to get pieces', async () => {
       return res(ctx.status(500));
     })
   );
-  await waitFor(() => mockedStore.dispatch(getPieces(0)));
+  await waitFor(() => mockedStore.dispatch(getPieces({ gameId: 0 })));
 
   expect(mockedStore.getActions()).toContainEqual(
     expect.objectContaining({
@@ -581,7 +581,7 @@ test('dispatches an error when failing to get pieces', async () => {
 });
 
 test('handles successful piece retrival', async () => {
-  const result = reducer(undefined, getPieces.fulfilled([blackRook], '', 0));
+  const result = reducer(undefined, getPieces.fulfilled([blackRook], '', { gameId: 0 }));
 
   expect(result.pieces.ids).toContain(blackRook.id);
 });

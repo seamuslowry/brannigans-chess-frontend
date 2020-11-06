@@ -37,7 +37,7 @@ afterAll(() => server.close());
 test('gets moves on mount', async () => {
   const { getByRole } = render(
     <Provider store={mockedStore}>
-      <MoveList gameId={0} color="BLACK" />
+      <MoveList gameId={0} />
     </Provider>
   );
 
@@ -59,7 +59,7 @@ test('handles an error getting moves on mount', async () => {
 
   const { getByRole } = render(
     <Provider store={mockedStore}>
-      <MoveList gameId={0} color="BLACK" />
+      <MoveList gameId={0} />
     </Provider>
   );
 
@@ -75,7 +75,7 @@ test('handles an error getting moves on mount', async () => {
 test('clears moves on unmount', async () => {
   const { getByRole, unmount } = render(
     <Provider store={mockedStore}>
-      <MoveList gameId={0} color="BLACK" />
+      <MoveList gameId={0} />
     </Provider>
   );
 
