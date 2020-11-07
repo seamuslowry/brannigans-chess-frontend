@@ -1,6 +1,7 @@
 import { Color } from '@material-ui/lab';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { clickTile } from '../boards/boards';
+import { getMoves } from '../moves/moves';
 import { getPieces } from '../pieces/pieces';
 
 export interface AlertInfo {
@@ -40,22 +41,33 @@ const notificationsSlice = createSlice({
     }
   },
   extraReducers: builder => {
-    builder.addCase(getPieces.rejected, (state, action) => {
-      const { colors, status = '' } = action.meta.arg;
+    builder
+      .addCase(getPieces.rejected, (state, action) => {
+        const { colors, status = '' } = action.meta.arg;
 
-      const metadataString = ` ${colors.join(' and ')} ${status}`.trimEnd();
+        const metadataString = ` ${colors.join(' and ')} ${status}`.trimEnd();
 
-      state.pendingAlerts.push({
-        message: `Could not find${metadataString} pieces: ${action.error.message}`,
-        severity: 'error'
+        state.pendingAlerts.push({
+          message: `Could not find${metadataString} pieces: ${action.error.message}`,
+          severity: 'error'
+        });
+      })
+      .addCase(getMoves.rejected, (state, action) => {
+        const { colors } = action.meta.arg;
+
+        const metadataString = ` ${colors.join(' and ')}`.trimEnd();
+
+        state.pendingAlerts.push({
+          message: `Could not find${metadataString} moves: ${action.error.message}`,
+          severity: 'error'
+        });
+      })
+      .addCase(clickTile.rejected, (state, action) => {
+        state.pendingAlerts.push({
+          message: `${action.error.message}`,
+          severity: 'error'
+        });
       });
-    });
-    builder.addCase(clickTile.rejected, (state, action) => {
-      state.pendingAlerts.push({
-        message: `${action.error.message}`,
-        severity: 'error'
-      });
-    });
   }
 });
 

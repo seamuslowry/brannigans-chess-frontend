@@ -9,8 +9,7 @@ import { mockEntityAdapterState, testStore, whiteMove } from '../../utils/testDa
 import { Move } from '../../services/ChessService.types';
 import config from '../../config';
 import MoveList from './MoveList';
-import { sendAlert } from '../../store/notifications/notifications';
-import { addMoves } from '../../store/moves/moves';
+import { getMoves } from '../../store/moves/moves';
 
 const mockStore = createMockStore(getDefaultMiddleware());
 const mockedStore = mockStore({
@@ -42,7 +41,7 @@ test('gets moves on mount', async () => {
 
   expect(mockedStore.getActions()).toContainEqual(
     expect.objectContaining({
-      type: addMoves.type
+      type: getMoves.fulfilled.type
     })
   );
 });
@@ -64,7 +63,7 @@ test('handles an error getting moves on mount', async () => {
 
   expect(mockedStore.getActions()).toContainEqual(
     expect.objectContaining({
-      type: sendAlert.type
+      type: getMoves.rejected.type
     })
   );
 });

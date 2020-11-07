@@ -1,10 +1,25 @@
-import { AnyAction, createEntityAdapter, createSelector, createSlice } from '@reduxjs/toolkit';
-import { Move } from '../../services/ChessService.types';
+import {
+  AnyAction,
+  createAsyncThunk,
+  createEntityAdapter,
+  createSelector,
+  createSlice
+} from '@reduxjs/toolkit';
+import ChessService from '../../services/ChessService';
+import { Move, PieceColor } from '../../services/ChessService.types';
 import { clickTile } from '../boards/boards';
 import { StompMessage, STOMP_MESSAGE } from '../middleware/stomp/stomp';
 
 export const SHARED_MOVES_PREFIX = `/game/moves/`;
 export const getSharedMovesTopic = (gameId: number) => `${SHARED_MOVES_PREFIX}${gameId}`;
+
+export const getMoves = createAsyncThunk(
+  'chess/moves/getMoves',
+  async ({ gameId, colors }: { gameId: number; colors: PieceColor[] }) => {
+    const response = await ChessService.getMoves(gameId, colors);
+    return response.data;
+  }
+);
 
 const movesAdapter = createEntityAdapter<Move>({
   sortComparer: (a, b) => a.id - b.id // keep moves sorted
@@ -21,6 +36,9 @@ const moveSlice = createSlice({
   },
   extraReducers: builder => {
     builder
+      .addCase(getMoves.fulfilled, (state, action) => {
+        state = movesAdapter.upsertMany(state, action.payload);
+      })
       .addCase(clickTile.fulfilled, (state, action) => {
         if (action.payload && typeof action.payload === 'object') {
           const move = action.payload;

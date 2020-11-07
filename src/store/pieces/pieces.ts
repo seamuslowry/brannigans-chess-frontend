@@ -12,7 +12,7 @@ import { StompMessage, STOMP_MESSAGE } from '../middleware/stomp/stomp';
 import { SHARED_MOVES_PREFIX } from '../moves/moves';
 
 export const getPieces = createAsyncThunk(
-  'chess/activeGame/getPieces',
+  'chess/pieces/getPieces',
   async ({
     gameId,
     colors,

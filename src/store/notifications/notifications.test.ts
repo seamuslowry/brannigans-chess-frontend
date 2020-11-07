@@ -1,5 +1,6 @@
 import { errorAlertInfo, successAlertInfo } from '../../utils/testData';
 import { clickTile } from '../boards/boards';
+import { getMoves } from '../moves/moves';
 import { getPieces } from '../pieces/pieces';
 import reducer, { initialState, sendAlert, AlertInfo, removeAlert } from './notifications';
 
@@ -39,6 +40,20 @@ test('shows a notification on piece retrieval failure', async () => {
   const result = reducer(
     undefined,
     getPieces.rejected(new Error(message), '', { gameId: 0, colors: [] })
+  );
+
+  expect(result.pendingAlerts).toContainEqual(
+    expect.objectContaining({
+      message: expect.stringContaining(message)
+    })
+  );
+});
+
+test('shows a notification on move retrieval failure', async () => {
+  const message = 'test message';
+  const result = reducer(
+    undefined,
+    getMoves.rejected(new Error(message), '', { gameId: 0, colors: [] })
   );
 
   expect(result.pendingAlerts).toContainEqual(
