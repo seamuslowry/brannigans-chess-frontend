@@ -6,9 +6,11 @@ import createStompMiddleware from './middleware/stomp/stomp';
 import config from '../config';
 import { configureStore } from '@reduxjs/toolkit';
 import { useDispatch } from 'react-redux';
+import boardsReducer, { BoardState } from './boards/boards';
 
 export interface AppState {
   activeGame: ActiveGameState;
+  boards: BoardState;
   auth: AuthState;
   notifications: NotificationsState;
   socket: SocketState;
@@ -17,6 +19,7 @@ export interface AppState {
 export const store = configureStore({
   reducer: {
     activeGame: activeGameReducer,
+    boards: boardsReducer,
     auth: authReducer,
     notifications: notificationsReducer,
     socket: socketReducer

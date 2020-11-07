@@ -14,6 +14,7 @@ import {
   initialState as initialNotificationsState,
   AlertInfo
 } from '../store/notifications/notifications';
+import { initialState as initialBoardState } from '../store/boards/boards';
 import { initialState as initialSocketState } from '../store/socket/socket';
 import { AppState } from '../store/store';
 
@@ -181,6 +182,7 @@ export const authenticatedAuth0 = {
 
 export const testStore: AppState = {
   activeGame: initialActiveGameState,
+  boards: initialBoardState,
   notifications: initialNotificationsState,
   socket: initialSocketState,
   auth: initialAuthState

@@ -34,7 +34,9 @@ const Board: React.FC<Props> = ({ gameId }) => {
         gridTemplateRows={`repeat(8, ${pieceSize})`}
       >
         {array.map(row =>
-          array.map(col => <Tile key={`tile-${row}-${col}`} row={row} col={col} />)
+          array.map(col => (
+            <Tile key={`tile-${gameId}-${row}-${col}`} gameId={gameId} row={row} col={col} />
+          ))
         )}
       </Box>
     </>

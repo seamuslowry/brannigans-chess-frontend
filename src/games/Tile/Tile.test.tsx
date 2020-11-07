@@ -16,7 +16,7 @@ beforeEach(() => mockedStore.clearActions());
 test('clicks a tile', async () => {
   const { getByTestId } = render(
     <Provider store={mockedStore}>
-      <Tile row={0} col={0} />
+      <Tile gameId={0} row={0} col={0} />
     </Provider>
   );
 
@@ -33,15 +33,15 @@ test('clicks a tile', async () => {
 test('renders selected', async () => {
   const selectedTileStore = mockStore({
     ...testStore,
-    activeGame: {
-      ...testStore.activeGame,
+    boards: mockEntityAdapterState({
+      id: 0,
       selectedPosition: { row: 0, col: 0 }
-    }
+    })
   });
 
   const { getByTestId } = render(
     <Provider store={selectedTileStore}>
-      <Tile row={0} col={0} />
+      <Tile gameId={0} row={0} col={0} />
     </Provider>
   );
 
@@ -53,7 +53,7 @@ test('renders selected', async () => {
 test('renders secondary color', async () => {
   const { getByTestId } = render(
     <Provider store={mockedStore}>
-      <Tile row={0} col={0} />
+      <Tile gameId={0} row={0} col={0} />
     </Provider>
   );
 
@@ -65,7 +65,7 @@ test('renders secondary color', async () => {
 test('renders primary color', async () => {
   const { getByTestId } = render(
     <Provider store={mockedStore}>
-      <Tile row={0} col={1} />
+      <Tile gameId={0} row={0} col={1} />
     </Provider>
   );
 
@@ -85,7 +85,7 @@ test('renders a piece', async () => {
 
   const { getByAltText } = render(
     <Provider store={withPieceStore}>
-      <Tile row={0} col={0} />
+      <Tile gameId={0} row={0} col={0} />
     </Provider>
   );
 

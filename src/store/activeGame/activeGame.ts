@@ -27,11 +27,16 @@ export interface TilePosition {
   col: number;
 }
 
-export const clickTile = createAsyncThunk<null | boolean | Move, TilePosition, { state: AppState }>(
+export const clickTile = createAsyncThunk<
+  null | boolean | Move,
+  TilePosition & { gameId: number },
+  { state: AppState }
+>(
   'chess/activeGame/clickTile',
-  async (position: TilePosition, { getState }) => {
-    const { row, col } = position;
-    const { selectedPosition, id: gameId, pieces } = getState().activeGame;
+  async (position: TilePosition & { gameId: number }, { getState }) => {
+    const { row, col, gameId } = position;
+    const { pieces } = getState().activeGame;
+    const selectedPosition = getState().boards.entities[gameId]?.selectedPosition;
 
     if (selectedPosition && selectedPosition.row === row && selectedPosition.col === col) {
       return false;
@@ -81,7 +86,6 @@ const piecesAdapter = createEntityAdapter<Piece>();
 const initialPiecesState = piecesAdapter.getInitialState();
 
 export interface ActiveGameState {
-  selectedPosition?: TilePosition;
   moves: typeof initialMovesState;
   pieces: typeof initialPiecesState;
   status: GameStatus | '';
@@ -117,8 +121,6 @@ const activeGameSlice = createSlice({
         .filter(p => p.status === 'ACTIVE')
         .map(p => p.id);
       state.pieces = piecesAdapter.removeMany(state.pieces, activeIds);
-
-      state.selectedPosition = initialState.selectedPosition;
     },
     clearTaken: (state, action: PayloadAction<PieceColor>) => {
       const takenColorIds = (Object.values(state.pieces.entities) as Piece[])
@@ -139,14 +141,8 @@ const activeGameSlice = createSlice({
         state.pieces = piecesAdapter.upsertMany(state.pieces, action.payload);
       })
       .addCase(clickTile.fulfilled, (state, action) => {
-        const { row, col } = action.meta.arg;
-        if (action.payload === false) {
-          state.selectedPosition = undefined;
-        } else if (action.payload === true) {
-          state.selectedPosition = { row, col };
-        } else if (action.payload) {
+        if (action.payload && typeof action.payload === 'object') {
           const move = action.payload;
-          state.selectedPosition = undefined;
 
           let newPieces = [move.movingPiece];
           newPieces = move.takenPiece ? newPieces.concat(move.takenPiece) : newPieces;
@@ -227,16 +223,6 @@ export const makeGetActivePiece = () =>
         p =>
           p.positionRow === position.row && p.positionCol === position.col && p.status === 'ACTIVE'
       )
-  );
-
-export const makeGetSelected = () =>
-  createSelector(
-    state => state.activeGame.selectedPosition,
-    (_: AppState, position: TilePosition) => position,
-    (selectedPostion, givenPosition) =>
-      !!selectedPostion &&
-      selectedPostion.row === givenPosition.row &&
-      selectedPostion.col === givenPosition.col
   );
 
 export const makeGetPromatablePawn = () =>
