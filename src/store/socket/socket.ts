@@ -1,4 +1,4 @@
-import { AnyAction, createSlice } from '@reduxjs/toolkit';
+import { AnyAction, createSelector, createSlice } from '@reduxjs/toolkit';
 import {
   MessagePayload,
   StompConnected,
@@ -8,6 +8,7 @@ import {
   STOMP_CONNECTED,
   STOMP_MESSAGE
 } from '../middleware/stomp/stomp';
+import { AppState } from '../store';
 
 export interface SocketState {
   messages: MessagePayload[];
@@ -45,5 +46,12 @@ const socketSlice = createSlice({
       );
   }
 });
+
+export const makeGetTopicMessages = () =>
+  createSelector(
+    state => state.socket.messages,
+    (_: AppState, topic: string) => topic,
+    (messages, topic) => messages.filter(m => m.topic === topic)
+  );
 
 export default socketSlice.reducer;
