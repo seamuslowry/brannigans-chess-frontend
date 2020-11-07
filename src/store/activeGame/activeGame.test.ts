@@ -14,7 +14,8 @@ import reducer, {
   getStatusTopic,
   getPieces,
   addPieces,
-  clickTile
+  clickTile,
+  getSharedMovesTopic
 } from './activeGame';
 import {
   blackRook,
@@ -157,6 +158,23 @@ test('handles an full game stomp message on the status topic', () => {
   expect(result.status).toEqual(fullGame.status);
   expect(result.whitePlayer).toEqual(fullGame.whitePlayer);
   expect(result.blackPlayer).toEqual(fullGame.blackPlayer);
+});
+
+test('handles a shared move on the move topic', () => {
+  const stateWithId: ActiveGameState = {
+    ...testStore.activeGame,
+    id: 1
+  };
+  const result = reducer(stateWithId, {
+    type: STOMP_MESSAGE,
+    payload: {
+      topic: getSharedMovesTopic(1),
+      data: JSON.stringify(whiteTake)
+    }
+  });
+
+  expect(result.moves.ids).toContain(whiteTake.id);
+  expect(result.pieces.ids).toContain(whiteTake.takenPiece && whiteTake.takenPiece.id);
 });
 
 test('handles a stomp message on an unrelated topic', () => {
