@@ -20,6 +20,7 @@ import {
 } from '../../services/ChessService.types';
 
 export const getStatusTopic = (gameId: number) => `/game/status/${gameId}`;
+export const getSharedMovesTopic = (gameId: number) => `/game/moves/${gameId}`;
 
 export interface TilePosition {
   row: number;
@@ -181,6 +182,11 @@ const activeGameSlice = createSlice({
             state.status = game.status;
             state.whitePlayer = game.whitePlayer;
             state.blackPlayer = game.blackPlayer;
+          }
+          if (action.payload.topic === getSharedMovesTopic(state.id)) {
+            const move: Move = JSON.parse(action.payload.data);
+            movesAdapter.upsertOne(state.moves, move);
+            move.takenPiece && piecesAdapter.upsertOne(state.pieces, move.takenPiece);
           }
         }
       );

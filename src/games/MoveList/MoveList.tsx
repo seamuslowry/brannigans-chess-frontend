@@ -2,12 +2,18 @@ import React from 'react';
 import { Box, CircularProgress, makeStyles, Paper } from '@material-ui/core';
 import { useSelector } from 'react-redux';
 import { Move as MoveEntity } from '../../services/ChessService.types';
-import { addMoves, clearMoves, selectAllMoves } from '../../store/activeGame/activeGame';
+import {
+  addMoves,
+  clearMoves,
+  getSharedMovesTopic,
+  selectAllMoves
+} from '../../store/activeGame/activeGame';
 import { sendAlert } from '../../store/notifications/notifications';
 import { AppState, useAppDispatch } from '../../store/store';
 import Move from '../Move/Move';
 import ChessService from '../../services/ChessService';
 import useGameColor from '../../utils/useGameColor';
+import useSubscription from '../../utils/useSubscription';
 
 interface Props {
   gameId: number;
@@ -21,6 +27,8 @@ const useStyles = makeStyles({
 });
 
 const MoveList: React.FC<Props> = ({ gameId }) => {
+  useSubscription(getSharedMovesTopic(gameId));
+
   const dispatch = useAppDispatch();
   const classes = useStyles();
 
