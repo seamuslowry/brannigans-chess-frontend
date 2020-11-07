@@ -1,5 +1,12 @@
-import { createEntityAdapter, createSelector, createSlice } from '@reduxjs/toolkit';
-import { clickTile } from '../activeGame/activeGame';
+import {
+  createAsyncThunk,
+  createEntityAdapter,
+  createSelector,
+  createSlice
+} from '@reduxjs/toolkit';
+import ChessService from '../../services/ChessService';
+import { Move } from '../../services/ChessService.types';
+import { AppState } from '../store';
 
 export interface TilePosition {
   row: number;
@@ -10,6 +17,43 @@ interface Board {
   selectedPosition?: TilePosition;
   id: number;
 }
+
+interface ClickTileParams extends TilePosition {
+  gameId: number;
+}
+
+export const clickTile = createAsyncThunk<
+  null | boolean | Move,
+  ClickTileParams,
+  { state: AppState }
+>('chess/activeGame/clickTile', async (position, { getState }) => {
+  const { row, col, gameId } = position;
+  const { pieces } = getState().activeGame;
+  const selectedPosition = getState().boards.entities[gameId]?.selectedPosition;
+
+  if (selectedPosition && selectedPosition.row === row && selectedPosition.col === col) {
+    return false;
+  } else if (selectedPosition) {
+    try {
+      const response = await ChessService.move(
+        gameId,
+        selectedPosition.row,
+        selectedPosition.col,
+        row,
+        col
+      );
+      return response.data;
+    } catch (e) {
+      throw new Error(e.response?.data || e.message);
+    }
+  } else if (
+    Object.values(pieces.entities).find(p => p?.positionCol === col && p?.positionRow === row)
+  ) {
+    return true;
+  }
+
+  return null;
+});
 
 const boardAdapter = createEntityAdapter<Board>();
 

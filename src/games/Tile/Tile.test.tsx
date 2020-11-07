@@ -5,8 +5,8 @@ import { Provider } from 'react-redux';
 import createMockStore from 'redux-mock-store';
 import Tile from './Tile';
 import { blackRook, mockEntityAdapterState, testStore } from '../../utils/testData';
-import { clickTile } from '../../store/activeGame/activeGame';
 import { AppState } from '../../store/store';
+import { clickTile } from '../../store/boards/boards';
 
 const mockStore = createMockStore<AppState, ActionCreator<AnyAction>>(getDefaultMiddleware());
 const mockedStore = mockStore(testStore);

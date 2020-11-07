@@ -18,50 +18,10 @@ import {
   Game,
   PieceStatus
 } from '../../services/ChessService.types';
+import { clickTile, TilePosition } from '../boards/boards';
 
 export const getStatusTopic = (gameId: number) => `/game/status/${gameId}`;
 export const getSharedMovesTopic = (gameId: number) => `/game/moves/${gameId}`;
-
-export interface TilePosition {
-  row: number;
-  col: number;
-}
-
-export const clickTile = createAsyncThunk<
-  null | boolean | Move,
-  TilePosition & { gameId: number },
-  { state: AppState }
->(
-  'chess/activeGame/clickTile',
-  async (position: TilePosition & { gameId: number }, { getState }) => {
-    const { row, col, gameId } = position;
-    const { pieces } = getState().activeGame;
-    const selectedPosition = getState().boards.entities[gameId]?.selectedPosition;
-
-    if (selectedPosition && selectedPosition.row === row && selectedPosition.col === col) {
-      return false;
-    } else if (selectedPosition) {
-      try {
-        const response = await ChessService.move(
-          gameId,
-          selectedPosition.row,
-          selectedPosition.col,
-          row,
-          col
-        );
-        return response.data;
-      } catch (e) {
-        throw new Error(e.response?.data || e.message);
-      }
-    } else if (
-      Object.values(pieces.entities).find(p => p?.positionCol === col && p?.positionRow === row)
-    ) {
-      return true;
-    }
-
-    return null;
-  }
-);
 
 export const getPieces = createAsyncThunk(
   'chess/activeGame/getPieces',

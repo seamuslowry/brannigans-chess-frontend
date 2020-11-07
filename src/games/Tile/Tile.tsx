@@ -2,8 +2,8 @@ import { Box, makeStyles, Theme, useTheme } from '@material-ui/core';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { Piece as PieceEntity } from '../../services/ChessService.types';
-import { clickTile, makeGetActivePiece } from '../../store/activeGame/activeGame';
-import { makeGetSelected } from '../../store/boards/boards';
+import { makeGetActivePiece } from '../../store/activeGame/activeGame';
+import { clickTile, makeGetSelected } from '../../store/boards/boards';
 import { AppState, useAppDispatch } from '../../store/store';
 import Piece from '../Piece/Piece';
 

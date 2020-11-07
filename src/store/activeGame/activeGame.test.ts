@@ -14,7 +14,6 @@ import reducer, {
   getStatusTopic,
   getPieces,
   addPieces,
-  clickTile,
   getSharedMovesTopic
 } from './activeGame';
 import {
@@ -32,18 +31,16 @@ import {
 } from '../../utils/testData';
 import { AppState } from '../store';
 import config from '../../config';
-import { Move, Piece } from '../../services/ChessService.types';
+import { Piece } from '../../services/ChessService.types';
 import { waitFor } from '@testing-library/dom';
 import { STOMP_MESSAGE } from '../middleware/stomp/stomp';
+import { clickTile } from '../boards/boards';
 
 const server = setupServer(
   rest.get(`${config.serviceUrl}/pieces/0`, (req, res, ctx) => {
     return res(
       ctx.json<Piece[]>([blackRook])
     );
-  }),
-  rest.post(`${config.serviceUrl}/moves/0`, (req, res, ctx) => {
-    return res(ctx.json<Move>(whiteMove));
   })
 );
 
@@ -192,30 +189,6 @@ test('handles a stomp message on an unrelated topic', () => {
   expect(result).toEqual(stateWithId);
 });
 
-test('moves a piece - action', async () => {
-  const selectedStore = mockStore({
-    ...testStore,
-    activeGame: {
-      ...testStore.activeGame
-    },
-    boards: mockEntityAdapterState({
-      id: 0,
-      selectedPosition: { row: whiteMove.srcRow, col: whiteMove.srcCol }
-    })
-  });
-
-  await waitFor(() =>
-    selectedStore.dispatch(clickTile({ row: whiteMove.dstRow, col: whiteMove.dstCol, gameId: 0 }))
-  );
-
-  expect(selectedStore.getActions()).toContainEqual(
-    expect.objectContaining({
-      type: clickTile.fulfilled.type,
-      payload: { ...whiteMove }
-    })
-  );
-});
-
 test('moves a piece - reducer', async () => {
   const request = { row: whiteMove.dstRow, col: whiteMove.dstCol, gameId: 0 };
   const result = reducer(undefined, clickTile.fulfilled(whiteMove, '', request));
@@ -227,33 +200,6 @@ test('moves a piece - reducer', async () => {
     })
   );
   expect(result.moves.ids).toContainEqual(whiteMove.id);
-});
-
-test('moves to take a piece - action', async () => {
-  server.use(
-    rest.post(`${config.serviceUrl}/moves/0`, (req, res, ctx) => {
-      return res(ctx.json(whiteTake));
-    })
-  );
-
-  const selectedStore = mockStore({
-    ...testStore,
-    boards: mockEntityAdapterState({
-      id: 0,
-      selectedPosition: { row: whiteTake.srcRow, col: whiteTake.srcCol }
-    })
-  });
-
-  await waitFor(() =>
-    selectedStore.dispatch(clickTile({ row: whiteTake.dstRow, col: whiteTake.dstCol, gameId: 0 }))
-  );
-
-  expect(selectedStore.getActions()).toContainEqual(
-    expect.objectContaining({
-      type: clickTile.fulfilled.type,
-      payload: { ...whiteTake }
-    })
-  );
 });
 
 test('moves to take a piece - reducer', async () => {
@@ -274,38 +220,6 @@ test('moves to take a piece - reducer', async () => {
   expect(result.moves.ids).toContainEqual(whiteTake.id);
 });
 
-test('en passants a piece - action', async () => {
-  server.use(
-    rest.post(`${config.serviceUrl}/moves/0`, (req, res, ctx) => {
-      return res(ctx.json(whiteEnPassant));
-    })
-  );
-
-  const selectedStore = mockStore({
-    ...testStore,
-    activeGame: {
-      ...testStore.activeGame
-    },
-    boards: mockEntityAdapterState({
-      id: 0,
-      selectedPosition: { row: whiteEnPassant.srcRow, col: whiteEnPassant.srcCol }
-    })
-  });
-
-  await waitFor(() =>
-    selectedStore.dispatch(
-      clickTile({ row: whiteEnPassant.dstRow, col: whiteEnPassant.dstCol, gameId: 0 })
-    )
-  );
-
-  expect(selectedStore.getActions()).toContainEqual(
-    expect.objectContaining({
-      type: clickTile.fulfilled.type,
-      payload: { ...whiteEnPassant }
-    })
-  );
-});
-
 test('en passants a piece - reducer', async () => {
   const request = { row: whiteEnPassant.dstRow, col: whiteEnPassant.dstCol, gameId: 0 };
   const result = reducer(undefined, clickTile.fulfilled(whiteEnPassant, '', request));
@@ -322,35 +236,6 @@ test('en passants a piece - reducer', async () => {
     })
   );
   expect(result.moves.ids).toContainEqual(whiteEnPassant.id);
-});
-
-test('king side castles - action', async () => {
-  server.use(
-    rest.post(`${config.serviceUrl}/moves/0`, (req, res, ctx) => {
-      return res(ctx.json(whiteKingSideCastle));
-    })
-  );
-
-  const selectedStore = mockStore({
-    ...testStore,
-    boards: mockEntityAdapterState({
-      id: 0,
-      selectedPosition: { row: whiteKingSideCastle.srcRow, col: whiteKingSideCastle.srcCol }
-    })
-  });
-
-  await waitFor(() =>
-    selectedStore.dispatch(
-      clickTile({ row: whiteKingSideCastle.dstRow, col: whiteKingSideCastle.dstCol, gameId: 0 })
-    )
-  );
-
-  expect(selectedStore.getActions()).toContainEqual(
-    expect.objectContaining({
-      type: clickTile.fulfilled.type,
-      payload: { ...whiteKingSideCastle }
-    })
-  );
 });
 
 test('king side castles - reducer', async () => {
@@ -384,35 +269,6 @@ test('king side castles - reducer', async () => {
   expect(result.moves.ids).toContainEqual(whiteKingSideCastle.id);
 });
 
-test('queen side castles - action', async () => {
-  server.use(
-    rest.post(`${config.serviceUrl}/moves/0`, (req, res, ctx) => {
-      return res(ctx.json(whiteQueenSideCastle));
-    })
-  );
-
-  const selectedStore = mockStore({
-    ...testStore,
-    boards: mockEntityAdapterState({
-      id: 0,
-      selectedPosition: { row: whiteQueenSideCastle.srcRow, col: whiteQueenSideCastle.srcCol }
-    })
-  });
-
-  await waitFor(() =>
-    selectedStore.dispatch(
-      clickTile({ row: whiteQueenSideCastle.dstRow, col: whiteQueenSideCastle.dstCol, gameId: 0 })
-    )
-  );
-
-  expect(selectedStore.getActions()).toContainEqual(
-    expect.objectContaining({
-      type: clickTile.fulfilled.type,
-      payload: { ...whiteQueenSideCastle }
-    })
-  );
-});
-
 test('queen side castles - reducer', async () => {
   const request = { row: whiteQueenSideCastle.dstRow, col: whiteQueenSideCastle.dstCol, gameId: 0 };
   const whiteRook = makePiece(
@@ -442,66 +298,6 @@ test('queen side castles - reducer', async () => {
     })
   );
   expect(result.moves.ids).toContainEqual(whiteQueenSideCastle.id);
-});
-
-test('moves a piece - invalid move', async () => {
-  const message = 'invalid move message';
-  server.use(
-    rest.post(`${config.serviceUrl}/moves/0`, (req, res, ctx) => {
-      return res(ctx.status(400), ctx.json(message));
-    })
-  );
-
-  const selectedStore = mockStore({
-    ...testStore,
-    boards: mockEntityAdapterState({
-      id: 0,
-      selectedPosition: { row: whiteMove.srcRow, col: whiteMove.srcCol }
-    })
-  });
-
-  await waitFor(() =>
-    selectedStore.dispatch(clickTile({ row: whiteMove.dstRow, col: whiteMove.dstCol, gameId: 0 }))
-  );
-
-  expect(selectedStore.getActions()).toContainEqual(
-    expect.objectContaining({
-      type: clickTile.rejected.type,
-      error: expect.objectContaining({
-        message
-      })
-    })
-  );
-});
-
-test('moves a piece - network error', async () => {
-  const message = 'Network Error';
-  server.use(
-    rest.post(`${config.serviceUrl}/moves/0`, (req, res, ctx) => {
-      return res.networkError(message);
-    })
-  );
-
-  const selectedStore = mockStore({
-    ...testStore,
-    boards: mockEntityAdapterState({
-      id: 0,
-      selectedPosition: { row: whiteMove.srcRow, col: whiteMove.srcCol }
-    })
-  });
-
-  await waitFor(() =>
-    selectedStore.dispatch(clickTile({ row: whiteMove.dstRow, col: whiteMove.dstCol, gameId: 0 }))
-  );
-
-  expect(selectedStore.getActions()).toContainEqual(
-    expect.objectContaining({
-      type: clickTile.rejected.type,
-      error: expect.objectContaining({
-        message
-      })
-    })
-  );
 });
 
 test('tries to get pieces', async () => {
