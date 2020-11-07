@@ -28,7 +28,7 @@ export const clickTile = createAsyncThunk<
   { state: AppState }
 >('chess/activeGame/clickTile', async (position, { getState }) => {
   const { row, col, gameId } = position;
-  const { pieces } = getState().activeGame;
+  const { pieces } = getState();
   const selectedPosition = getState().boards.entities[gameId]?.selectedPosition;
 
   if (selectedPosition && selectedPosition.row === row && selectedPosition.col === col) {
@@ -69,7 +69,7 @@ const boardSlice = createSlice({
       const { row, col, gameId } = action.meta.arg;
       boardAdapter.upsertOne(state, {
         id: gameId,
-        selectedPosition: action.payload ? { row, col } : undefined
+        selectedPosition: action.payload === true ? { row, col } : undefined
       });
     });
   }

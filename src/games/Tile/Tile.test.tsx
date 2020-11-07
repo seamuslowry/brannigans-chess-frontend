@@ -77,10 +77,7 @@ test('renders primary color', async () => {
 test('renders a piece', async () => {
   const withPieceStore = mockStore({
     ...testStore,
-    activeGame: {
-      ...testStore.activeGame,
-      pieces: mockEntityAdapterState(blackRook)
-    }
+    pieces: mockEntityAdapterState(blackRook)
   });
 
   const { getByAltText } = render(

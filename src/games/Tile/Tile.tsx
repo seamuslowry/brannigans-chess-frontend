@@ -2,8 +2,8 @@ import { Box, makeStyles, Theme, useTheme } from '@material-ui/core';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { Piece as PieceEntity } from '../../services/ChessService.types';
-import { makeGetActivePiece } from '../../store/activeGame/activeGame';
 import { clickTile, makeGetSelected } from '../../store/boards/boards';
+import { makeGetActivePiece } from '../../store/pieces/pieces';
 import { AppState, useAppDispatch } from '../../store/store';
 import Piece from '../Piece/Piece';
 
@@ -48,7 +48,7 @@ const Tile: React.FC<Props> = ({ row, col, gameId }) => {
     getSelected(state.boards, gameId, { row, col })
   );
   const piece = useSelector<AppState, PieceEntity | undefined>(state =>
-    getActivePiece(state, { row, col })
+    getActivePiece(state.pieces, gameId, { row, col })
   );
 
   const bgColor = getBgColor(theme, row, col, selected);

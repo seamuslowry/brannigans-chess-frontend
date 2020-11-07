@@ -7,10 +7,14 @@ import config from '../config';
 import { configureStore } from '@reduxjs/toolkit';
 import { useDispatch } from 'react-redux';
 import boardsReducer, { BoardState } from './boards/boards';
+import piecesReducer, { PieceState } from './pieces/pieces';
+import movesReducer, { MoveState } from './moves/moves';
 
 export interface AppState {
   activeGame: ActiveGameState;
   boards: BoardState;
+  pieces: PieceState;
+  moves: MoveState;
   auth: AuthState;
   notifications: NotificationsState;
   socket: SocketState;
@@ -20,6 +24,8 @@ export const store = configureStore({
   reducer: {
     activeGame: activeGameReducer,
     boards: boardsReducer,
+    pieces: piecesReducer,
+    moves: movesReducer,
     auth: authReducer,
     notifications: notificationsReducer,
     socket: socketReducer

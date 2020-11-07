@@ -9,7 +9,7 @@ import { makePiece, mockEntityAdapterState, testStore } from '../../utils/testDa
 import { Piece } from '../../services/ChessService.types';
 import config from '../../config';
 import TakenPieces from './TakenPieces';
-import { clearTaken, getPieces } from '../../store/activeGame/activeGame';
+import { getPieces } from '../../store/pieces/pieces';
 
 const takenBlackRook = makePiece('ROOK', 'BLACK', 0, 0, 'TAKEN');
 
@@ -69,24 +69,6 @@ test('handles an error getting pieces on mount', async () => {
   expect(mockedStore.getActions()).toContainEqual(
     expect.objectContaining({
       type: getPieces.rejected.type
-    })
-  );
-});
-
-test('clears pieces on unmount', async () => {
-  const { getByRole, unmount } = render(
-    <Provider store={mockedStore}>
-      <TakenPieces gameId={0} color="BLACK" />
-    </Provider>
-  );
-
-  await waitForElementToBeRemoved(() => getByRole('progressbar')); // wait for service call to complete
-
-  unmount();
-
-  expect(mockedStore.getActions()).toContainEqual(
-    expect.objectContaining({
-      type: clearTaken.type
     })
   );
 });

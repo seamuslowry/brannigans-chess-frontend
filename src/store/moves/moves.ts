@@ -1,0 +1,53 @@
+import { AnyAction, createEntityAdapter, createSelector, createSlice } from '@reduxjs/toolkit';
+import { Move } from '../../services/ChessService.types';
+import { clickTile } from '../boards/boards';
+import { StompMessage, STOMP_MESSAGE } from '../middleware/stomp/stomp';
+
+export const SHARED_MOVES_PREFIX = `/game/moves/`;
+export const getSharedMovesTopic = (gameId: number) => `${SHARED_MOVES_PREFIX}${gameId}`;
+
+const movesAdapter = createEntityAdapter<Move>({
+  sortComparer: (a, b) => a.id - b.id // keep moves sorted
+});
+
+export const initialState = movesAdapter.getInitialState();
+export type MoveState = typeof initialState;
+
+const moveSlice = createSlice({
+  name: 'chess/moves',
+  initialState,
+  reducers: {
+    addMoves: movesAdapter.upsertMany
+  },
+  extraReducers: builder => {
+    builder
+      .addCase(clickTile.fulfilled, (state, action) => {
+        if (action.payload && typeof action.payload === 'object') {
+          const move = action.payload;
+          state = movesAdapter.upsertOne(state, move);
+        }
+      })
+      .addMatcher(
+        (action: AnyAction): action is StompMessage => action.type === STOMP_MESSAGE,
+        (state, action) => {
+          if (action.payload.topic.includes(SHARED_MOVES_PREFIX)) {
+            const move: Move = JSON.parse(action.payload.data);
+            state = movesAdapter.upsertOne(state, move);
+          }
+        }
+      );
+  }
+});
+
+export const { addMoves } = moveSlice.actions;
+
+const { selectAll: selectAllMoves } = movesAdapter.getSelectors();
+
+export default moveSlice.reducer;
+
+export const makeSelectMoves = () =>
+  createSelector(
+    selectAllMoves,
+    (_: MoveState, gameId: number) => gameId,
+    (moves, gameId) => moves.filter(m => m.movingPiece.game.id === gameId)
+  );

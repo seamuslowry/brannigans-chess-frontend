@@ -9,8 +9,8 @@ import { makePiece, mockEntityAdapterState, testStore, whiteMove } from '../../u
 import { Move } from '../../services/ChessService.types';
 import config from '../../config';
 import PawnPromotion from './PawnPromotion';
-import { addPieces } from '../../store/activeGame/activeGame';
 import { sendAlert } from '../../store/notifications/notifications';
+import { addPieces } from '../../store/pieces/pieces';
 
 const mockStore = createMockStore(getDefaultMiddleware());
 const mockedStore = mockStore(testStore);
@@ -18,19 +18,13 @@ const mockedStore = mockStore(testStore);
 const blackPawn = makePiece('PAWN', 'BLACK', 7, 0);
 const blackPawnPromoteStore = mockStore({
   ...testStore,
-  activeGame: {
-    ...testStore.activeGame,
-    pieces: mockEntityAdapterState(blackPawn)
-  }
+  pieces: mockEntityAdapterState(blackPawn)
 });
 
 const whitePawn = makePiece('PAWN', 'WHITE');
 const whitePawnPromoteStore = mockStore({
   ...testStore,
-  activeGame: {
-    ...testStore.activeGame,
-    pieces: mockEntityAdapterState(whitePawn)
-  }
+  pieces: mockEntityAdapterState(whitePawn)
 });
 
 const server = setupServer(

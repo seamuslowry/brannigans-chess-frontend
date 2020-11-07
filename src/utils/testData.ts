@@ -15,6 +15,8 @@ import {
   AlertInfo
 } from '../store/notifications/notifications';
 import { initialState as initialBoardState } from '../store/boards/boards';
+import { initialState as initialPieceState } from '../store/pieces/pieces';
+import { initialState as initialMoveState } from '../store/moves/moves';
 import { initialState as initialSocketState } from '../store/socket/socket';
 import { AppState } from '../store/store';
 
@@ -42,29 +44,6 @@ export const playerTwo: Player = {
   imageUrl: 'www.two.com'
 };
 
-export const mockEntityAdapterState = <T extends { id: number }>(...testEntities: T[]) => ({
-  ids: testEntities.map(e => e.id),
-  entities: testEntities.reduce((obj, key) => ({ ...obj, [key.id]: { ...key } }), {})
-});
-
-let testPieceId = 1000;
-export const makePiece = (
-  type: PieceType,
-  color: PieceColor,
-  row: number = 0,
-  col: number = 0,
-  status: PieceStatus = 'ACTIVE'
-): Piece => ({
-  color,
-  type,
-  positionCol: col,
-  positionRow: row,
-  status: status,
-  id: ++testPieceId
-});
-
-export const blackRook: Piece = makePiece('ROOK', 'BLACK');
-
 export const emptyGame: Game = {
   id: 1,
   uuid: 'empty game',
@@ -82,6 +61,34 @@ export const fullGame: Game = {
   winner: playerOne,
   status: 'WHITE_TURN'
 };
+
+export const mockEntityAdapterState = <T extends { id: number }>(...testEntities: T[]) => ({
+  ids: testEntities.map(e => e.id),
+  entities: testEntities.reduce((obj, key) => ({ ...obj, [key.id]: { ...key } }), {})
+});
+
+let testPieceId = 1000;
+export const makePiece = (
+  type: PieceType,
+  color: PieceColor,
+  row: number = 0,
+  col: number = 0,
+  status: PieceStatus = 'ACTIVE',
+  gameId: number = 0
+): Piece => ({
+  color,
+  type,
+  positionCol: col,
+  positionRow: row,
+  status: status,
+  id: ++testPieceId,
+  game: {
+    ...fullGame,
+    id: gameId
+  }
+});
+
+export const blackRook: Piece = makePiece('ROOK', 'BLACK');
 
 export const whiteMove: Move = {
   movingPiece: makePiece('ROOK', 'WHITE', 4, 0),
@@ -183,6 +190,8 @@ export const authenticatedAuth0 = {
 export const testStore: AppState = {
   activeGame: initialActiveGameState,
   boards: initialBoardState,
+  pieces: initialPieceState,
+  moves: initialMoveState,
   notifications: initialNotificationsState,
   socket: initialSocketState,
   auth: initialAuthState

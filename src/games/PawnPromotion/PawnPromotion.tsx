@@ -4,9 +4,9 @@ import { useSelector } from 'react-redux';
 import Piece from '../Piece/Piece';
 import { AppState, useAppDispatch } from '../../store/store';
 import { PieceColor, PieceType, Piece as PieceEntity } from '../../services/ChessService.types';
-import { makeGetPromatablePawn, addPieces } from '../../store/activeGame/activeGame';
 import { sendAlert } from '../../store/notifications/notifications';
 import ChessService from '../../services/ChessService';
+import { addPieces, makeGetPromatablePawn } from '../../store/pieces/pieces';
 
 type VariantValues = {
   [key in PieceColor]: { row: number };
@@ -30,7 +30,7 @@ const PawnPromotion: React.FC<Props> = ({ color, gameId }) => {
   const getPromotablePawn = React.useMemo(makeGetPromatablePawn, []);
 
   const pawn = useSelector<AppState, PieceEntity | undefined>(state =>
-    getPromotablePawn(state, row)
+    getPromotablePawn(state.pieces, gameId, row)
   );
 
   if (!pawn) return null;

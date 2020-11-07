@@ -56,10 +56,7 @@ test('clicks an unselected tile - action', async () => {
   const piece = makePiece('ROOK', 'WHITE', 0, 0);
   const storeWithRook = mockStore({
     ...testStore,
-    activeGame: {
-      ...testStore.activeGame,
-      pieces: mockEntityAdapterState(piece)
-    }
+    pieces: mockEntityAdapterState(piece)
   });
 
   await waitFor(() => storeWithRook.dispatch(clickTile({ row: 0, col: 0, gameId: 0 })));

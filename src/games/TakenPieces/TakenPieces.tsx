@@ -3,9 +3,9 @@ import { Box, CircularProgress } from '@material-ui/core';
 import { useSelector } from 'react-redux';
 import { Piece as PieceEntity, PieceColor } from '../../services/ChessService.types';
 import Piece from '../Piece/Piece';
-import { clearTaken, makeGetTakenPieces, getPieces } from '../../store/activeGame/activeGame';
 import { AppState, useAppDispatch } from '../../store/store';
 import usePieceSize from '../../utils/usePieceSize';
+import { getPieces, makeGetTakenPieces } from '../../store/pieces/pieces';
 
 interface Props {
   gameId: number;
@@ -23,14 +23,12 @@ const TakenPieces: React.FC<Props> = ({ gameId, color }) => {
     dispatch(getPieces({ gameId, colors: [color], status: 'TAKEN' })).finally(() =>
       setLoading(false)
     );
-
-    return () => {
-      dispatch(clearTaken(color));
-    };
   }, [gameId, color, dispatch]);
 
   const getTakenPieces = React.useMemo(makeGetTakenPieces, []);
-  const pieces = useSelector<AppState, PieceEntity[]>(state => getTakenPieces(state, color));
+  const pieces = useSelector<AppState, PieceEntity[]>(state =>
+    getTakenPieces(state.pieces, gameId, color)
+  );
 
   return (
     <Box

@@ -23,6 +23,7 @@ export interface Piece {
   positionRow: number;
   positionCol: number;
   status: PieceStatus;
+  game: Game;
   id: number;
 }
 
