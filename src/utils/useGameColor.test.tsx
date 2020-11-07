@@ -5,7 +5,7 @@ import { ActionCreator, AnyAction, getDefaultMiddleware } from '@reduxjs/toolkit
 import createMockStore from 'redux-mock-store';
 import { AppState } from '../store/store';
 import { playerOne, playerTwo, testStore } from './testData';
-import useGameColor from './useGameColor';
+import useGameColors from './useGameColor';
 
 const mockStore = createMockStore<AppState, ActionCreator<AnyAction>>(getDefaultMiddleware());
 const mockedStore = mockStore(testStore);
@@ -26,11 +26,11 @@ test('should determine that the logged in player is white', async () => {
     }
   });
 
-  const { result } = renderHook(() => useGameColor(), {
+  const { result } = renderHook(() => useGameColors(), {
     wrapper: ({ children }) => <Provider store={mockedWhiteStore}>{children}</Provider>
   });
 
-  expect(result.current).toEqual('WHITE');
+  expect(result.current).toEqual(['WHITE']);
 });
 
 test('should determine that the logged in player is black', async () => {
@@ -47,11 +47,11 @@ test('should determine that the logged in player is black', async () => {
     }
   });
 
-  const { result } = renderHook(() => useGameColor(), {
+  const { result } = renderHook(() => useGameColors(), {
     wrapper: ({ children }) => <Provider store={mockedBlackStore}>{children}</Provider>
   });
 
-  expect(result.current).toEqual('BLACK');
+  expect(result.current).toEqual(['BLACK']);
 });
 
 test('should determine that the logged in player is not in the game', async () => {
@@ -66,9 +66,9 @@ test('should determine that the logged in player is not in the game', async () =
     }
   });
 
-  const { result } = renderHook(() => useGameColor(), {
+  const { result } = renderHook(() => useGameColors(), {
     wrapper: ({ children }) => <Provider store={mockedBlackStore}>{children}</Provider>
   });
 
-  expect(result.current).toBeUndefined();
+  expect(result.current).toEqual([]);
 });

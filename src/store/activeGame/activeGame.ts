@@ -62,14 +62,14 @@ export const getPieces = createAsyncThunk(
   'chess/activeGame/getPieces',
   async ({
     gameId,
-    color,
+    colors,
     status
   }: {
     gameId: number;
-    color?: PieceColor;
+    colors: PieceColor[];
     status?: PieceStatus;
   }) => {
-    const response = await ChessService.getPieces(gameId, color, status);
+    const response = await ChessService.getPieces(gameId, colors, status);
     return response.data;
   }
 );
