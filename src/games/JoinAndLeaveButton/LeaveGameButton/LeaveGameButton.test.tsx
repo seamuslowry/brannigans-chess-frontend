@@ -8,7 +8,13 @@ import { Provider } from 'react-redux';
 import { AppState } from '@auth0/auth0-react/dist/auth0-provider';
 import { Game } from '../../../services/ChessService.types';
 import config from '../../../config';
-import { emptyGame, playerOne, playerTwo, testStore } from '../../../utils/testData';
+import {
+  emptyGame,
+  mockEntityAdapterState,
+  playerOne,
+  playerTwo,
+  testStore
+} from '../../../utils/testData';
 import LeaveGameButton from './LeaveGameButton';
 import { sendAlert } from '../../../store/notifications/notifications';
 
@@ -131,10 +137,11 @@ test('will not allow to leave black when not self', async () => {
       ...testStore.auth,
       player: playerTwo
     },
-    activeGame: {
-      ...testStore.activeGame,
+    games: mockEntityAdapterState({
+      ...emptyGame,
+      id: 1,
       blackPlayer: playerOne
-    }
+    })
   });
 
   const { queryByText } = render(
@@ -155,10 +162,11 @@ test('will not allow to leave white when not self', async () => {
       ...testStore.auth,
       player: playerTwo
     },
-    activeGame: {
-      ...testStore.activeGame,
+    games: mockEntityAdapterState({
+      ...emptyGame,
+      id: 1,
       whitePlayer: playerOne
-    }
+    })
   });
 
   const { queryByText } = render(
@@ -179,11 +187,12 @@ test('will not allow to leave a full game', async () => {
       ...testStore.auth,
       player: playerTwo
     },
-    activeGame: {
-      ...testStore.activeGame,
-      whitePlayer: playerOne,
-      blackPlayer: playerTwo
-    }
+    games: mockEntityAdapterState({
+      ...emptyGame,
+      id: 1,
+      blackPlayer: playerOne,
+      whitePlayer: playerTwo
+    })
   });
 
   const { queryByText } = render(

@@ -15,7 +15,7 @@ const Board: React.FC<Props> = ({ gameId }) => {
   const array = Array.from(Array(8).keys());
   const dispatch = useAppDispatch();
   const pieceSize = usePieceSize();
-  const colors = useGameColors();
+  const colors = useGameColors(gameId);
 
   React.useEffect(() => {
     dispatch(getPieces({ gameId, colors }));

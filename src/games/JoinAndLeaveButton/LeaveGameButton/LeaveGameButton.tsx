@@ -4,8 +4,9 @@ import { useSelector } from 'react-redux';
 import ChessService from '../../../services/ChessService';
 import { sendAlert } from '../../../store/notifications/notifications';
 import { AxiosError } from 'axios';
-import { PieceColor, Player } from '../../../services/ChessService.types';
+import { Game, PieceColor, Player } from '../../../services/ChessService.types';
 import { AppState, useAppDispatch } from '../../../store/store';
+import { selectGameById } from '../../../store/games/games';
 
 interface Props {
   gameId: number;
@@ -20,14 +21,13 @@ const LeaveGameButton: React.FC<Omit<ButtonProps, 'disabled' | 'onClick'> & Prop
   const dispatch = useAppDispatch();
 
   const [loading, setLoading] = React.useState(false);
-  const fullGame = useSelector<AppState, boolean>(
-    state => !!state.activeGame.whitePlayer && !!state.activeGame.blackPlayer
+  const game = useSelector<AppState, Game | undefined>(state =>
+    selectGameById(state.games, gameId)
   );
   const loggedInPlayer = useSelector<AppState, Player | undefined>(state => state.auth.player);
-  const currentPlayer = useSelector<AppState, Player | null>(
-    state => state.activeGame[pieceColor === 'WHITE' ? 'whitePlayer' : 'blackPlayer']
-  );
 
+  const fullGame = game && !!game.whitePlayer && !!game.blackPlayer;
+  const currentPlayer = game && game[pieceColor === 'WHITE' ? 'whitePlayer' : 'blackPlayer'];
   if (fullGame || loggedInPlayer?.authId !== currentPlayer?.authId) return null;
 
   const handleClick = () => {

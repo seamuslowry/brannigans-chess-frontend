@@ -8,13 +8,13 @@ import {
   PieceType,
   Player
 } from '../services/ChessService.types';
-import { initialState as initialActiveGameState } from '../store/activeGame/activeGame';
 import { initialState as initialAuthState } from '../store/auth/auth';
 import {
   initialState as initialNotificationsState,
   AlertInfo
 } from '../store/notifications/notifications';
 import { initialState as initialBoardState } from '../store/boards/boards';
+import { initialState as initialGamesState } from '../store/games/games';
 import { initialState as initialPieceState } from '../store/pieces/pieces';
 import { initialState as initialMoveState } from '../store/moves/moves';
 import { initialState as initialSocketState } from '../store/socket/socket';
@@ -188,7 +188,7 @@ export const authenticatedAuth0 = {
 };
 
 export const testStore: AppState = {
-  activeGame: initialActiveGameState,
+  games: initialGamesState,
   boards: initialBoardState,
   pieces: initialPieceState,
   moves: initialMoveState,

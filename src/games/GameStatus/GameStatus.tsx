@@ -5,9 +5,9 @@ import { useSelector } from 'react-redux';
 import startCase from 'lodash.startcase';
 import { AppState } from '../../store/store';
 import useSubscription from '../../utils/useSubscription';
-import { getStatusTopic } from '../../store/activeGame/activeGame';
-import { GameStatus as Status, Player } from '../../services/ChessService.types';
+import { Game } from '../../services/ChessService.types';
 import JoinAndLeaveButton from '../JoinAndLeaveButton/JoinAndLeaveButton';
+import { getStatusTopic, selectGameById } from '../../store/games/games';
 
 interface Props {
   gameId: number;
@@ -18,9 +18,11 @@ const GameStatus: React.FC<Props> = ({ gameId }) => {
 
   const connected = useSelector<AppState, boolean>(state => state.socket.connected);
 
-  const gameStatus = useSelector<AppState, Status | ''>(state => state.activeGame.status);
-  const whitePlayer = useSelector<AppState, Player | null>(state => state.activeGame.whitePlayer);
-  const blackPlayer = useSelector<AppState, Player | null>(state => state.activeGame.blackPlayer);
+  const game = useSelector<AppState, Game | undefined>(state =>
+    selectGameById(state.games, gameId)
+  );
+
+  const { status, whitePlayer, blackPlayer } = game || {};
 
   return (
     <Paper>
@@ -40,7 +42,7 @@ const GameStatus: React.FC<Props> = ({ gameId }) => {
             STATUS:{' '}
           </Typography>
           <Typography display="inline">
-            {gameStatus ? startCase(gameStatus.toLowerCase()) : 'Unknown'}
+            {status ? startCase(status.toLowerCase()) : 'Unknown'}
           </Typography>
         </Box>
         <Box my={1}>

@@ -26,7 +26,7 @@ export const clickTile = createAsyncThunk<
   null | boolean | Move,
   ClickTileParams,
   { state: AppState }
->('chess/activeGame/clickTile', async (position, { getState }) => {
+>('chess/board/clickTile', async (position, { getState }) => {
   const { row, col, gameId } = position;
   const { pieces } = getState();
   const selectedPosition = getState().boards.entities[gameId]?.selectedPosition;

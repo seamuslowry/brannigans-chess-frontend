@@ -2,12 +2,11 @@ import React from 'react';
 import { Box, CircularProgress, makeStyles, Paper } from '@material-ui/core';
 import { useSelector } from 'react-redux';
 import { Move as MoveEntity } from '../../services/ChessService.types';
-import { getSharedMovesTopic } from '../../store/activeGame/activeGame';
 import { AppState, useAppDispatch } from '../../store/store';
 import Move from '../Move/Move';
 import useGameColors from '../../utils/useGameColor';
 import useSubscription from '../../utils/useSubscription';
-import { getMoves, makeSelectMoves } from '../../store/moves/moves';
+import { getMoves, getSharedMovesTopic, makeSelectMoves } from '../../store/moves/moves';
 
 interface Props {
   gameId: number;
@@ -30,7 +29,7 @@ const MoveList: React.FC<Props> = ({ gameId }) => {
 
   const ref = React.useRef<HTMLElement | null>(null);
 
-  const colors = useGameColors();
+  const colors = useGameColors(gameId);
 
   React.useEffect(() => {
     setLoading(true);
