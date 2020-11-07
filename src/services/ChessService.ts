@@ -28,20 +28,20 @@ const getGames = (active?: boolean, pageRequest: Partial<PageRequest> = {}) => {
   return chessApi.get<PageResponse<Game>>(`/games?${args.join('&')}`);
 };
 
-const getPieces = (gameId: number, color?: PieceColor, status?: PieceStatus) => {
+const getPieces = (gameId: number, colors?: PieceColor[], status?: PieceStatus) => {
   const args = [];
 
   status && args.push(`status=${status}`);
 
-  color && args.push(`color=${color}`);
+  colors && args.push(`color=${colors.join('&color=')}`);
 
   return chessApi.get<Piece[]>(`pieces/${gameId}?${args.join('&')}`);
 };
 
-const getMoves = (gameId: number, color?: PieceColor) => {
+const getMoves = (gameId: number, colors?: PieceColor[]) => {
   const args = [];
 
-  color && args.push(`color=${color}`);
+  colors && args.push(`color=${colors.join('&color=')}`);
 
   return chessApi.get<Move[]>(`moves/${gameId}?${args.join('&')}`);
 };

@@ -12,7 +12,7 @@ import { sendAlert } from '../../store/notifications/notifications';
 import { AppState, useAppDispatch } from '../../store/store';
 import Move from '../Move/Move';
 import ChessService from '../../services/ChessService';
-import useGameColor from '../../utils/useGameColor';
+import useGameColors from '../../utils/useGameColor';
 import useSubscription from '../../utils/useSubscription';
 
 interface Props {
@@ -36,16 +36,16 @@ const MoveList: React.FC<Props> = ({ gameId }) => {
 
   const ref = React.useRef<HTMLElement | null>(null);
 
-  const color = useGameColor();
+  const colors = useGameColors();
 
   React.useEffect(() => {
     setLoading(true);
-    ChessService.getMoves(gameId, color)
+    ChessService.getMoves(gameId, colors)
       .then(res => {
         dispatch(addMoves(res.data));
       })
       .catch(e => {
-        dispatch(sendAlert(`Could not find ${color} moves: ${e.message}`));
+        dispatch(sendAlert(`Could not find ${colors} moves: ${e.message}`));
       })
       .finally(() => {
         setLoading(false);
@@ -54,7 +54,7 @@ const MoveList: React.FC<Props> = ({ gameId }) => {
     return () => {
       dispatch(clearMoves());
     };
-  }, [gameId, color, dispatch]);
+  }, [gameId, colors, dispatch]);
 
   const moves = useSelector<AppState, MoveEntity[]>(selectAllMoves);
 

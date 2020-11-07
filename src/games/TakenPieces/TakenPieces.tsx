@@ -20,7 +20,9 @@ const TakenPieces: React.FC<Props> = ({ gameId, color }) => {
 
   React.useEffect(() => {
     setLoading(true);
-    dispatch(getPieces({ gameId, color, status: 'TAKEN' })).finally(() => setLoading(false));
+    dispatch(getPieces({ gameId, colors: [color], status: 'TAKEN' })).finally(() =>
+      setLoading(false)
+    );
 
     return () => {
       dispatch(clearTaken(color));
