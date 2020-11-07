@@ -1,7 +1,7 @@
 import React from 'react';
 import { Grid } from '@material-ui/core';
 import { useParams } from 'react-router-dom';
-import { clearGame, setGameId } from '../../store/activeGame/activeGame';
+import { setGameId } from '../../store/activeGame/activeGame';
 import Board from '../Board/Board';
 import MoveList from '../MoveList/MoveList';
 import TakenPieces from '../TakenPieces/TakenPieces';
@@ -19,11 +19,7 @@ const ActiveGame: React.FC = () => {
   const gameId = Number(id);
 
   React.useEffect(() => {
-    dispatch(setGameId(gameId));
-
-    return () => {
-      dispatch(clearGame());
-    };
+    dispatch(setGameId(gameId)); // TODO remove
   }, [gameId, dispatch]);
 
   return (

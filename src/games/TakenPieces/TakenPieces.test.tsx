@@ -16,10 +16,7 @@ const takenBlackRook = makePiece('ROOK', 'BLACK', 0, 0, 'TAKEN');
 const mockStore = createMockStore(getDefaultMiddleware());
 const mockedStore = mockStore({
   ...testStore,
-  activeGame: {
-    ...testStore.activeGame,
-    pieces: mockEntityAdapterState(takenBlackRook)
-  }
+  pieces: mockEntityAdapterState(takenBlackRook)
 });
 
 const server = setupServer(

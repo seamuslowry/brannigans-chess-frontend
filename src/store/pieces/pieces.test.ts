@@ -69,6 +69,13 @@ test('handles a stomp message on an unrelated topic', () => {
   expect(result).toEqual(initialState);
 });
 
+test('unrelated click request - reducer', async () => {
+  const request = { row: whiteMove.dstRow, col: whiteMove.dstCol, gameId: 0 };
+  const result = reducer(undefined, clickTile.fulfilled(true, '', request));
+
+  expect(result).toEqual(initialState);
+});
+
 test('moves a piece - reducer', async () => {
   const request = { row: whiteMove.dstRow, col: whiteMove.dstCol, gameId: 0 };
   const result = reducer(undefined, clickTile.fulfilled(whiteMove, '', request));

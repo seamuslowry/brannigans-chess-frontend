@@ -25,9 +25,6 @@ const activeGameSlice = createSlice({
   reducers: {
     setGameId: (state, action: PayloadAction<number>) => {
       state.id = action.payload;
-    },
-    clearGame: state => {
-      state = initialState;
     }
   },
   extraReducers: builder => {
@@ -45,6 +42,6 @@ const activeGameSlice = createSlice({
   }
 });
 
-export const { setGameId, clearGame } = activeGameSlice.actions;
+export const { setGameId } = activeGameSlice.actions;
 
 export default activeGameSlice.reducer;

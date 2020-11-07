@@ -15,10 +15,7 @@ import { addMoves } from '../../store/moves/moves';
 const mockStore = createMockStore(getDefaultMiddleware());
 const mockedStore = mockStore({
   ...testStore,
-  activeGame: {
-    ...testStore.activeGame,
-    moves: mockEntityAdapterState(whiteMove)
-  }
+  moves: mockEntityAdapterState(whiteMove)
 });
 
 const server = setupServer(

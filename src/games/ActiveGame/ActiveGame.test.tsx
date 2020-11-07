@@ -6,7 +6,7 @@ import { setupServer } from 'msw/node';
 import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { getDefaultMiddleware } from '@reduxjs/toolkit';
-import { clearGame, setGameId } from '../../store/activeGame/activeGame';
+import { setGameId } from '../../store/activeGame/activeGame';
 import { testStore } from '../../utils/testData';
 import ActiveGame from './ActiveGame';
 import config from '../../config';
@@ -52,10 +52,4 @@ test('sets and unsets the game id', async () => {
   await waitForElementToBeRemoved(() => getAllByRole('progressbar')); // wait for service calls to complete
 
   unmount();
-
-  expect(mockedStore.getActions()).toContainEqual(
-    expect.objectContaining({
-      type: clearGame.type
-    })
-  );
 });
