@@ -40,9 +40,9 @@ const notificationsSlice = createSlice({
   },
   extraReducers: builder => {
     builder.addCase(getPieces.rejected, (state, action) => {
-      const { color = '', status = '' } = action.meta.arg;
+      const { colors = [], status = '' } = action.meta.arg;
 
-      const metadataString = ` ${color} ${status}`.trimEnd();
+      const metadataString = ` ${colors.join(' and ')} ${status}`.trimEnd();
 
       state.pendingAlerts.push({
         message: `Could not find${metadataString} pieces: ${action.error.message}`,
