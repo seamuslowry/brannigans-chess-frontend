@@ -41,7 +41,7 @@ const notificationsSlice = createSlice({
   },
   extraReducers: builder => {
     builder.addCase(getPieces.rejected, (state, action) => {
-      const { colors = [], status = '' } = action.meta.arg;
+      const { colors, status = '' } = action.meta.arg;
 
       const metadataString = ` ${colors.join(' and ')} ${status}`.trimEnd();
 
