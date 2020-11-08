@@ -3,7 +3,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { clickTile } from '../boards/boards';
 import { createGame } from '../games/games';
 import { getMoves } from '../moves/moves';
-import { getPieces } from '../pieces/pieces';
+import { getPieces, promotePawn } from '../pieces/pieces';
 
 export interface AlertInfo {
   message: string;
@@ -66,6 +66,12 @@ const notificationsSlice = createSlice({
       .addCase(createGame.rejected, (state, action) => {
         state.pendingAlerts.push({
           message: `Could not create game: ${action.error.message}`,
+          severity: 'error'
+        });
+      })
+      .addCase(promotePawn.rejected, (state, action) => {
+        state.pendingAlerts.push({
+          message: `Failed to promote the piece: ${action.error.message}`,
           severity: 'error'
         });
       })

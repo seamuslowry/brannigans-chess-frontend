@@ -20,13 +20,16 @@ import {
 import { clickTile } from '../boards/boards';
 import { STOMP_MESSAGE } from '../middleware/stomp/stomp';
 import { getSharedMovesTopic } from '../moves/moves';
-import reducer, { addPieces, getPieces, initialState } from './pieces';
+import reducer, { addPieces, getPieces, initialState, promotePawn } from './pieces';
 
 const server = setupServer(
   rest.get(`${config.serviceUrl}/pieces/0`, (req, res, ctx) => {
     return res(
       ctx.json<Piece[]>([blackRook])
     );
+  }),
+  rest.post(`${config.serviceUrl}/pieces/promote/0/QUEEN`, (req, res, ctx) => {
+    return res(ctx.json<Piece>(makePiece('QUEEN', 'WHITE')));
   })
 );
 
@@ -208,4 +211,40 @@ test('handles successful piece retrival', async () => {
   );
 
   expect(result.ids).toContain(blackRook.id);
+});
+
+test('tries to promote a piece', async () => {
+  await waitFor(() => mockedStore.dispatch(promotePawn({ pieceId: 0, type: 'QUEEN' })));
+
+  expect(mockedStore.getActions()).toContainEqual(
+    expect.objectContaining({
+      type: promotePawn.fulfilled.type
+    })
+  );
+});
+
+test('dispatches an error when failing to promote a piece', async () => {
+  server.use(
+    rest.post(`${config.serviceUrl}/pieces/promote/0/QUEEN`, (req, res, ctx) => {
+      return res(ctx.status(500));
+    })
+  );
+  await waitFor(() => mockedStore.dispatch(promotePawn({ pieceId: 0, type: 'QUEEN' })));
+
+  expect(mockedStore.getActions()).toContainEqual(
+    expect.objectContaining({
+      type: promotePawn.rejected.type
+    })
+  );
+});
+
+test('handles successful piece promotion', async () => {
+  const pawn = makePiece('PAWN', 'BLACK');
+  const result = reducer(
+    mockEntityAdapterState(pawn),
+    promotePawn.fulfilled(blackRook, '', { pieceId: pawn.id, type: 'ROOK' })
+  );
+
+  expect(result.ids).toContain(blackRook.id);
+  expect(result.entities[pawn.id]?.status).toEqual('REMOVED');
 });

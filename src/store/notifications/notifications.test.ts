@@ -2,7 +2,7 @@ import { errorAlertInfo, successAlertInfo } from '../../utils/testData';
 import { clickTile } from '../boards/boards';
 import { createGame } from '../games/games';
 import { getMoves } from '../moves/moves';
-import { getPieces } from '../pieces/pieces';
+import { getPieces, promotePawn } from '../pieces/pieces';
 import reducer, { initialState, sendAlert, AlertInfo, removeAlert } from './notifications';
 
 test('sends an alert', () => {
@@ -81,6 +81,20 @@ test('shows a notification on an attempted move failure', async () => {
 test('shows a notification on a game creation failure', async () => {
   const message = 'test message';
   const result = reducer(undefined, createGame.rejected(new Error(message), '', undefined));
+
+  expect(result.pendingAlerts).toContainEqual(
+    expect.objectContaining({
+      message: expect.stringContaining(message)
+    })
+  );
+});
+
+test('shows a notification on pawn promotion failure', async () => {
+  const message = 'test message';
+  const result = reducer(
+    undefined,
+    promotePawn.rejected(new Error(message), '', { pieceId: 0, type: 'BISHOP' })
+  );
 
   expect(result.pendingAlerts).toContainEqual(
     expect.objectContaining({

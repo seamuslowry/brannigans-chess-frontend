@@ -67,12 +67,6 @@ export interface PageResponse<T> {
   totalElements: number;
 }
 
-export interface PieceIdentitifierDto {
-  gameId: number;
-  row: number;
-  col: number;
-}
-
 export interface AdditionalPlayerInfo {
   name: string;
   imageUrl: string;

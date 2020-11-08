@@ -5,12 +5,11 @@ import createMockStore from 'redux-mock-store';
 import { rest } from 'msw';
 import { setupServer } from 'msw/node';
 import { getDefaultMiddleware } from '@reduxjs/toolkit';
-import { makePiece, mockEntityAdapterState, testStore, whiteMove } from '../../utils/testData';
-import { Move } from '../../services/ChessService.types';
+import { makePiece, mockEntityAdapterState, testStore } from '../../utils/testData';
 import config from '../../config';
 import PawnPromotion from './PawnPromotion';
-import { sendAlert } from '../../store/notifications/notifications';
-import { addPieces } from '../../store/pieces/pieces';
+import { promotePawn } from '../../store/pieces/pieces';
+import { Piece } from '../../services/ChessService.types';
 
 const mockStore = createMockStore(getDefaultMiddleware());
 const mockedStore = mockStore(testStore);
@@ -28,10 +27,11 @@ const whitePawnPromoteStore = mockStore({
 });
 
 const server = setupServer(
-  rest.post(`${config.serviceUrl}/pieces/promote/QUEEN`, (req, res, ctx) => {
-    return res(
-      ctx.json<Move[]>([whiteMove])
-    );
+  rest.post(`${config.serviceUrl}/pieces/promote/${blackPawn.id}/QUEEN`, (req, res, ctx) => {
+    return res(ctx.json<Piece>(makePiece('QUEEN', 'BLACK')));
+  }),
+  rest.post(`${config.serviceUrl}/pieces/promote/${whitePawn.id}/QUEEN`, (req, res, ctx) => {
+    return res(ctx.json<Piece>(makePiece('QUEEN', 'WHITE')));
   })
 );
 
@@ -73,32 +73,7 @@ test('promotes a pawn - BLACK', async () => {
   await waitFor(() =>
     expect(blackPawnPromoteStore.getActions()).toContainEqual(
       expect.objectContaining({
-        type: addPieces.type
-      })
-    )
-  );
-});
-
-test('handles an error when promoting a pawn - BLACK', async () => {
-  server.use(
-    rest.post(`${config.serviceUrl}/pieces/promote/QUEEN`, (req, res, ctx) => {
-      return res(ctx.status(500));
-    })
-  );
-
-  const { getByAltText } = render(
-    <Provider store={blackPawnPromoteStore}>
-      <PawnPromotion gameId={0} color="BLACK" />
-    </Provider>
-  );
-
-  const node = await waitFor(() => getByAltText('BLACK-QUEEN'));
-  fireEvent.click(node);
-
-  await waitFor(() =>
-    expect(blackPawnPromoteStore.getActions()).toContainEqual(
-      expect.objectContaining({
-        type: sendAlert.type
+        type: promotePawn.fulfilled.type
       })
     )
   );
@@ -137,32 +112,7 @@ test('promotes a pawn - WHITE', async () => {
   await waitFor(() =>
     expect(whitePawnPromoteStore.getActions()).toContainEqual(
       expect.objectContaining({
-        type: addPieces.type
-      })
-    )
-  );
-});
-
-test('handles an error when promoting a pawn - WHITE', async () => {
-  server.use(
-    rest.post(`${config.serviceUrl}/pieces/promote/QUEEN`, (req, res, ctx) => {
-      return res(ctx.status(500));
-    })
-  );
-
-  const { getByAltText } = render(
-    <Provider store={whitePawnPromoteStore}>
-      <PawnPromotion gameId={0} color="WHITE" />
-    </Provider>
-  );
-
-  const node = await waitFor(() => getByAltText('WHITE-QUEEN'));
-  fireEvent.click(node);
-
-  await waitFor(() =>
-    expect(whitePawnPromoteStore.getActions()).toContainEqual(
-      expect.objectContaining({
-        type: sendAlert.type
+        type: promotePawn.fulfilled.type
       })
     )
   );

@@ -6,7 +6,7 @@ import {
   createSlice
 } from '@reduxjs/toolkit';
 import ChessService from '../../services/ChessService';
-import { Move, Piece, PieceColor, PieceStatus } from '../../services/ChessService.types';
+import { Move, Piece, PieceColor, PieceStatus, PieceType } from '../../services/ChessService.types';
 import { clickTile, TilePosition } from '../boards/boards';
 import { StompMessage, STOMP_MESSAGE } from '../middleware/stomp/stomp';
 import { SHARED_MOVES_PREFIX } from '../moves/moves';
@@ -27,6 +27,14 @@ export const getPieces = createAsyncThunk(
   }
 );
 
+export const promotePawn = createAsyncThunk(
+  'chess/pieces/promotePawn',
+  async ({ pieceId, type }: { pieceId: number; type: PieceType }) => {
+    const res = await ChessService.promote(pieceId, type);
+    return res.data;
+  }
+);
+
 const piecesAdapter = createEntityAdapter<Piece>();
 
 export const initialState = piecesAdapter.getInitialState();
@@ -42,6 +50,11 @@ const pieceSlice = createSlice({
     builder
       .addCase(getPieces.fulfilled, (state, action) => {
         state = piecesAdapter.upsertMany(state, action.payload);
+      })
+      .addCase(promotePawn.fulfilled, (state, action) => {
+        const pawnId = action.meta.arg.pieceId;
+        state = piecesAdapter.upsertOne(state, action);
+        state = piecesAdapter.updateOne(state, { id: pawnId, changes: { status: 'REMOVED' } });
       })
       .addCase(clickTile.fulfilled, (state, action) => {
         if (action.payload && typeof action.payload === 'object') {
