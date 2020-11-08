@@ -6,7 +6,7 @@ import {
   createSlice
 } from '@reduxjs/toolkit';
 import ChessService from '../../services/ChessService';
-import { Game } from '../../services/ChessService.types';
+import { Game, PieceColor } from '../../services/ChessService.types';
 import { StompMessage, STOMP_MESSAGE } from '../middleware/stomp/stomp';
 
 const GAME_STATUS_PREFIX = `/game/status/`;
@@ -16,6 +16,27 @@ export const createGame = createAsyncThunk('chess/games/createGame', async () =>
   const response = await ChessService.createGame();
   return response.data;
 });
+
+interface JoinGameParams {
+  gameId: number;
+  pieceColor: PieceColor;
+}
+
+export const joinGame = createAsyncThunk(
+  'chess/games/joinGame',
+  async ({ gameId, pieceColor }: JoinGameParams) => {
+    try {
+      const response = await ChessService.joinGame(gameId, pieceColor);
+      return response.data;
+    } catch (e) {
+      if (e.response?.status === 409) {
+        throw new Error(e.response.data);
+      } else {
+        throw e;
+      }
+    }
+  }
+);
 
 const gamesAdapter = createEntityAdapter<Game>();
 
@@ -27,6 +48,7 @@ const gameSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: builder => {
+    // do not need a case for join because the status topic will update the game info
     builder.addCase(createGame.fulfilled, gamesAdapter.upsertOne).addMatcher(
       (action: AnyAction): action is StompMessage => action.type === STOMP_MESSAGE,
       (state, action) => {

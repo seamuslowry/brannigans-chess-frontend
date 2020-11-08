@@ -1,6 +1,6 @@
 import { errorAlertInfo, successAlertInfo } from '../../utils/testData';
 import { clickTile } from '../boards/boards';
-import { createGame } from '../games/games';
+import { createGame, joinGame } from '../games/games';
 import { getMoves } from '../moves/moves';
 import { getPieces, promotePawn } from '../pieces/pieces';
 import reducer, { initialState, sendAlert, AlertInfo, removeAlert } from './notifications';
@@ -94,6 +94,20 @@ test('shows a notification on pawn promotion failure', async () => {
   const result = reducer(
     undefined,
     promotePawn.rejected(new Error(message), '', { pieceId: 0, type: 'BISHOP' })
+  );
+
+  expect(result.pendingAlerts).toContainEqual(
+    expect.objectContaining({
+      message: expect.stringContaining(message)
+    })
+  );
+});
+
+test('shows a notification on join game failure', async () => {
+  const message = 'test message';
+  const result = reducer(
+    undefined,
+    joinGame.rejected(new Error(message), '', { gameId: 0, pieceColor: 'WHITE' })
   );
 
   expect(result.pendingAlerts).toContainEqual(

@@ -8,6 +8,7 @@ import config from '../../config';
 import { Piece } from '../../services/ChessService.types';
 import {
   blackRook,
+  fullGame,
   makePiece,
   mockEntityAdapterState,
   testStore,
@@ -18,6 +19,7 @@ import {
   whiteTake
 } from '../../utils/testData';
 import { clickTile } from '../boards/boards';
+import { joinGame } from '../games/games';
 import { STOMP_MESSAGE } from '../middleware/stomp/stomp';
 import { getSharedMovesTopic } from '../moves/moves';
 import reducer, { addPieces, getPieces, initialState, promotePawn } from './pieces';
@@ -247,4 +249,14 @@ test('handles successful piece promotion', async () => {
 
   expect(result.ids).toContain(blackRook.id);
   expect(result.entities[pawn.id]?.status).toEqual('REMOVED');
+});
+
+test('handles joining a game', async () => {
+  const removePiece = makePiece('PAWN', 'BLACK');
+  const result = reducer(
+    mockEntityAdapterState(removePiece),
+    joinGame.fulfilled(fullGame, '', { gameId: 0, pieceColor: 'WHITE' })
+  );
+
+  expect(result.ids).not.toContain(removePiece.id);
 });

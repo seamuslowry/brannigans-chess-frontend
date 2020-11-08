@@ -1,7 +1,7 @@
 import { Color } from '@material-ui/lab';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { clickTile } from '../boards/boards';
-import { createGame } from '../games/games';
+import { createGame, joinGame } from '../games/games';
 import { getMoves } from '../moves/moves';
 import { getPieces, promotePawn } from '../pieces/pieces';
 
@@ -72,6 +72,12 @@ const notificationsSlice = createSlice({
       .addCase(promotePawn.rejected, (state, action) => {
         state.pendingAlerts.push({
           message: `Failed to promote the piece: ${action.error.message}`,
+          severity: 'error'
+        });
+      })
+      .addCase(joinGame.rejected, (state, action) => {
+        state.pendingAlerts.push({
+          message: `Could not join game: ${action.error.message}`,
           severity: 'error'
         });
       })

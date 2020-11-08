@@ -16,7 +16,7 @@ import {
   testStore
 } from '../../../utils/testData';
 import JoinGameButton from './JoinGameButton';
-import { sendAlert } from '../../../store/notifications/notifications';
+import { joinGame } from '../../../store/games/games';
 
 const mockStore = createMockStore<AppState, ActionCreator<AnyAction>>(getDefaultMiddleware());
 const mockedStore = mockStore(testStore);
@@ -44,11 +44,10 @@ test('joins a game as white', async () => {
   fireEvent.click(button);
 
   await waitFor(() => expect(getByTestId('join-game-button')).toBeDisabled());
-  await waitFor(() => expect(getByTestId('join-game-button')).not.toBeDisabled());
 
-  expect(mockedStore.getActions()).not.toContainEqual(
+  expect(mockedStore.getActions()).toContainEqual(
     expect.objectContaining({
-      type: sendAlert.type
+      type: joinGame.pending.type
     })
   );
 });
@@ -64,68 +63,10 @@ test('joins a game as black', async () => {
   fireEvent.click(button);
 
   await waitFor(() => expect(getByTestId('join-game-button')).toBeDisabled());
-  await waitFor(() => expect(getByTestId('join-game-button')).not.toBeDisabled());
-
-  expect(mockedStore.getActions()).not.toContainEqual(
-    expect.objectContaining({
-      type: sendAlert.type
-    })
-  );
-});
-
-test('tries to join a filled slot', async () => {
-  const errorMessage = 'test error';
-  server.use(
-    rest.post(`${config.serviceUrl}/players/join/1`, (req, res, ctx) => {
-      return res(ctx.status(409), ctx.json(errorMessage));
-    })
-  );
-  const { getByTestId } = render(
-    <Provider store={mockedStore}>
-      <JoinGameButton gameId={1} pieceColor="BLACK" />
-    </Provider>
-  );
-
-  const button = getByTestId('join-game-button');
-  fireEvent.click(button);
-
-  await waitFor(() => expect(getByTestId('join-game-button')).toBeDisabled());
-  await waitFor(() => expect(getByTestId('join-game-button')).not.toBeDisabled());
 
   expect(mockedStore.getActions()).toContainEqual(
     expect.objectContaining({
-      type: sendAlert.type,
-      payload: expect.objectContaining({
-        message: expect.stringContaining(errorMessage)
-      })
-    })
-  );
-});
-
-test('fails to join a slot', async () => {
-  server.use(
-    rest.post(`${config.serviceUrl}/players/join/1`, (req, res, ctx) => {
-      return res(ctx.status(500));
-    })
-  );
-  const { getByTestId } = render(
-    <Provider store={mockedStore}>
-      <JoinGameButton gameId={1} pieceColor="BLACK" />
-    </Provider>
-  );
-
-  const button = getByTestId('join-game-button');
-  fireEvent.click(button);
-
-  await waitFor(() => expect(getByTestId('join-game-button')).toBeDisabled());
-  await waitFor(() => expect(getByTestId('join-game-button')).not.toBeDisabled());
-
-  expect(mockedStore.getActions()).toContainEqual(
-    expect.objectContaining({
-      type: sendAlert.type,
-      payload: expect.objectContaining({
-        message: expect.stringContaining('Error while joining')
-      })
+      type: joinGame.pending.type
     })
   );
 });

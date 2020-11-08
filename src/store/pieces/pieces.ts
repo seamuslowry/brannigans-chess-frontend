@@ -8,6 +8,7 @@ import {
 import ChessService from '../../services/ChessService';
 import { Move, Piece, PieceColor, PieceStatus, PieceType } from '../../services/ChessService.types';
 import { clickTile, TilePosition } from '../boards/boards';
+import { joinGame } from '../games/games';
 import { StompMessage, STOMP_MESSAGE } from '../middleware/stomp/stomp';
 import { SHARED_MOVES_PREFIX } from '../moves/moves';
 
@@ -48,6 +49,14 @@ const pieceSlice = createSlice({
   },
   extraReducers: builder => {
     builder
+      .addCase(joinGame.fulfilled, (state, action) => {
+        const { gameId, pieceColor } = action.meta.arg;
+        const removePieces = Object.values(state.entities).filter(
+          p => p?.game.id === gameId && p.color !== pieceColor
+        ) as Piece[];
+        const removeIds = removePieces.map(p => p.id);
+        state = piecesAdapter.removeMany(state, removeIds);
+      })
       .addCase(getPieces.fulfilled, (state, action) => {
         state = piecesAdapter.upsertMany(state, action.payload);
       })

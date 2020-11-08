@@ -5,8 +5,8 @@ import { setupServer } from 'msw/node';
 import createMockStore from 'redux-mock-store';
 import config from '../../config';
 import { Game } from '../../services/ChessService.types';
-import { emptyGame, testStore } from '../../utils/testData';
-import reducer, { createGame, getStatusTopic, initialState } from '../games/games';
+import { emptyGame, fullGame, testStore } from '../../utils/testData';
+import reducer, { createGame, getStatusTopic, initialState, joinGame } from '../games/games';
 import { STOMP_MESSAGE } from '../middleware/stomp/stomp';
 import { AppState } from '../store';
 
@@ -18,6 +18,9 @@ beforeEach(() => mockedStore.clearActions());
 const server = setupServer(
   rest.post(`${config.serviceUrl}/games/create`, (req, res, ctx) => {
     return res(ctx.json<Game>(emptyGame));
+  }),
+  rest.post(`${config.serviceUrl}/players/join/0`, (req, res, ctx) => {
+    return res(ctx.json<Game>(fullGame));
   })
 );
 
@@ -78,4 +81,57 @@ test('handles successful game creation', async () => {
   const result = reducer(undefined, createGame.fulfilled(emptyGame, '', undefined));
 
   expect(result.ids).toContain(emptyGame.id);
+});
+
+test('tries to join a game', async () => {
+  await waitFor(() => mockedStore.dispatch(joinGame({ gameId: 0, pieceColor: 'WHITE' })));
+
+  expect(mockedStore.getActions()).toContainEqual(
+    expect.objectContaining({
+      type: joinGame.fulfilled.type
+    })
+  );
+});
+
+test('dispatches an error when failing to join a game', async () => {
+  server.use(
+    rest.post(`${config.serviceUrl}/players/join/0`, (req, res, ctx) => {
+      return res(ctx.status(500));
+    })
+  );
+  await waitFor(() => mockedStore.dispatch(joinGame({ gameId: 0, pieceColor: 'WHITE' })));
+
+  expect(mockedStore.getActions()).toContainEqual(
+    expect.objectContaining({
+      type: joinGame.rejected.type
+    })
+  );
+});
+
+test('dispatches an error when failing to join a game from conflict', async () => {
+  const message = 'conflict';
+  server.use(
+    rest.post(`${config.serviceUrl}/players/join/0`, (req, res, ctx) => {
+      return res(ctx.status(409), ctx.json(message));
+    })
+  );
+  await waitFor(() => mockedStore.dispatch(joinGame({ gameId: 0, pieceColor: 'WHITE' })));
+
+  expect(mockedStore.getActions()).toContainEqual(
+    expect.objectContaining({
+      type: joinGame.rejected.type,
+      error: expect.objectContaining({
+        message: expect.stringContaining(message)
+      })
+    })
+  );
+});
+
+test('does not handle joining a game', async () => {
+  const result = reducer(
+    undefined,
+    joinGame.fulfilled(emptyGame, '', { gameId: 0, pieceColor: 'WHITE' })
+  );
+
+  expect(result).toEqual(initialState);
 });
