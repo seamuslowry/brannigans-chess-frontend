@@ -1,5 +1,6 @@
 import { Color } from '@material-ui/lab';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { authenticatePlayer } from '../auth/auth';
 import { clickTile } from '../boards/boards';
 import { createGame, joinGame, leaveGame } from '../games/games';
 import { getMoves } from '../moves/moves';
@@ -26,12 +27,6 @@ const notificationsSlice = createSlice({
   name: 'chess/notifications',
   initialState,
   reducers: {
-    sendAlert: {
-      reducer: (state, action: PayloadAction<AlertInfo>) => {
-        state.pendingAlerts.push(action.payload);
-      },
-      prepare: prepareAlertInfo
-    },
     removeAlert: {
       reducer: (state, action: PayloadAction<AlertInfo>) => {
         state.pendingAlerts = state.pendingAlerts.filter(
@@ -87,6 +82,12 @@ const notificationsSlice = createSlice({
           severity: 'error'
         });
       })
+      .addCase(authenticatePlayer.rejected, (state, action) => {
+        state.pendingAlerts.push({
+          message: `Error finding Player: ${action.error.message}`,
+          severity: 'error'
+        });
+      })
       .addCase(clickTile.rejected, (state, action) => {
         state.pendingAlerts.push({
           message: `${action.error.message}`,
@@ -96,6 +97,6 @@ const notificationsSlice = createSlice({
   }
 });
 
-export const { sendAlert, removeAlert } = notificationsSlice.actions;
+export const { removeAlert } = notificationsSlice.actions;
 
 export default notificationsSlice.reducer;

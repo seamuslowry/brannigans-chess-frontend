@@ -1,26 +1,50 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Player } from '../../services/ChessService.types';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import ChessService from '../../services/ChessService';
+import { AdditionalPlayerInfo, Player } from '../../services/ChessService.types';
+import { playerTwo } from '../../utils/testData';
+
+interface AuthenticatePlayerParams {
+  playerInfo: AdditionalPlayerInfo;
+  getAccessToken: () => Promise<string>;
+}
+
+export const authenticatePlayer = createAsyncThunk(
+  'chess/auth/authenticatePlayer',
+  async (params: AuthenticatePlayerParams) => {
+    const token = await params.getAccessToken();
+    localStorage.setItem('token', token);
+
+    const response = await ChessService.authenticatePlayer(params.playerInfo);
+    return response.data;
+  }
+);
 
 export interface AuthState {
   player?: Player;
-  token?: string;
 }
 
 export const initialState: AuthState = {};
+
+const sharedClearAuth = () => {
+  localStorage.removeItem('token');
+  return initialState;
+};
 
 const authSlice = createSlice({
   name: 'chess/auth',
   initialState,
   reducers: {
-    updateToken: (state, action: PayloadAction<string>) => {
-      state.token = action.payload;
-    },
-    updatePlayer: (state, action: PayloadAction<Player>) => {
-      state.player = action.payload;
-    }
+    clearAuth: sharedClearAuth
+  },
+  extraReducers: builder => {
+    builder
+      .addCase(authenticatePlayer.fulfilled, (state, action) => {
+        state.player = action.payload;
+      })
+      .addCase(authenticatePlayer.rejected, sharedClearAuth);
   }
 });
 
-export const { updatePlayer, updateToken } = authSlice.actions;
+export const { clearAuth } = authSlice.actions;
 
 export default authSlice.reducer;

@@ -1,15 +1,10 @@
 import { errorAlertInfo, successAlertInfo } from '../../utils/testData';
+import { authenticatePlayer } from '../auth/auth';
 import { clickTile } from '../boards/boards';
 import { createGame, joinGame, leaveGame } from '../games/games';
 import { getMoves } from '../moves/moves';
 import { getPieces, promotePawn } from '../pieces/pieces';
-import reducer, { initialState, sendAlert, AlertInfo, removeAlert } from './notifications';
-
-test('sends an alert', () => {
-  const result = reducer(undefined, sendAlert(successAlertInfo.message, successAlertInfo.severity));
-
-  expect(result.pendingAlerts).toContainEqual(successAlertInfo);
-});
+import reducer, { initialState, AlertInfo, removeAlert } from './notifications';
 
 test('removes an alert', () => {
   const alerts: AlertInfo[] = [
@@ -120,6 +115,23 @@ test('shows a notification on join game failure', async () => {
 test('shows a notification on leave game failure', async () => {
   const message = 'test message';
   const result = reducer(undefined, leaveGame.rejected(new Error(message), '', 0));
+
+  expect(result.pendingAlerts).toContainEqual(
+    expect.objectContaining({
+      message: expect.stringContaining(message)
+    })
+  );
+});
+
+test('shows a notification on player authenticate failure', async () => {
+  const message = 'test message';
+  const result = reducer(
+    undefined,
+    authenticatePlayer.rejected(new Error(message), '', {
+      getAccessToken: jest.fn(),
+      playerInfo: { name: 'test', imageUrl: 'test' }
+    })
+  );
 
   expect(result.pendingAlerts).toContainEqual(
     expect.objectContaining({

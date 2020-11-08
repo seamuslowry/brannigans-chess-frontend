@@ -16,8 +16,7 @@ import {
 import { useAuth0 } from '@auth0/auth0-react';
 import config from '../../config';
 import { Player } from '../../services/ChessService.types';
-import { updatePlayer } from '../../store/auth/auth';
-import { sendAlert } from '../../store/notifications/notifications';
+import { authenticatePlayer } from '../../store/auth/auth';
 
 const server = setupServer(
   rest.post(`${config.serviceUrl}/players/auth`, (req, res, ctx) => {
@@ -47,64 +46,17 @@ test('renders nothing when not logged in', () => {
   expect(container.firstChild).toBeNull();
 });
 
-test('retrieves an access token after authenticating', () => {
+test('fully authenticates the player after auth0', async () => {
   render(
     <Provider store={mockedStore}>
       <UserAvatar />
     </Provider>
   );
 
-  expect(authenticatedAuth0.getAccessTokenSilently).toHaveBeenCalled();
-});
-
-test('retrieves a player after getting an access token', async () => {
-  const accessTokenStore = mockStore({
-    ...testStore,
-    auth: {
-      ...testStore.auth,
-      token: 'test-token'
-    }
-  });
-
-  render(
-    <Provider store={accessTokenStore}>
-      <UserAvatar />
-    </Provider>
-  );
-
   await waitFor(() =>
-    expect(accessTokenStore.getActions()).toContainEqual(
+    expect(mockedStore.getActions()).toContainEqual(
       expect.objectContaining({
-        type: updatePlayer.type
-      })
-    )
-  );
-});
-
-test('fails to retrieve a player after getting an access token', async () => {
-  const accessTokenStore = mockStore({
-    ...testStore,
-    auth: {
-      ...testStore.auth,
-      token: 'test-token'
-    }
-  });
-  server.use(
-    rest.post(`${config.serviceUrl}/players/auth`, (req, res, ctx) => {
-      return res(ctx.status(403));
-    })
-  );
-
-  render(
-    <Provider store={accessTokenStore}>
-      <UserAvatar />
-    </Provider>
-  );
-
-  await waitFor(() =>
-    expect(accessTokenStore.getActions()).toContainEqual(
-      expect.objectContaining({
-        type: sendAlert.type
+        type: authenticatePlayer.fulfilled.type
       })
     )
   );
@@ -115,7 +67,6 @@ test('renders an avatar when fully logged in', async () => {
     ...testStore,
     auth: {
       ...testStore.auth,
-      token: 'test-token',
       player: playerOne
     }
   });
