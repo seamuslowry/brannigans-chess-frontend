@@ -38,6 +38,19 @@ export const joinGame = createAsyncThunk(
   }
 );
 
+export const leaveGame = createAsyncThunk('chess/games/leaveGame', async (gameId: number) => {
+  try {
+    const response = await ChessService.leaveGame(gameId);
+    return response.data;
+  } catch (e) {
+    if (e.response?.status === 409) {
+      throw new Error(e.response.data);
+    } else {
+      throw e;
+    }
+  }
+});
+
 const gamesAdapter = createEntityAdapter<Game>();
 
 export const initialState = gamesAdapter.getInitialState();
@@ -49,6 +62,7 @@ const gameSlice = createSlice({
   reducers: {},
   extraReducers: builder => {
     // do not need a case for join because the status topic will update the game info
+    // do not need a case for leave because the status topic will update the game info
     builder.addCase(createGame.fulfilled, gamesAdapter.upsertOne).addMatcher(
       (action: AnyAction): action is StompMessage => action.type === STOMP_MESSAGE,
       (state, action) => {

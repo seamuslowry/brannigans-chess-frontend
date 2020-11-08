@@ -6,7 +6,13 @@ import createMockStore from 'redux-mock-store';
 import config from '../../config';
 import { Game } from '../../services/ChessService.types';
 import { emptyGame, fullGame, testStore } from '../../utils/testData';
-import reducer, { createGame, getStatusTopic, initialState, joinGame } from '../games/games';
+import reducer, {
+  createGame,
+  getStatusTopic,
+  initialState,
+  joinGame,
+  leaveGame
+} from '../games/games';
 import { STOMP_MESSAGE } from '../middleware/stomp/stomp';
 import { AppState } from '../store';
 
@@ -20,6 +26,9 @@ const server = setupServer(
     return res(ctx.json<Game>(emptyGame));
   }),
   rest.post(`${config.serviceUrl}/players/join/0`, (req, res, ctx) => {
+    return res(ctx.json<Game>(fullGame));
+  }),
+  rest.post(`${config.serviceUrl}/players/leaveq/0`, (req, res, ctx) => {
     return res(ctx.json<Game>(fullGame));
   })
 );
@@ -132,6 +141,56 @@ test('does not handle joining a game', async () => {
     undefined,
     joinGame.fulfilled(emptyGame, '', { gameId: 0, pieceColor: 'WHITE' })
   );
+
+  expect(result).toEqual(initialState);
+});
+
+test('tries to leave a game', async () => {
+  await waitFor(() => mockedStore.dispatch(leaveGame(0)));
+
+  expect(mockedStore.getActions()).toContainEqual(
+    expect.objectContaining({
+      type: leaveGame.fulfilled.type
+    })
+  );
+});
+
+test('dispatches an error when failing to leave a game', async () => {
+  server.use(
+    rest.post(`${config.serviceUrl}/players/leave/0`, (req, res, ctx) => {
+      return res(ctx.status(500));
+    })
+  );
+  await waitFor(() => mockedStore.dispatch(leaveGame(0)));
+
+  expect(mockedStore.getActions()).toContainEqual(
+    expect.objectContaining({
+      type: leaveGame.rejected.type
+    })
+  );
+});
+
+test('dispatches an error when failing to leave a game from conflict', async () => {
+  const message = 'conflict';
+  server.use(
+    rest.post(`${config.serviceUrl}/players/leave/0`, (req, res, ctx) => {
+      return res(ctx.status(409), ctx.json(message));
+    })
+  );
+  await waitFor(() => mockedStore.dispatch(leaveGame(0)));
+
+  expect(mockedStore.getActions()).toContainEqual(
+    expect.objectContaining({
+      type: leaveGame.rejected.type,
+      error: expect.objectContaining({
+        message: expect.stringContaining(message)
+      })
+    })
+  );
+});
+
+test('does not handle leaving a game', async () => {
+  const result = reducer(undefined, leaveGame.fulfilled(emptyGame, '', 0));
 
   expect(result).toEqual(initialState);
 });

@@ -19,7 +19,7 @@ import {
   whiteTake
 } from '../../utils/testData';
 import { clickTile } from '../boards/boards';
-import { joinGame } from '../games/games';
+import { joinGame, leaveGame } from '../games/games';
 import { STOMP_MESSAGE } from '../middleware/stomp/stomp';
 import { getSharedMovesTopic } from '../moves/moves';
 import reducer, { addPieces, getPieces, initialState, promotePawn } from './pieces';
@@ -259,4 +259,10 @@ test('handles joining a game', async () => {
   );
 
   expect(result.ids).not.toContain(removePiece.id);
+});
+
+test('does not handle leaving a game', async () => {
+  const result = reducer(undefined, leaveGame.fulfilled(fullGame, '', 0));
+
+  expect(result).toEqual(initialState);
 });

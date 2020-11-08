@@ -1,12 +1,9 @@
 import React from 'react';
 import { Button, ButtonProps } from '@material-ui/core';
 import { useSelector } from 'react-redux';
-import ChessService from '../../../services/ChessService';
-import { sendAlert } from '../../../store/notifications/notifications';
-import { AxiosError } from 'axios';
 import { Game, PieceColor, Player } from '../../../services/ChessService.types';
 import { AppState, useAppDispatch } from '../../../store/store';
-import { selectGameById } from '../../../store/games/games';
+import { leaveGame, selectGameById } from '../../../store/games/games';
 
 interface Props {
   gameId: number;
@@ -32,19 +29,7 @@ const LeaveGameButton: React.FC<Omit<ButtonProps, 'disabled' | 'onClick'> & Prop
 
   const handleClick = () => {
     setLoading(true);
-    ChessService.leaveGame(gameId)
-      .catch((e: AxiosError) => {
-        let alert = '';
-        if (e.response?.status === 409) {
-          alert = `Could not leave game: ${e.response.data}`;
-        } else {
-          alert = `Error while leaving: ${e.message}`;
-        }
-        dispatch(sendAlert(alert));
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+    dispatch(leaveGame(gameId)).catch(() => setLoading(false));
   };
 
   return (

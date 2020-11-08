@@ -57,6 +57,7 @@ const pieceSlice = createSlice({
         const removeIds = removePieces.map(p => p.id);
         state = piecesAdapter.removeMany(state, removeIds);
       })
+      // do not need a case for leaving a game because that should not remove pieces
       .addCase(getPieces.fulfilled, (state, action) => {
         state = piecesAdapter.upsertMany(state, action.payload);
       })

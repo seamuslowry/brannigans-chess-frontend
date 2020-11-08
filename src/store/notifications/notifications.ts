@@ -1,7 +1,7 @@
 import { Color } from '@material-ui/lab';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { clickTile } from '../boards/boards';
-import { createGame, joinGame } from '../games/games';
+import { createGame, joinGame, leaveGame } from '../games/games';
 import { getMoves } from '../moves/moves';
 import { getPieces, promotePawn } from '../pieces/pieces';
 
@@ -78,6 +78,12 @@ const notificationsSlice = createSlice({
       .addCase(joinGame.rejected, (state, action) => {
         state.pendingAlerts.push({
           message: `Could not join game: ${action.error.message}`,
+          severity: 'error'
+        });
+      })
+      .addCase(leaveGame.rejected, (state, action) => {
+        state.pendingAlerts.push({
+          message: `Could not leave game: ${action.error.message}`,
           severity: 'error'
         });
       })

@@ -16,7 +16,7 @@ import {
   testStore
 } from '../../../utils/testData';
 import LeaveGameButton from './LeaveGameButton';
-import { sendAlert } from '../../../store/notifications/notifications';
+import { leaveGame } from '../../../store/games/games';
 
 const mockStore = createMockStore<AppState, ActionCreator<AnyAction>>(getDefaultMiddleware());
 const mockedStore = mockStore(testStore);
@@ -44,11 +44,10 @@ test('leaves a white game', async () => {
   fireEvent.click(button);
 
   await waitFor(() => expect(getByTestId('leave-game-button')).toBeDisabled());
-  await waitFor(() => expect(getByTestId('leave-game-button')).not.toBeDisabled());
 
-  expect(mockedStore.getActions()).not.toContainEqual(
+  expect(mockedStore.getActions()).toContainEqual(
     expect.objectContaining({
-      type: sendAlert.type
+      type: leaveGame.pending.type
     })
   );
 });
@@ -64,68 +63,10 @@ test('leaves a black game', async () => {
   fireEvent.click(button);
 
   await waitFor(() => expect(getByTestId('leave-game-button')).toBeDisabled());
-  await waitFor(() => expect(getByTestId('leave-game-button')).not.toBeDisabled());
-
-  expect(mockedStore.getActions()).not.toContainEqual(
-    expect.objectContaining({
-      type: sendAlert.type
-    })
-  );
-});
-
-test('tries to leave a full game', async () => {
-  const errorMessage = 'test error';
-  server.use(
-    rest.post(`${config.serviceUrl}/players/leave/1`, (req, res, ctx) => {
-      return res(ctx.status(409), ctx.json(errorMessage));
-    })
-  );
-  const { getByTestId } = render(
-    <Provider store={mockedStore}>
-      <LeaveGameButton gameId={1} pieceColor="WHITE" />
-    </Provider>
-  );
-
-  const button = getByTestId('leave-game-button');
-  fireEvent.click(button);
-
-  await waitFor(() => expect(getByTestId('leave-game-button')).toBeDisabled());
-  await waitFor(() => expect(getByTestId('leave-game-button')).not.toBeDisabled());
 
   expect(mockedStore.getActions()).toContainEqual(
     expect.objectContaining({
-      type: sendAlert.type,
-      payload: expect.objectContaining({
-        message: expect.stringContaining(errorMessage)
-      })
-    })
-  );
-});
-
-test('fails to leave a slot', async () => {
-  server.use(
-    rest.post(`${config.serviceUrl}/players/leave/1`, (req, res, ctx) => {
-      return res(ctx.status(500));
-    })
-  );
-  const { getByTestId } = render(
-    <Provider store={mockedStore}>
-      <LeaveGameButton gameId={1} pieceColor="WHITE" />
-    </Provider>
-  );
-
-  const button = getByTestId('leave-game-button');
-  fireEvent.click(button);
-
-  await waitFor(() => expect(getByTestId('leave-game-button')).toBeDisabled());
-  await waitFor(() => expect(getByTestId('leave-game-button')).not.toBeDisabled());
-
-  expect(mockedStore.getActions()).toContainEqual(
-    expect.objectContaining({
-      type: sendAlert.type,
-      payload: expect.objectContaining({
-        message: expect.stringContaining('Error while leaving')
-      })
+      type: leaveGame.pending.type
     })
   );
 });
