@@ -1,9 +1,21 @@
-import { AnyAction, createEntityAdapter, createSelector, createSlice } from '@reduxjs/toolkit';
+import {
+  AnyAction,
+  createAsyncThunk,
+  createEntityAdapter,
+  createSelector,
+  createSlice
+} from '@reduxjs/toolkit';
+import ChessService from '../../services/ChessService';
 import { Game } from '../../services/ChessService.types';
 import { StompMessage, STOMP_MESSAGE } from '../middleware/stomp/stomp';
 
 const GAME_STATUS_PREFIX = `/game/status/`;
 export const getStatusTopic = (gameId: number) => `${GAME_STATUS_PREFIX}${gameId}`;
+
+export const createGame = createAsyncThunk('chess/games/createGame', async () => {
+  const response = await ChessService.createGame();
+  return response.data;
+});
 
 const gamesAdapter = createEntityAdapter<Game>();
 
@@ -15,7 +27,7 @@ const gameSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: builder => {
-    builder.addMatcher(
+    builder.addCase(createGame.fulfilled, gamesAdapter.upsertOne).addMatcher(
       (action: AnyAction): action is StompMessage => action.type === STOMP_MESSAGE,
       (state, action) => {
         if (action.payload.topic.includes(GAME_STATUS_PREFIX)) {

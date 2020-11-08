@@ -1,6 +1,7 @@
 import { Color } from '@material-ui/lab';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { clickTile } from '../boards/boards';
+import { createGame } from '../games/games';
 import { getMoves } from '../moves/moves';
 import { getPieces } from '../pieces/pieces';
 
@@ -59,6 +60,12 @@ const notificationsSlice = createSlice({
 
         state.pendingAlerts.push({
           message: `Could not find${metadataString} moves: ${action.error.message}`,
+          severity: 'error'
+        });
+      })
+      .addCase(createGame.rejected, (state, action) => {
+        state.pendingAlerts.push({
+          message: `Could not create game: ${action.error.message}`,
           severity: 'error'
         });
       })
