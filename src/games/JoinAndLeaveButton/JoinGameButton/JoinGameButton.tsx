@@ -29,7 +29,7 @@ const JoinGameButton: React.FC<Omit<ButtonProps, 'disabled' | 'onClick'> & Props
 
   const handleClick = () => {
     setLoading(true);
-    dispatch(joinGame({ gameId, pieceColor })).catch(() => setLoading(false));
+    dispatch(joinGame({ gameId, pieceColor })).finally(() => setLoading(false));
   };
 
   return (

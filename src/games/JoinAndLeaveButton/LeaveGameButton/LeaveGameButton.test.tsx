@@ -44,6 +44,7 @@ test('leaves a white game', async () => {
   fireEvent.click(button);
 
   await waitFor(() => expect(getByTestId('leave-game-button')).toBeDisabled());
+  await waitFor(() => expect(getByTestId('leave-game-button')).not.toBeDisabled());
 
   expect(mockedStore.getActions()).toContainEqual(
     expect.objectContaining({
@@ -63,6 +64,7 @@ test('leaves a black game', async () => {
   fireEvent.click(button);
 
   await waitFor(() => expect(getByTestId('leave-game-button')).toBeDisabled());
+  await waitFor(() => expect(getByTestId('leave-game-button')).not.toBeDisabled());
 
   expect(mockedStore.getActions()).toContainEqual(
     expect.objectContaining({

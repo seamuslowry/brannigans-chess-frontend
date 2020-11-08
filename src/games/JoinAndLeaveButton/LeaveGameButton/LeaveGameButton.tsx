@@ -29,7 +29,7 @@ const LeaveGameButton: React.FC<Omit<ButtonProps, 'disabled' | 'onClick'> & Prop
 
   const handleClick = () => {
     setLoading(true);
-    dispatch(leaveGame(gameId)).catch(() => setLoading(false));
+    dispatch(leaveGame(gameId)).finally(() => setLoading(false));
   };
 
   return (

@@ -44,6 +44,7 @@ test('joins a game as white', async () => {
   fireEvent.click(button);
 
   await waitFor(() => expect(getByTestId('join-game-button')).toBeDisabled());
+  await waitFor(() => expect(getByTestId('join-game-button')).not.toBeDisabled());
 
   expect(mockedStore.getActions()).toContainEqual(
     expect.objectContaining({
@@ -63,6 +64,7 @@ test('joins a game as black', async () => {
   fireEvent.click(button);
 
   await waitFor(() => expect(getByTestId('join-game-button')).toBeDisabled());
+  await waitFor(() => expect(getByTestId('join-game-button')).not.toBeDisabled());
 
   expect(mockedStore.getActions()).toContainEqual(
     expect.objectContaining({
