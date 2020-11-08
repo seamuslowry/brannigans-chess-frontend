@@ -1,7 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import ChessService from '../../services/ChessService';
 import { AdditionalPlayerInfo, Player } from '../../services/ChessService.types';
-import { playerTwo } from '../../utils/testData';
 
 interface AuthenticatePlayerParams {
   playerInfo: AdditionalPlayerInfo;
