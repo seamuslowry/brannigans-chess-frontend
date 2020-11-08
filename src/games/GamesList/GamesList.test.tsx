@@ -9,15 +9,17 @@ import { Provider } from 'react-redux';
 import GamesList from './GamesList';
 import { Game, PageResponse } from '../../services/ChessService.types';
 import config from '../../config';
-import { emptyGame, testStore } from '../../utils/testData';
+import { emptyGame, mockEntityAdapterState, testStore } from '../../utils/testData';
 import { AppState } from '../../store/store';
 
+const gamesResponse: Game[] = [emptyGame, { ...emptyGame, id: 2 }];
 const mockStore = createMockStore<AppState, ActionCreator<AnyAction>>(getDefaultMiddleware());
-const mockedStore = mockStore(testStore);
+const mockedStore = mockStore({
+  ...testStore,
+  games: mockEntityAdapterState(...gamesResponse)
+});
 
 beforeEach(() => mockedStore.clearActions());
-
-const gamesResponse: Game[] = [emptyGame, { ...emptyGame, id: 2 }];
 
 const server = setupServer(
   rest.get(`${config.serviceUrl}/games`, (req, res, ctx) => {
@@ -50,6 +52,11 @@ test('renders games as a list', async () => {
 });
 
 test('handles error when getting lists', async () => {
+  const noGamesStore = mockStore({
+    ...testStore,
+    games: mockEntityAdapterState()
+  });
+
   server.use(
     rest.get(`${config.serviceUrl}/games`, (req, res, ctx) => {
       return res(ctx.status(500));
@@ -57,7 +64,7 @@ test('handles error when getting lists', async () => {
   );
 
   render(
-    <Provider store={mockedStore}>
+    <Provider store={noGamesStore}>
       <GamesList />
     </Provider>
   );
@@ -70,6 +77,11 @@ test('handles error when getting lists', async () => {
 });
 
 test('shows a message when there are no available games', async () => {
+  const noGamesStore = mockStore({
+    ...testStore,
+    games: mockEntityAdapterState()
+  });
+
   server.use(
     rest.get(`${config.serviceUrl}/games`, (req, res, ctx) => {
       return res(
@@ -79,7 +91,7 @@ test('shows a message when there are no available games', async () => {
   );
 
   render(
-    <Provider store={mockedStore}>
+    <Provider store={noGamesStore}>
       <GamesList />
     </Provider>
   );

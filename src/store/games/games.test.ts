@@ -4,10 +4,12 @@ import { rest } from 'msw';
 import { setupServer } from 'msw/node';
 import createMockStore from 'redux-mock-store';
 import config from '../../config';
-import { Game } from '../../services/ChessService.types';
+import { Game, PageResponse } from '../../services/ChessService.types';
 import { emptyGame, fullGame, testStore } from '../../utils/testData';
 import reducer, {
+  addGames,
   createGame,
+  getGames,
   getStatusTopic,
   initialState,
   joinGame,
@@ -28,14 +30,40 @@ const server = setupServer(
   rest.post(`${config.serviceUrl}/players/join/0`, (req, res, ctx) => {
     return res(ctx.json<Game>(fullGame));
   }),
-  rest.post(`${config.serviceUrl}/players/leaveq/0`, (req, res, ctx) => {
+  rest.post(`${config.serviceUrl}/players/leave/0`, (req, res, ctx) => {
     return res(ctx.json<Game>(fullGame));
+  }),
+  rest.get(`${config.serviceUrl}/games`, (req, res, ctx) => {
+    return res(
+      ctx.json<PageResponse<Game>>({
+        content: [],
+        totalPages: 0,
+        totalElements: 0
+      })
+    );
   })
 );
 
 beforeAll(() => server.listen());
 afterEach(() => server.resetHandlers());
 afterAll(() => server.close());
+
+test('sorts games by id', () => {
+  const firstGame = {
+    ...emptyGame,
+    id: 11
+  };
+  const secondGame = {
+    ...fullGame,
+    id: 10
+  };
+
+  const firstAdd = reducer(undefined, addGames([secondGame]));
+  const result = reducer(firstAdd, addGames([firstGame]));
+
+  expect(result.ids).not.toEqual([secondGame.id, firstGame.id]);
+  expect(result.ids).toEqual([firstGame.id, secondGame.id]);
+});
 
 test('handles an message on the status topic', () => {
   const result = reducer(undefined, {
@@ -193,4 +221,55 @@ test('does not handle leaving a game', async () => {
   const result = reducer(undefined, leaveGame.fulfilled(emptyGame, '', 0));
 
   expect(result).toEqual(initialState);
+});
+
+test('tries to get a page of games', async () => {
+  await waitFor(() =>
+    mockedStore.dispatch(
+      getGames({
+        active: true,
+        page: 1
+      })
+    )
+  );
+
+  expect(mockedStore.getActions()).toContainEqual(
+    expect.objectContaining({
+      type: getGames.fulfilled.type
+    })
+  );
+});
+
+test('dispatches an error when failing to get games', async () => {
+  server.use(
+    rest.get(`${config.serviceUrl}/games`, (req, res, ctx) => {
+      return res(ctx.status(500));
+    })
+  );
+  await waitFor(() =>
+    mockedStore.dispatch(
+      getGames({
+        active: true,
+        page: 1
+      })
+    )
+  );
+
+  expect(mockedStore.getActions()).toContainEqual(
+    expect.objectContaining({
+      type: getGames.rejected.type
+    })
+  );
+});
+
+test('handles successful game retrieval', async () => {
+  const result = reducer(
+    undefined,
+    getGames.fulfilled({ content: [emptyGame], totalElements: 1, totalPages: 1 }, '', {
+      active: true,
+      page: 1
+    })
+  );
+
+  expect(result.ids).toContain(emptyGame.id);
 });

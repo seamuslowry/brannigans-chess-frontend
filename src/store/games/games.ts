@@ -51,7 +51,31 @@ export const leaveGame = createAsyncThunk('chess/games/leaveGame', async (gameId
   }
 });
 
-const gamesAdapter = createEntityAdapter<Game>();
+interface GetGamesParams {
+  active: boolean;
+  page: number;
+}
+
+const PAGE_SIZE = 10;
+const PAGE_SORT_BY = 'id';
+const PAGE_ORDER = 'desc';
+
+export const getGames = createAsyncThunk(
+  'chess/games/getGames',
+  async ({ active, page }: GetGamesParams) => {
+    const response = await ChessService.getGames(active, {
+      page: page - 1,
+      size: PAGE_SIZE,
+      order: PAGE_ORDER,
+      orderBy: PAGE_SORT_BY
+    });
+    return response.data;
+  }
+);
+
+const gamesAdapter = createEntityAdapter<Game>({
+  sortComparer: (a, b) => b.id - a.id // sort games asc
+});
 
 export const initialState = gamesAdapter.getInitialState();
 export type GameState = typeof initialState;
@@ -59,25 +83,40 @@ export type GameState = typeof initialState;
 const gameSlice = createSlice({
   name: 'chess/games',
   initialState,
-  reducers: {},
+  reducers: {
+    addGames: gamesAdapter.upsertMany
+  },
   extraReducers: builder => {
     // do not need a case for join because the status topic will update the game info
     // do not need a case for leave because the status topic will update the game info
-    builder.addCase(createGame.fulfilled, gamesAdapter.upsertOne).addMatcher(
-      (action: AnyAction): action is StompMessage => action.type === STOMP_MESSAGE,
-      (state, action) => {
-        if (action.payload.topic.includes(GAME_STATUS_PREFIX)) {
-          const game: Game = JSON.parse(action.payload.data);
-          state = gamesAdapter.upsertOne(state, game);
+    builder
+      .addCase(createGame.fulfilled, gamesAdapter.upsertOne)
+      .addCase(getGames.fulfilled, (state, action) => {
+        state = gamesAdapter.upsertMany(state, action.payload.content);
+      })
+      .addMatcher(
+        (action: AnyAction): action is StompMessage => action.type === STOMP_MESSAGE,
+        (state, action) => {
+          if (action.payload.topic.includes(GAME_STATUS_PREFIX)) {
+            const game: Game = JSON.parse(action.payload.data);
+            state = gamesAdapter.upsertOne(state, game);
+          }
         }
-      }
-    );
+      );
   }
 });
 
-export const { selectById: selectGameById } = gamesAdapter.getSelectors();
+export const { addGames } = gameSlice.actions;
+
+export const { selectById: selectGameById, selectAll: selectGames } = gamesAdapter.getSelectors();
 
 export const selectWhiteId = createSelector(selectGameById, game => game?.whitePlayer?.authId);
 export const selectBlackId = createSelector(selectGameById, game => game?.blackPlayer?.authId);
+
+export const selectPage = createSelector(
+  selectGames,
+  (_: GameState, page: number) => page,
+  (games, page) => games.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE)
+);
 
 export default gameSlice.reducer;
