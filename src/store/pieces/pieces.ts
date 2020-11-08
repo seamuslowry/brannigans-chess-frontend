@@ -12,25 +12,28 @@ import { joinGame } from '../games/games';
 import { StompMessage, STOMP_MESSAGE } from '../middleware/stomp/stomp';
 import { SHARED_MOVES_PREFIX } from '../moves/moves';
 
+interface GetPiecesParams {
+  gameId: number;
+  colors: PieceColor[];
+  status?: PieceStatus;
+}
+
 export const getPieces = createAsyncThunk(
   'chess/pieces/getPieces',
-  async ({
-    gameId,
-    colors,
-    status
-  }: {
-    gameId: number;
-    colors: PieceColor[];
-    status?: PieceStatus;
-  }) => {
+  async ({ gameId, colors, status }: GetPiecesParams) => {
     const response = await ChessService.getPieces(gameId, colors, status);
     return response.data;
   }
 );
 
+interface PromotePawnParams {
+  pieceId: number;
+  type: PieceType;
+}
+
 export const promotePawn = createAsyncThunk(
   'chess/pieces/promotePawn',
-  async ({ pieceId, type }: { pieceId: number; type: PieceType }) => {
+  async ({ pieceId, type }: PromotePawnParams) => {
     const res = await ChessService.promote(pieceId, type);
     return res.data;
   }

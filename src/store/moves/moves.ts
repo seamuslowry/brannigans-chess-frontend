@@ -13,9 +13,14 @@ import { StompMessage, STOMP_MESSAGE } from '../middleware/stomp/stomp';
 export const SHARED_MOVES_PREFIX = `/game/moves/`;
 export const getSharedMovesTopic = (gameId: number) => `${SHARED_MOVES_PREFIX}${gameId}`;
 
+interface GetMovesParams {
+  gameId: number;
+  colors: PieceColor[];
+}
+
 export const getMoves = createAsyncThunk(
   'chess/moves/getMoves',
-  async ({ gameId, colors }: { gameId: number; colors: PieceColor[] }) => {
+  async ({ gameId, colors }: GetMovesParams) => {
     const response = await ChessService.getMoves(gameId, colors);
     return response.data;
   }
