@@ -9,15 +9,12 @@ import { Provider } from 'react-redux';
 import GamesList from './GamesList';
 import { Game, PageResponse } from '../../services/ChessService.types';
 import config from '../../config';
-import { emptyGame, mockEntityAdapterState, testStore } from '../../utils/testData';
+import { emptyGame, testStore } from '../../utils/testData';
 import { AppState } from '../../store/store';
 
 const gamesResponse: Game[] = [emptyGame, { ...emptyGame, id: 2 }];
 const mockStore = createMockStore<AppState, ActionCreator<AnyAction>>(getDefaultMiddleware());
-const mockedStore = mockStore({
-  ...testStore,
-  games: mockEntityAdapterState(...gamesResponse)
-});
+const mockedStore = mockStore(testStore);
 
 beforeEach(() => mockedStore.clearActions());
 
@@ -52,11 +49,6 @@ test('renders games as a list', async () => {
 });
 
 test('handles error when getting lists', async () => {
-  const noGamesStore = mockStore({
-    ...testStore,
-    games: mockEntityAdapterState()
-  });
-
   server.use(
     rest.get(`${config.serviceUrl}/games`, (req, res, ctx) => {
       return res(ctx.status(500));
@@ -64,7 +56,7 @@ test('handles error when getting lists', async () => {
   );
 
   render(
-    <Provider store={noGamesStore}>
+    <Provider store={mockedStore}>
       <GamesList />
     </Provider>
   );
@@ -77,11 +69,6 @@ test('handles error when getting lists', async () => {
 });
 
 test('shows a message when there are no available games', async () => {
-  const noGamesStore = mockStore({
-    ...testStore,
-    games: mockEntityAdapterState()
-  });
-
   server.use(
     rest.get(`${config.serviceUrl}/games`, (req, res, ctx) => {
       return res(
@@ -91,7 +78,7 @@ test('shows a message when there are no available games', async () => {
   );
 
   render(
-    <Provider store={noGamesStore}>
+    <Provider store={mockedStore}>
       <GamesList />
     </Provider>
   );

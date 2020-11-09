@@ -9,7 +9,6 @@ import { emptyGame, fullGame, testStore } from '../../utils/testData';
 import reducer, {
   addGames,
   createGame,
-  getGames,
   getStatusTopic,
   initialState,
   joinGame,
@@ -221,55 +220,4 @@ test('does not handle leaving a game', async () => {
   const result = reducer(undefined, leaveGame.fulfilled(emptyGame, '', 0));
 
   expect(result).toEqual(initialState);
-});
-
-test('tries to get a page of games', async () => {
-  await waitFor(() =>
-    mockedStore.dispatch(
-      getGames({
-        active: true,
-        page: 1
-      })
-    )
-  );
-
-  expect(mockedStore.getActions()).toContainEqual(
-    expect.objectContaining({
-      type: getGames.fulfilled.type
-    })
-  );
-});
-
-test('dispatches an error when failing to get games', async () => {
-  server.use(
-    rest.get(`${config.serviceUrl}/games`, (req, res, ctx) => {
-      return res(ctx.status(500));
-    })
-  );
-  await waitFor(() =>
-    mockedStore.dispatch(
-      getGames({
-        active: true,
-        page: 1
-      })
-    )
-  );
-
-  expect(mockedStore.getActions()).toContainEqual(
-    expect.objectContaining({
-      type: getGames.rejected.type
-    })
-  );
-});
-
-test('handles successful game retrieval', async () => {
-  const result = reducer(
-    undefined,
-    getGames.fulfilled({ content: [emptyGame], totalElements: 1, totalPages: 1 }, '', {
-      active: true,
-      page: 1
-    })
-  );
-
-  expect(result.ids).toContain(emptyGame.id);
 });
