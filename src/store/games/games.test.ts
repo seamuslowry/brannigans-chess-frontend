@@ -7,7 +7,6 @@ import config from '../../config';
 import { Game, PageResponse } from '../../services/ChessService.types';
 import { emptyGame, fullGame, testStore } from '../../utils/testData';
 import reducer, {
-  addGames,
   createGame,
   getStatusTopic,
   initialState,
@@ -46,23 +45,6 @@ const server = setupServer(
 beforeAll(() => server.listen());
 afterEach(() => server.resetHandlers());
 afterAll(() => server.close());
-
-test('sorts games by id', () => {
-  const firstGame = {
-    ...emptyGame,
-    id: 11
-  };
-  const secondGame = {
-    ...fullGame,
-    id: 10
-  };
-
-  const firstAdd = reducer(undefined, addGames([secondGame]));
-  const result = reducer(firstAdd, addGames([firstGame]));
-
-  expect(result.ids).not.toEqual([secondGame.id, firstGame.id]);
-  expect(result.ids).toEqual([firstGame.id, secondGame.id]);
-});
 
 test('handles an message on the status topic', () => {
   const result = reducer(undefined, {

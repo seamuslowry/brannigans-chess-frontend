@@ -51,9 +51,7 @@ export const leaveGame = createAsyncThunk('chess/games/leaveGame', async (gameId
   }
 });
 
-const gamesAdapter = createEntityAdapter<Game>({
-  sortComparer: (a, b) => b.id - a.id // sort games asc
-});
+const gamesAdapter = createEntityAdapter<Game>();
 
 export const initialState = gamesAdapter.getInitialState();
 export type GameState = typeof initialState;
@@ -61,9 +59,7 @@ export type GameState = typeof initialState;
 const gameSlice = createSlice({
   name: 'chess/games',
   initialState,
-  reducers: {
-    addGames: gamesAdapter.upsertMany
-  },
+  reducers: {},
   extraReducers: builder => {
     // do not need a case for join because the status topic will update the game info
     // do not need a case for leave because the status topic will update the game info
@@ -78,8 +74,6 @@ const gameSlice = createSlice({
     );
   }
 });
-
-export const { addGames } = gameSlice.actions;
 
 export const { selectById: selectGameById, selectAll: selectGames } = gamesAdapter.getSelectors();
 
