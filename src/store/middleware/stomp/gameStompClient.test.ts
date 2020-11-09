@@ -99,6 +99,7 @@ test('unsubscribes from a topic with no subscribers', () => {
 
   client.unsubscribe(topic);
 
+  expect(Object.keys(client.subscriptions)).not.toContain(topic);
   expect(client.subscriptions[topic]).toBeUndefined();
 });
 
@@ -120,6 +121,7 @@ test('unsubscribes from a topic with one subscriber', () => {
   client.unsubscribe(topic);
 
   expect(unsubscribeFn).toHaveBeenCalledTimes(1);
+  expect(Object.keys(client.subscriptions)).not.toContain(topic);
   expect(client.subscriptions[topic]).toBeUndefined();
 });
 
