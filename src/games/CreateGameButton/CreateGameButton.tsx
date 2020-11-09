@@ -2,9 +2,9 @@ import React from 'react';
 import { CircularProgress, Fab, makeStyles } from '@material-ui/core';
 import { Add } from '@material-ui/icons';
 import { useHistory } from 'react-router-dom';
-import ChessService from '../../services/ChessService';
-import { sendAlert } from '../../store/notifications/notifications';
 import { useAppDispatch } from '../../store/store';
+import { createGame } from '../../store/games/games';
+import { unwrapResult } from '@reduxjs/toolkit';
 
 const useStyles = makeStyles(theme => ({
   fab: {
@@ -23,15 +23,10 @@ const CreateGameButton: React.FC = () => {
 
   const handleClick = () => {
     setLoading(true);
-    ChessService.createGame()
-      .then(res => {
-        setLoading(false); // putting this in a `finally` results in a warning for updating an unmounted component
-        history.push(`/game/${res.data.id}`);
-      })
-      .catch(e => {
-        dispatch(sendAlert(`Could not create game: ${e.message}`));
-        setLoading(false); // putting this in a `finally` results in a warning for updating an unmounted component
-      });
+    dispatch(createGame())
+      .then(unwrapResult)
+      .then(game => history.push(`/game/${game.id}`))
+      .catch(() => setLoading(false));
   };
 
   return (

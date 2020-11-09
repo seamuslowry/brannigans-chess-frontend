@@ -2,18 +2,11 @@ import React from 'react';
 import { Box, CircularProgress, makeStyles, Paper } from '@material-ui/core';
 import { useSelector } from 'react-redux';
 import { Move as MoveEntity } from '../../services/ChessService.types';
-import {
-  addMoves,
-  clearMoves,
-  getSharedMovesTopic,
-  selectAllMoves
-} from '../../store/activeGame/activeGame';
-import { sendAlert } from '../../store/notifications/notifications';
 import { AppState, useAppDispatch } from '../../store/store';
 import Move from '../Move/Move';
-import ChessService from '../../services/ChessService';
 import useGameColors from '../../utils/useGameColor';
 import useSubscription from '../../utils/useSubscription';
+import { getMoves, getSharedMovesTopic, makeSelectMoves } from '../../store/moves/moves';
 
 interface Props {
   gameId: number;
@@ -36,27 +29,15 @@ const MoveList: React.FC<Props> = ({ gameId }) => {
 
   const ref = React.useRef<HTMLElement | null>(null);
 
-  const colors = useGameColors();
+  const colors = useGameColors(gameId);
 
   React.useEffect(() => {
     setLoading(true);
-    ChessService.getMoves(gameId, colors)
-      .then(res => {
-        dispatch(addMoves(res.data));
-      })
-      .catch(e => {
-        dispatch(sendAlert(`Could not find ${colors} moves: ${e.message}`));
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-
-    return () => {
-      dispatch(clearMoves());
-    };
+    dispatch(getMoves({ gameId, colors })).finally(() => setLoading(false));
   }, [gameId, colors, dispatch]);
 
-  const moves = useSelector<AppState, MoveEntity[]>(selectAllMoves);
+  const selectMoves = React.useMemo(makeSelectMoves, []);
+  const moves = useSelector<AppState, MoveEntity[]>(state => selectMoves(state.moves, gameId));
 
   React.useEffect(() => {
     moves.length && ref.current && (ref.current.scrollTop = ref.current.scrollHeight);

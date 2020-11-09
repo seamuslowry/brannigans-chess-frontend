@@ -9,16 +9,12 @@ import { mockEntityAdapterState, testStore, whiteMove } from '../../utils/testDa
 import { Move } from '../../services/ChessService.types';
 import config from '../../config';
 import MoveList from './MoveList';
-import { addMoves, clearMoves } from '../../store/activeGame/activeGame';
-import { sendAlert } from '../../store/notifications/notifications';
+import { getMoves } from '../../store/moves/moves';
 
 const mockStore = createMockStore(getDefaultMiddleware());
 const mockedStore = mockStore({
   ...testStore,
-  activeGame: {
-    ...testStore.activeGame,
-    moves: mockEntityAdapterState(whiteMove)
-  }
+  moves: mockEntityAdapterState(whiteMove)
 });
 
 const server = setupServer(
@@ -45,7 +41,7 @@ test('gets moves on mount', async () => {
 
   expect(mockedStore.getActions()).toContainEqual(
     expect.objectContaining({
-      type: addMoves.type
+      type: getMoves.fulfilled.type
     })
   );
 });
@@ -67,25 +63,7 @@ test('handles an error getting moves on mount', async () => {
 
   expect(mockedStore.getActions()).toContainEqual(
     expect.objectContaining({
-      type: sendAlert.type
-    })
-  );
-});
-
-test('clears moves on unmount', async () => {
-  const { getByRole, unmount } = render(
-    <Provider store={mockedStore}>
-      <MoveList gameId={0} />
-    </Provider>
-  );
-
-  await waitForElementToBeRemoved(() => getByRole('progressbar')); // wait for service call to complete
-
-  unmount();
-
-  expect(mockedStore.getActions()).toContainEqual(
-    expect.objectContaining({
-      type: clearMoves.type
+      type: getMoves.rejected.type
     })
   );
 });

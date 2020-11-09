@@ -62,7 +62,7 @@ class GameStompClient {
     if (!existingSub) return;
     if (existingSub && existingSub.subscribers <= 1) {
       existingSub.subscription && existingSub.subscription.unsubscribe();
-      this.subscriptions[topic] = undefined;
+      delete this.subscriptions[topic];
     } else {
       this.subscriptions[topic] = {
         ...existingSub,

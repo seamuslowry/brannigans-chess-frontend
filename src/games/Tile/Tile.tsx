@@ -2,11 +2,13 @@ import { Box, makeStyles, Theme, useTheme } from '@material-ui/core';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { Piece as PieceEntity } from '../../services/ChessService.types';
-import { clickTile, makeGetActivePiece, makeGetSelected } from '../../store/activeGame/activeGame';
+import { clickTile, makeGetSelected } from '../../store/boards/boards';
+import { makeGetActivePiece } from '../../store/pieces/pieces';
 import { AppState, useAppDispatch } from '../../store/store';
 import Piece from '../Piece/Piece';
 
 interface Props {
+  gameId: number;
   row: number;
   col: number;
 }
@@ -34,23 +36,25 @@ const getBgColor = (theme: Theme, row: number, col: number, selected: boolean) =
   }
 };
 
-const Tile: React.FC<Props> = ({ row, col }) => {
+const Tile: React.FC<Props> = ({ row, col, gameId }) => {
   const theme = useTheme();
   const dispatch = useAppDispatch();
-  const classes = useStyles({ row, col });
+  const classes = useStyles({ row, col, gameId });
 
   const getSelected = React.useMemo(makeGetSelected, []);
   const getActivePiece = React.useMemo(makeGetActivePiece, []);
 
-  const selected = useSelector<AppState, boolean>(state => getSelected(state, { row, col }));
+  const selected = useSelector<AppState, boolean>(state =>
+    getSelected(state.boards, gameId, { row, col })
+  );
   const piece = useSelector<AppState, PieceEntity | undefined>(state =>
-    getActivePiece(state, { row, col })
+    getActivePiece(state.pieces, gameId, { row, col })
   );
 
   const bgColor = getBgColor(theme, row, col, selected);
 
   const handleClick = () => {
-    dispatch(clickTile({ row, col }));
+    dispatch(clickTile({ row, col, gameId }));
   };
 
   return (

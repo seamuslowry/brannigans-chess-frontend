@@ -4,7 +4,7 @@ import { ActionCreator, AnyAction, getDefaultMiddleware } from '@reduxjs/toolkit
 import createMockStore from 'redux-mock-store';
 import { Provider } from 'react-redux';
 import GameStatus from './GameStatus';
-import { playerOne, testStore } from '../../utils/testData';
+import { emptyGame, mockEntityAdapterState, playerOne, testStore } from '../../utils/testData';
 import { AppState } from '../../store/store';
 
 const mockStore = createMockStore<AppState, ActionCreator<AnyAction>>(getDefaultMiddleware());
@@ -15,10 +15,10 @@ beforeEach(() => mockedStore.clearActions());
 test('shows the most recent status of the game when available', async () => {
   const storeWithStatusMessage = mockStore({
     ...testStore,
-    activeGame: {
-      ...testStore.activeGame,
+    games: mockEntityAdapterState({
+      ...emptyGame,
       status: 'BLACK_TURN'
-    }
+    })
   });
 
   const { getByText } = render(
@@ -47,10 +47,10 @@ test('shows unknown when game status is unavailable', async () => {
 test('shows the white player when available', async () => {
   const storeWithStatusMessage = mockStore({
     ...testStore,
-    activeGame: {
-      ...testStore.activeGame,
+    games: mockEntityAdapterState({
+      ...emptyGame,
       whitePlayer: playerOne
-    }
+    })
   });
 
   const { getByText } = render(
@@ -79,10 +79,10 @@ test('shows the join button when white player is not taken', async () => {
 test('shows the black player when available', async () => {
   const storeWithStatusMessage = mockStore({
     ...testStore,
-    activeGame: {
-      ...testStore.activeGame,
+    games: mockEntityAdapterState({
+      ...emptyGame,
       blackPlayer: playerOne
-    }
+    })
   });
 
   const { getByText } = render(

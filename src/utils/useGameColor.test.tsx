@@ -4,7 +4,7 @@ import { Provider } from 'react-redux';
 import { ActionCreator, AnyAction, getDefaultMiddleware } from '@reduxjs/toolkit';
 import createMockStore from 'redux-mock-store';
 import { AppState } from '../store/store';
-import { playerOne, playerTwo, testStore } from './testData';
+import { emptyGame, mockEntityAdapterState, playerOne, playerTwo, testStore } from './testData';
 import useGameColors from './useGameColor';
 
 const mockStore = createMockStore<AppState, ActionCreator<AnyAction>>(getDefaultMiddleware());
@@ -15,18 +15,18 @@ beforeEach(() => mockedStore.clearActions());
 test('should determine that the logged in player is white', async () => {
   const mockedWhiteStore = mockStore({
     ...testStore,
-    activeGame: {
-      ...testStore.activeGame,
+    games: mockEntityAdapterState({
+      ...emptyGame,
       whitePlayer: playerOne,
       blackPlayer: playerTwo
-    },
+    }),
     auth: {
       ...testStore.auth,
       player: playerOne
     }
   });
 
-  const { result } = renderHook(() => useGameColors(), {
+  const { result } = renderHook(() => useGameColors(emptyGame.id), {
     wrapper: ({ children }) => <Provider store={mockedWhiteStore}>{children}</Provider>
   });
 
@@ -36,18 +36,18 @@ test('should determine that the logged in player is white', async () => {
 test('should determine that the logged in player is black', async () => {
   const mockedBlackStore = mockStore({
     ...testStore,
-    activeGame: {
-      ...testStore.activeGame,
+    games: mockEntityAdapterState({
+      ...emptyGame,
       whitePlayer: playerOne,
       blackPlayer: playerTwo
-    },
+    }),
     auth: {
       ...testStore.auth,
       player: playerTwo
     }
   });
 
-  const { result } = renderHook(() => useGameColors(), {
+  const { result } = renderHook(() => useGameColors(emptyGame.id), {
     wrapper: ({ children }) => <Provider store={mockedBlackStore}>{children}</Provider>
   });
 
@@ -57,16 +57,14 @@ test('should determine that the logged in player is black', async () => {
 test('should determine that the logged in player is not in the game', async () => {
   const mockedBlackStore = mockStore({
     ...testStore,
-    activeGame: {
-      ...testStore.activeGame
-    },
+    games: mockEntityAdapterState(emptyGame),
     auth: {
       ...testStore.auth,
       player: playerTwo
     }
   });
 
-  const { result } = renderHook(() => useGameColors(), {
+  const { result } = renderHook(() => useGameColors(emptyGame.id), {
     wrapper: ({ children }) => <Provider store={mockedBlackStore}>{children}</Provider>
   });
 

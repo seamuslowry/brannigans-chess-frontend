@@ -1,12 +1,10 @@
 import { errorAlertInfo, successAlertInfo } from '../../utils/testData';
-import { getPieces, clickTile } from '../activeGame/activeGame';
-import reducer, { initialState, sendAlert, AlertInfo, removeAlert } from './notifications';
-
-test('sends an alert', () => {
-  const result = reducer(undefined, sendAlert(successAlertInfo.message, successAlertInfo.severity));
-
-  expect(result.pendingAlerts).toContainEqual(successAlertInfo);
-});
+import { authenticatePlayer } from '../auth/auth';
+import { clickTile } from '../boards/boards';
+import { createGame, joinGame, leaveGame } from '../games/games';
+import { getMoves } from '../moves/moves';
+import { getPieces, promotePawn } from '../pieces/pieces';
+import reducer, { initialState, AlertInfo, removeAlert } from './notifications';
 
 test('removes an alert', () => {
   const alerts: AlertInfo[] = [
@@ -35,7 +33,24 @@ test('removes an alert', () => {
 
 test('shows a notification on piece retrieval failure', async () => {
   const message = 'test message';
-  const result = reducer(undefined, getPieces.rejected(new Error(message), '', { gameId: 0 }));
+  const result = reducer(
+    undefined,
+    getPieces.rejected(new Error(message), '', { gameId: 0, colors: [] })
+  );
+
+  expect(result.pendingAlerts).toContainEqual(
+    expect.objectContaining({
+      message: expect.stringContaining(message)
+    })
+  );
+});
+
+test('shows a notification on move retrieval failure', async () => {
+  const message = 'test message';
+  const result = reducer(
+    undefined,
+    getMoves.rejected(new Error(message), '', { gameId: 0, colors: [] })
+  );
 
   expect(result.pendingAlerts).toContainEqual(
     expect.objectContaining({
@@ -46,7 +61,77 @@ test('shows a notification on piece retrieval failure', async () => {
 
 test('shows a notification on an attempted move failure', async () => {
   const message = 'test message';
-  const result = reducer(undefined, clickTile.rejected(new Error(message), '', { row: 0, col: 0 }));
+  const result = reducer(
+    undefined,
+    clickTile.rejected(new Error(message), '', { gameId: 0, row: 0, col: 0 })
+  );
+
+  expect(result.pendingAlerts).toContainEqual(
+    expect.objectContaining({
+      message: expect.stringContaining(message)
+    })
+  );
+});
+
+test('shows a notification on a game creation failure', async () => {
+  const message = 'test message';
+  const result = reducer(undefined, createGame.rejected(new Error(message), '', undefined));
+
+  expect(result.pendingAlerts).toContainEqual(
+    expect.objectContaining({
+      message: expect.stringContaining(message)
+    })
+  );
+});
+
+test('shows a notification on pawn promotion failure', async () => {
+  const message = 'test message';
+  const result = reducer(
+    undefined,
+    promotePawn.rejected(new Error(message), '', { pieceId: 0, type: 'BISHOP' })
+  );
+
+  expect(result.pendingAlerts).toContainEqual(
+    expect.objectContaining({
+      message: expect.stringContaining(message)
+    })
+  );
+});
+
+test('shows a notification on join game failure', async () => {
+  const message = 'test message';
+  const result = reducer(
+    undefined,
+    joinGame.rejected(new Error(message), '', { gameId: 0, pieceColor: 'WHITE' })
+  );
+
+  expect(result.pendingAlerts).toContainEqual(
+    expect.objectContaining({
+      message: expect.stringContaining(message)
+    })
+  );
+});
+
+test('shows a notification on leave game failure', async () => {
+  const message = 'test message';
+  const result = reducer(undefined, leaveGame.rejected(new Error(message), '', 0));
+
+  expect(result.pendingAlerts).toContainEqual(
+    expect.objectContaining({
+      message: expect.stringContaining(message)
+    })
+  );
+});
+
+test('shows a notification on player authenticate failure', async () => {
+  const message = 'test message';
+  const result = reducer(
+    undefined,
+    authenticatePlayer.rejected(new Error(message), '', {
+      getAccessToken: jest.fn(),
+      playerInfo: { name: 'test', imageUrl: 'test' }
+    })
+  );
 
   expect(result.pendingAlerts).toContainEqual(
     expect.objectContaining({

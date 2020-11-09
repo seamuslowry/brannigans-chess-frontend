@@ -6,7 +6,6 @@ import { setupServer } from 'msw/node';
 import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { getDefaultMiddleware } from '@reduxjs/toolkit';
-import { clearGame, setGameId } from '../../store/activeGame/activeGame';
 import { testStore } from '../../utils/testData';
 import ActiveGame from './ActiveGame';
 import config from '../../config';
@@ -30,8 +29,8 @@ beforeAll(() => server.listen());
 afterEach(() => server.resetHandlers());
 afterAll(() => server.close());
 
-test('sets and unsets the game id', async () => {
-  const { container, getAllByRole, unmount } = render(
+test('renders', async () => {
+  const { container, getAllByRole } = render(
     <Provider store={mockedStore}>
       <MemoryRouter initialEntries={['/test/1']}>
         <Route path="/test/:id">
@@ -40,22 +39,7 @@ test('sets and unsets the game id', async () => {
       </MemoryRouter>
     </Provider>
   );
-
-  expect(container).toBeInTheDocument();
-  expect(mockedStore.getActions()).toContainEqual(
-    expect.objectContaining({
-      type: setGameId.type,
-      payload: 1
-    })
-  );
-
   await waitForElementToBeRemoved(() => getAllByRole('progressbar')); // wait for service calls to complete
 
-  unmount();
-
-  expect(mockedStore.getActions()).toContainEqual(
-    expect.objectContaining({
-      type: clearGame.type
-    })
-  );
+  expect(container).toBeInTheDocument();
 });

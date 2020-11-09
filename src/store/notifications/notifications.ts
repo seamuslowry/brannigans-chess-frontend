@@ -1,6 +1,10 @@
 import { Color } from '@material-ui/lab';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { getPieces, clickTile } from '../activeGame/activeGame';
+import { authenticatePlayer } from '../auth/auth';
+import { clickTile } from '../boards/boards';
+import { createGame, joinGame, leaveGame } from '../games/games';
+import { getMoves } from '../moves/moves';
+import { getPieces, promotePawn } from '../pieces/pieces';
 
 export interface AlertInfo {
   message: string;
@@ -23,12 +27,6 @@ const notificationsSlice = createSlice({
   name: 'chess/notifications',
   initialState,
   reducers: {
-    sendAlert: {
-      reducer: (state, action: PayloadAction<AlertInfo>) => {
-        state.pendingAlerts.push(action.payload);
-      },
-      prepare: prepareAlertInfo
-    },
     removeAlert: {
       reducer: (state, action: PayloadAction<AlertInfo>) => {
         state.pendingAlerts = state.pendingAlerts.filter(
@@ -39,25 +37,66 @@ const notificationsSlice = createSlice({
     }
   },
   extraReducers: builder => {
-    builder.addCase(getPieces.rejected, (state, action) => {
-      const { colors = [], status = '' } = action.meta.arg;
+    builder
+      .addCase(getPieces.rejected, (state, action) => {
+        const { colors, status = '' } = action.meta.arg;
 
-      const metadataString = ` ${colors.join(' and ')} ${status}`.trimEnd();
+        const metadataString = ` ${colors.join(' and ')} ${status}`.trimEnd();
 
-      state.pendingAlerts.push({
-        message: `Could not find${metadataString} pieces: ${action.error.message}`,
-        severity: 'error'
+        state.pendingAlerts.push({
+          message: `Could not find${metadataString} pieces: ${action.error.message}`,
+          severity: 'error'
+        });
+      })
+      .addCase(getMoves.rejected, (state, action) => {
+        const { colors } = action.meta.arg;
+
+        const metadataString = ` ${colors.join(' and ')}`.trimEnd();
+
+        state.pendingAlerts.push({
+          message: `Could not find${metadataString} moves: ${action.error.message}`,
+          severity: 'error'
+        });
+      })
+      .addCase(createGame.rejected, (state, action) => {
+        state.pendingAlerts.push({
+          message: `Could not create game: ${action.error.message}`,
+          severity: 'error'
+        });
+      })
+      .addCase(promotePawn.rejected, (state, action) => {
+        state.pendingAlerts.push({
+          message: `Failed to promote the piece: ${action.error.message}`,
+          severity: 'error'
+        });
+      })
+      .addCase(joinGame.rejected, (state, action) => {
+        state.pendingAlerts.push({
+          message: `Could not join game: ${action.error.message}`,
+          severity: 'error'
+        });
+      })
+      .addCase(leaveGame.rejected, (state, action) => {
+        state.pendingAlerts.push({
+          message: `Could not leave game: ${action.error.message}`,
+          severity: 'error'
+        });
+      })
+      .addCase(authenticatePlayer.rejected, (state, action) => {
+        state.pendingAlerts.push({
+          message: `Error finding Player: ${action.error.message}`,
+          severity: 'error'
+        });
+      })
+      .addCase(clickTile.rejected, (state, action) => {
+        state.pendingAlerts.push({
+          message: `${action.error.message}`,
+          severity: 'error'
+        });
       });
-    });
-    builder.addCase(clickTile.rejected, (state, action) => {
-      state.pendingAlerts.push({
-        message: `${action.error.message}`,
-        severity: 'error'
-      });
-    });
   }
 });
 
-export const { sendAlert, removeAlert } = notificationsSlice.actions;
+export const { removeAlert } = notificationsSlice.actions;
 
 export default notificationsSlice.reducer;

@@ -7,7 +7,6 @@ import {
   PageResponse,
   Piece,
   PieceColor,
-  PieceIdentitifierDto,
   PieceStatus,
   PieceType,
   Player
@@ -54,8 +53,8 @@ const move = (gameId: number, srcRow: number, srcCol: number, dstRow: number, ds
     dstCol
   });
 
-const promote = (type: PieceType, dto: PieceIdentitifierDto) =>
-  chessApi.post<Piece>(`pieces/promote/${type}`, dto);
+const promote = (pieceId: number, type: PieceType) =>
+  chessApi.post<Piece>(`pieces/promote/${pieceId}/${type}`);
 
 const createGame = () => chessApi.post<Game>('games/create');
 

@@ -1,8 +1,7 @@
 import React from 'react';
-import { render, waitFor, screen, fireEvent } from '@testing-library/react';
+import { render, waitFor, screen, fireEvent, act } from '@testing-library/react';
 import { rest } from 'msw';
 import { setupServer } from 'msw/node';
-import { act } from 'react-test-renderer';
 import { MemoryRouter } from 'react-router-dom';
 import { ActionCreator, AnyAction, getDefaultMiddleware } from '@reduxjs/toolkit';
 import createMockStore from 'redux-mock-store';
@@ -13,12 +12,11 @@ import config from '../../config';
 import { emptyGame, testStore } from '../../utils/testData';
 import { AppState } from '../../store/store';
 
+const gamesResponse: Game[] = [emptyGame, { ...emptyGame, id: 2 }];
 const mockStore = createMockStore<AppState, ActionCreator<AnyAction>>(getDefaultMiddleware());
 const mockedStore = mockStore(testStore);
 
 beforeEach(() => mockedStore.clearActions());
-
-const gamesResponse: Game[] = [emptyGame, { ...emptyGame, id: 2 }];
 
 const server = setupServer(
   rest.get(`${config.serviceUrl}/games`, (req, res, ctx) => {

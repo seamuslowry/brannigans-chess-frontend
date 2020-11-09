@@ -23,6 +23,7 @@ export interface Piece {
   positionRow: number;
   positionCol: number;
   status: PieceStatus;
+  gameId: number;
   id: number;
 }
 
@@ -64,12 +65,6 @@ export interface PageResponse<T> {
   content: T[];
   totalPages: number;
   totalElements: number;
-}
-
-export interface PieceIdentitifierDto {
-  gameId: number;
-  row: number;
-  col: number;
 }
 
 export interface AdditionalPlayerInfo {

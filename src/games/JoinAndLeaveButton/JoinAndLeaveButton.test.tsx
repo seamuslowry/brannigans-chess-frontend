@@ -5,7 +5,7 @@ import createMockStore from 'redux-mock-store';
 import { Provider } from 'react-redux';
 import { AppState } from '@auth0/auth0-react/dist/auth0-provider';
 import JoinAndLeaveButton from './JoinAndLeaveButton';
-import { playerOne, testStore } from '../../utils/testData';
+import { emptyGame, mockEntityAdapterState, playerOne, testStore } from '../../utils/testData';
 
 const mockStore = createMockStore<AppState, ActionCreator<AnyAction>>(getDefaultMiddleware());
 const mockedStore = mockStore(testStore);
@@ -43,10 +43,11 @@ test('allows to leave a black game', async () => {
       ...testStore.auth,
       player: playerOne
     },
-    activeGame: {
-      ...testStore.activeGame,
+    games: mockEntityAdapterState({
+      ...emptyGame,
+      id: 1,
       blackPlayer: playerOne
-    }
+    })
   });
 
   const { getByText } = render(
@@ -67,10 +68,11 @@ test('allows to leave a white game', async () => {
       ...testStore.auth,
       player: playerOne
     },
-    activeGame: {
-      ...testStore.activeGame,
+    games: mockEntityAdapterState({
+      ...emptyGame,
+      id: 1,
       whitePlayer: playerOne
-    }
+    })
   });
 
   const { getByText } = render(
