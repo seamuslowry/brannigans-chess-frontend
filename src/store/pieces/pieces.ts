@@ -52,6 +52,7 @@ const pieceSlice = createSlice({
   },
   extraReducers: builder => {
     builder
+      // do not need a case for leaving a game because that should not remove pieces
       .addCase(joinGame.fulfilled, (state, action) => {
         const { gameId, pieceColor } = action.meta.arg;
         const removePieces = Object.values(state.entities).filter(
@@ -60,7 +61,6 @@ const pieceSlice = createSlice({
         const removeIds = removePieces.map(p => p.id);
         state = piecesAdapter.removeMany(state, removeIds);
       })
-      // do not need a case for leaving a game because that should not remove pieces
       .addCase(getPieces.fulfilled, (state, action) => {
         state = piecesAdapter.upsertMany(state, action.payload);
       })
@@ -100,12 +100,11 @@ const pieceSlice = createSlice({
         }
       })
       .addMatcher(
-        (action: AnyAction): action is StompMessage => action.type === STOMP_MESSAGE,
+        (action: AnyAction): action is StompMessage =>
+          action.type === STOMP_MESSAGE && action.payload.topic.includes(SHARED_MOVES_PREFIX),
         (state, action) => {
-          if (action.payload.topic.includes(SHARED_MOVES_PREFIX)) {
-            const move: Move = JSON.parse(action.payload.data);
-            move.takenPiece && (state = piecesAdapter.upsertOne(state, move.takenPiece));
-          }
+          const move: Move = JSON.parse(action.payload.data);
+          move.takenPiece && (state = piecesAdapter.upsertOne(state, move.takenPiece));
         }
       );
   }

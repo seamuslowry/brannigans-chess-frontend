@@ -51,12 +51,11 @@ const moveSlice = createSlice({
         }
       })
       .addMatcher(
-        (action: AnyAction): action is StompMessage => action.type === STOMP_MESSAGE,
+        (action: AnyAction): action is StompMessage =>
+          action.type === STOMP_MESSAGE && action.payload.topic.includes(SHARED_MOVES_PREFIX),
         (state, action) => {
-          if (action.payload.topic.includes(SHARED_MOVES_PREFIX)) {
-            const move: Move = JSON.parse(action.payload.data);
-            state = movesAdapter.upsertOne(state, move);
-          }
+          const move: Move = JSON.parse(action.payload.data);
+          state = movesAdapter.upsertOne(state, move);
         }
       );
   }

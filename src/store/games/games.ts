@@ -64,12 +64,11 @@ const gameSlice = createSlice({
     // do not need a case for join because the status topic will update the game info
     // do not need a case for leave because the status topic will update the game info
     builder.addCase(createGame.fulfilled, gamesAdapter.upsertOne).addMatcher(
-      (action: AnyAction): action is StompMessage => action.type === STOMP_MESSAGE,
+      (action: AnyAction): action is StompMessage =>
+        action.type === STOMP_MESSAGE && action.payload.topic.includes(GAME_STATUS_PREFIX),
       (state, action) => {
-        if (action.payload.topic.includes(GAME_STATUS_PREFIX)) {
-          const game: Game = JSON.parse(action.payload.data);
-          state = gamesAdapter.upsertOne(state, game);
-        }
+        const game: Game = JSON.parse(action.payload.data);
+        state = gamesAdapter.upsertOne(state, game);
       }
     );
   }
