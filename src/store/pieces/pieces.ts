@@ -56,7 +56,7 @@ const pieceSlice = createSlice({
       .addCase(joinGame.fulfilled, (state, action) => {
         const { gameId, pieceColor } = action.meta.arg;
         const removePieces = Object.values(state.entities).filter(
-          p => p?.game.id === gameId && p.color !== pieceColor
+          p => p?.gameId === gameId && p.color !== pieceColor
         ) as Piece[];
         const removeIds = removePieces.map(p => p.id);
         state = piecesAdapter.removeMany(state, removeIds);
@@ -122,7 +122,7 @@ export const makeGetTakenPieces = () =>
     (_: PieceState, gameId: number) => gameId,
     (_: PieceState, __, color: PieceColor) => color,
     (pieces, gameId, color) =>
-      pieces.filter(p => p.game.id === gameId && p.color === color && p.status === 'TAKEN')
+      pieces.filter(p => p.gameId === gameId && p.color === color && p.status === 'TAKEN')
   );
 
 export const makeGetActivePiece = () =>
@@ -133,7 +133,7 @@ export const makeGetActivePiece = () =>
     (pieces, gameId, position) =>
       pieces.find(
         p =>
-          p.game.id === gameId &&
+          p.gameId === gameId &&
           p.positionRow === position.row &&
           p.positionCol === position.col &&
           p.status === 'ACTIVE'
@@ -148,9 +148,6 @@ export const makeGetPromatablePawn = () =>
     (pieces, gameId, row) =>
       pieces.find(
         p =>
-          p.game.id === gameId &&
-          p.type === 'PAWN' &&
-          p.positionRow === row &&
-          p.status === 'ACTIVE'
+          p.gameId === gameId && p.type === 'PAWN' && p.positionRow === row && p.status === 'ACTIVE'
       )
   );

@@ -82,10 +82,7 @@ export const makePiece = (
   positionRow: row,
   status: status,
   id: ++testPieceId,
-  game: {
-    ...fullGame,
-    id: gameId
-  }
+  gameId
 });
 
 export const blackRook: Piece = makePiece('ROOK', 'BLACK');

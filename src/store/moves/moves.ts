@@ -71,5 +71,5 @@ export const makeSelectMoves = () =>
   createSelector(
     selectAllMoves,
     (_: MoveState, gameId: number) => gameId,
-    (moves, gameId) => moves.filter(m => m.movingPiece.game.id === gameId)
+    (moves, gameId) => moves.filter(m => m.movingPiece.gameId === gameId)
   );
