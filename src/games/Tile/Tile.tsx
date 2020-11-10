@@ -44,7 +44,13 @@ const Tile: React.FC<Props> = ({ row, col, gameId }) => {
   };
 
   return (
-    <Box data-testid={`tile-${row}-${col}`} bgcolor={bgColor} onClick={handleClick}>
+    <Box
+      width="100%"
+      height="100%"
+      data-testid={`tile-${row}-${col}`}
+      bgcolor={bgColor}
+      onClick={handleClick}
+    >
       <Piece type={piece?.type} color={piece?.color} />
     </Box>
   );
