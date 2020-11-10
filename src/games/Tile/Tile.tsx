@@ -1,4 +1,4 @@
-import { Box, makeStyles, Theme, useTheme } from '@material-ui/core';
+import { Box, Theme, useTheme } from '@material-ui/core';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { Piece as PieceEntity } from '../../services/ChessService.types';
@@ -13,19 +13,6 @@ interface Props {
   col: number;
 }
 
-const BORDER_RADIUS = '.5rem';
-
-const useStyles = makeStyles<Theme, Props>({
-  borderRadius: {
-    borderTopRightRadius: props => (props.col === 7 && props.row === 0 ? BORDER_RADIUS : undefined),
-    borderTopLeftRadius: props => (props.col === 0 && props.row === 0 ? BORDER_RADIUS : undefined),
-    borderBottomRightRadius: props =>
-      props.col === 7 && props.row === 7 ? BORDER_RADIUS : undefined,
-    borderBottomLeftRadius: props =>
-      props.col === 0 && props.row === 7 ? BORDER_RADIUS : undefined
-  }
-});
-
 const getBgColor = (theme: Theme, row: number, col: number, selected: boolean) => {
   if (selected) {
     return theme.palette.action.selected;
@@ -39,7 +26,6 @@ const getBgColor = (theme: Theme, row: number, col: number, selected: boolean) =
 const Tile: React.FC<Props> = ({ row, col, gameId }) => {
   const theme = useTheme();
   const dispatch = useAppDispatch();
-  const classes = useStyles({ row, col, gameId });
 
   const getSelected = React.useMemo(makeGetSelected, []);
   const getActivePiece = React.useMemo(makeGetActivePiece, []);
@@ -58,14 +44,7 @@ const Tile: React.FC<Props> = ({ row, col, gameId }) => {
   };
 
   return (
-    <Box
-      data-testid={`tile-${row}-${col}`}
-      gridRow={row + 1}
-      gridColumn={col + 1}
-      bgcolor={bgColor}
-      onClick={handleClick}
-      className={classes.borderRadius}
-    >
+    <Box data-testid={`tile-${row}-${col}`} bgcolor={bgColor} onClick={handleClick}>
       <Piece type={piece?.type} color={piece?.color} />
     </Box>
   );
