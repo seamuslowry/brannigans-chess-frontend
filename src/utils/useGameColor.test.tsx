@@ -68,5 +68,5 @@ test('should determine that the logged in player is not in the game', async () =
     wrapper: ({ children }) => <Provider store={mockedBlackStore}>{children}</Provider>
   });
 
-  expect(result.current).toEqual([]);
+  expect(result.current).toEqual(['WHITE', 'BLACK']);
 });
