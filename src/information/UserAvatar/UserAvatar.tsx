@@ -47,7 +47,7 @@ const UserAvatar: React.FC<Omit<AvatarProps, 'alt' | 'src' | 'className'>> = pro
       alt={user.name}
       src={user.picture}
       className={classes.small}
-      imgProps={{ referrerPolicy: 'no-reerrer' }}
+      imgProps={{ referrerPolicy: 'no-referrer' }}
     />
   ) : null;
 };
