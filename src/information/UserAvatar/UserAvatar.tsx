@@ -43,7 +43,12 @@ const UserAvatar: React.FC<Omit<AvatarProps, 'alt' | 'src' | 'className'>> = pro
   }, [isAuthenticated, dispatch, getAccessTokenSilently, user]);
 
   return loggedIn && user ? (
-    <Avatar alt={user.name} src={user.picture} className={classes.small} />
+    <Avatar
+      alt={user.name}
+      src={user.picture}
+      className={classes.small}
+      imgProps={{ referrerPolicy: 'no-reerrer' }}
+    />
   ) : null;
 };
 
