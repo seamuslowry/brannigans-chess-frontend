@@ -48,9 +48,9 @@ const Board: React.FC<Props> = ({ gameId }) => {
         gridTemplateColumns={`2rem ${tileTemplate} 2rem`}
         gridTemplateRows={`2rem ${tileTemplate} 2rem`}
       >
-        {rows[colors[0]].map(r => (
+        {rows[colors[0]].map((r, index) => (
           <React.Fragment key={`row-markers-${gameId}-${r}`}>
-            <Marker gridRow={r + 2} gridColumn={1}>
+            <Marker gridRow={index + 2} gridColumn={1}>
               {displayRow(r)}
             </Marker>
             <Marker gridRow={r + 2} gridColumn={10}>
