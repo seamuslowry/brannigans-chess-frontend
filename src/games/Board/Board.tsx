@@ -53,7 +53,7 @@ const Board: React.FC<Props> = ({ gameId }) => {
             <Marker gridRow={index + 2} gridColumn={1}>
               {displayRow(r)}
             </Marker>
-            <Marker gridRow={r + 2} gridColumn={10}>
+            <Marker gridRow={index + 2} gridColumn={10}>
               {displayRow(r)}
             </Marker>
           </React.Fragment>
