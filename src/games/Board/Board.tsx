@@ -6,6 +6,8 @@ import PawnPromotion from '../PawnPromotion/PawnPromotion';
 import { useAppDispatch } from '../../store/store';
 import useGameColors from '../../utils/useGameColor';
 import { getPieces } from '../../store/pieces/pieces';
+import Marker from '../Marker/Marker';
+import { displayCol, displayRow } from '../../utils/markerHelper';
 
 const useStyles = makeStyles({
   borderRadius: {
@@ -35,21 +37,51 @@ const Board: React.FC<Props> = ({ gameId }) => {
     dispatch(getPieces({ gameId, colors }));
   }, [gameId, colors, dispatch]);
 
+  const tileTemplate = `repeat(8, ${pieceSize})`;
+
   return (
     <>
       <PawnPromotion color="WHITE" gameId={gameId} />
       <PawnPromotion color="BLACK" gameId={gameId} />
       <Box
         display="grid"
-        gridTemplateColumns={`repeat(8, ${pieceSize})`}
-        gridTemplateRows={`repeat(8, ${pieceSize})`}
-        className={classes.borderRadius}
+        gridTemplateColumns={`2rem ${tileTemplate} 2rem`}
+        gridTemplateRows={`2rem ${tileTemplate} 2rem`}
       >
-        {rows[colors[0]].map(row =>
-          cols.map(col => (
-            <Tile key={`tile-${gameId}-${row}-${col}`} gameId={gameId} row={row} col={col} />
-          ))
-        )}
+        {rows[colors[0]].map((r, index) => (
+          <React.Fragment key={`row-markers-${gameId}-${r}`}>
+            <Marker gridRow={index + 2} gridColumn={1}>
+              {displayRow(r)}
+            </Marker>
+            <Marker gridRow={index + 2} gridColumn={10}>
+              {displayRow(r)}
+            </Marker>
+          </React.Fragment>
+        ))}
+        {cols.map(c => (
+          <React.Fragment key={`col-markers-${gameId}-${c}`}>
+            <Marker gridRow={1} gridColumn={c + 2}>
+              {displayCol(c)}
+            </Marker>
+            <Marker gridRow={10} gridColumn={c + 2}>
+              {displayCol(c)}
+            </Marker>
+          </React.Fragment>
+        ))}
+        <Box
+          display="grid"
+          gridRow="2/10"
+          gridColumn="2/10"
+          gridTemplateColumns={tileTemplate}
+          gridTemplateRows={tileTemplate}
+          className={classes.borderRadius}
+        >
+          {rows[colors[0]].map(row =>
+            cols.map(col => (
+              <Tile key={`tile-${gameId}-${row}-${col}`} gameId={gameId} row={row} col={col} />
+            ))
+          )}
+        </Box>
       </Box>
     </>
   );

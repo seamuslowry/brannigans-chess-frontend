@@ -2,6 +2,7 @@ import React from 'react';
 import { Box, Typography, useTheme } from '@material-ui/core';
 import { Move as MoveEntity, MoveType } from '../../services/ChessService.types';
 import Piece from '../Piece/Piece';
+import { displayRow, displayCol } from '../../utils/markerHelper';
 
 interface Props {
   move: MoveEntity;
@@ -20,6 +21,8 @@ const getMoveDescriptor = (type: MoveType) => {
       return '->';
   }
 };
+
+const getTileDescriptor = (row: number, col: number) => `${displayCol(col)}${displayRow(row)}`;
 
 const Move: React.FC<Props> = ({ move }) => {
   const theme = useTheme();
@@ -43,8 +46,8 @@ const Move: React.FC<Props> = ({ move }) => {
       </Box>
       <Box gridColumn={2}>
         <Typography ref={ref}>
-          [{move.srcRow},{move.srcCol}] {getMoveDescriptor(move.moveType)} [{move.dstRow},
-          {move.dstCol}]
+          {getTileDescriptor(move.srcRow, move.srcCol)} {getMoveDescriptor(move.moveType)}{' '}
+          {getTileDescriptor(move.dstRow, move.dstCol)}
         </Typography>
       </Box>
       <Box gridColumn={3}>
