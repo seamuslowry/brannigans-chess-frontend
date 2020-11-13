@@ -125,13 +125,12 @@ test('defaults to active games', async () => {
   );
 
   const activeButtonLabel = await waitFor(() => getByText('Active'));
-  const inactiveButtonLabel = await waitFor(() => getByText('Inactive'));
+  const inactiveButtonLabel = await waitFor(() => getByText('Complete'));
   const openButtonLabel = await waitFor(() => getByText('Open'));
 
-  // MUI default button secondary color
-  expect(activeButtonLabel.parentElement).toHaveStyle('background-color: rgb(245, 0, 87)');
-  expect(inactiveButtonLabel.parentElement).not.toHaveStyle('background-color: rgb(245, 0, 87)');
-  expect(openButtonLabel.parentElement).not.toHaveStyle('background-color: rgb(245, 0, 87)');
+  expect(activeButtonLabel.parentElement?.className).toContain('Secondary');
+  expect(inactiveButtonLabel.parentElement?.className).not.toContain('Secondary');
+  expect(openButtonLabel.parentElement?.className).not.toContain('Secondary');
 });
 
 test('selects open games', async () => {
@@ -144,17 +143,16 @@ test('selects open games', async () => {
   );
 
   const activeButtonLabel = await waitFor(() => getByText('Active'));
-  const inactiveButtonLabel = await waitFor(() => getByText('Inactive'));
+  const inactiveButtonLabel = await waitFor(() => getByText('Complete'));
   const openButtonLabel = await waitFor(() => getByText('Open'));
 
   fireEvent.click(openButtonLabel);
 
   await waitForElementToBeRemoved(() => getAllByRole('progressbar')); // wait for service calls to complete
 
-  // MUI default button secondary color
-  expect(activeButtonLabel.parentElement).not.toHaveStyle('background-color: rgb(245, 0, 87)');
-  expect(inactiveButtonLabel.parentElement).not.toHaveStyle('background-color: rgb(245, 0, 87)');
-  expect(openButtonLabel.parentElement).toHaveStyle('background-color: rgb(245, 0, 87)');
+  expect(activeButtonLabel.parentElement?.className).not.toContain('Secondary');
+  expect(inactiveButtonLabel.parentElement?.className).not.toContain('Secondary');
+  expect(openButtonLabel.parentElement?.className).toContain('Secondary');
 });
 
 test('selects inactive games', async () => {
@@ -167,15 +165,14 @@ test('selects inactive games', async () => {
   );
 
   const activeButtonLabel = await waitFor(() => getByText('Active'));
-  const inactiveButtonLabel = await waitFor(() => getByText('Inactive'));
+  const inactiveButtonLabel = await waitFor(() => getByText('Complete'));
   const openButtonLabel = await waitFor(() => getByText('Open'));
 
   fireEvent.click(inactiveButtonLabel);
 
   await waitForElementToBeRemoved(() => getAllByRole('progressbar')); // wait for service calls to complete
 
-  // MUI default button secondary color
-  expect(activeButtonLabel.parentElement).not.toHaveStyle('background-color: rgb(245, 0, 87)');
-  expect(inactiveButtonLabel.parentElement).toHaveStyle('background-color: rgb(245, 0, 87)');
-  expect(openButtonLabel.parentElement).not.toHaveStyle('background-color: rgb(245, 0, 87)');
+  expect(activeButtonLabel.parentElement?.className).not.toContain('Secondary');
+  expect(inactiveButtonLabel.parentElement?.className).toContain('Secondary');
+  expect(openButtonLabel.parentElement?.className).not.toContain('Secondary');
 });

@@ -24,7 +24,8 @@ const useStyles = makeStyles(theme => ({
     height: '80vh',
     overflowY: 'auto',
     backgroundColor: theme.palette.background.paper,
-    borderRadius: `0 0 ${theme.shape.borderRadius}px ${theme.shape.borderRadius}px`
+    borderRadius: `0 0 ${theme.shape.borderRadius}px ${theme.shape.borderRadius}px`,
+    textAlign: 'center'
   },
   listItemContainer: {
     height: '10%',
@@ -55,7 +56,7 @@ const GamesList: React.FC = () => {
   const {
     loading,
     response = {
-      content: undefined,
+      content: [],
       totalElements: 0,
       totalPages: 0
     },
@@ -67,65 +68,61 @@ const GamesList: React.FC = () => {
 
   return (
     <Box display="flex" flexDirection="column" className={classes.root} alignItems="center">
-      {loading && <CircularProgress />}
-      {response.content && (
-        <>
-          <ButtonGroup
-            classes={{ groupedContainedHorizontal: classes.buttonGroup }}
-            fullWidth
-            variant="contained"
-            color="primary"
+      <ButtonGroup
+        classes={{ groupedContainedHorizontal: classes.buttonGroup }}
+        fullWidth
+        variant="contained"
+        color="primary"
+      >
+        <Button
+          onClick={handleStatusGroupChange(GameStatusGroup.OPEN)}
+          color={statusGroup === GameStatusGroup.OPEN ? 'secondary' : undefined}
+        >
+          Open
+        </Button>
+        <Button
+          onClick={handleStatusGroupChange(GameStatusGroup.ACTIVE)}
+          color={statusGroup === GameStatusGroup.ACTIVE ? 'secondary' : undefined}
+        >
+          Active
+        </Button>
+        <Button
+          onClick={handleStatusGroupChange(GameStatusGroup.INACTIVE)}
+          color={statusGroup === GameStatusGroup.INACTIVE ? 'secondary' : undefined}
+        >
+          Complete
+        </Button>
+      </ButtonGroup>
+      <List className={classes.list}>
+        {loading && <CircularProgress />}
+        {response.content.map(game => (
+          <ListItem
+            classes={{
+              container: classes.listItemContainer
+            }}
+            data-testid="game-list-item"
+            key={`game-item-${game.id}`}
           >
-            <Button
-              onClick={handleStatusGroupChange(GameStatusGroup.OPEN)}
-              color={statusGroup === GameStatusGroup.OPEN ? 'secondary' : undefined}
-            >
-              Open
-            </Button>
-            <Button
-              onClick={handleStatusGroupChange(GameStatusGroup.ACTIVE)}
-              color={statusGroup === GameStatusGroup.ACTIVE ? 'secondary' : undefined}
-            >
-              Active
-            </Button>
-            <Button
-              onClick={handleStatusGroupChange(GameStatusGroup.INACTIVE)}
-              color={statusGroup === GameStatusGroup.INACTIVE ? 'secondary' : undefined}
-            >
-              Inactive
-            </Button>
-          </ButtonGroup>
-          <List className={classes.list}>
-            {response.content.map(game => (
-              <ListItem
-                classes={{
-                  container: classes.listItemContainer
-                }}
-                data-testid="game-list-item"
-                key={`game-item-${game.id}`}
-              >
-                <ListItemText primary={game.uuid} />
-                <ListItemSecondaryAction>
-                  <Button component={Link} to={`/game/${game.id}`} color="primary">
-                    View
-                  </Button>
-                </ListItemSecondaryAction>
-              </ListItem>
-            ))}
-            {response.content.length === 0 && (
-              <Typography align="center">No available games</Typography>
-            )}
-          </List>
-          <Box m={1}>
-            <Pagination
-              count={response.totalPages}
-              page={page}
-              onChange={handlePageChange}
-              size="large"
-            />
-          </Box>
-        </>
-      )}
+            <ListItemText primary={game.uuid} />
+            <ListItemSecondaryAction>
+              <Button component={Link} to={`/game/${game.id}`} color="primary">
+                View
+              </Button>
+            </ListItemSecondaryAction>
+          </ListItem>
+        ))}
+        {!loading && response.content.length === 0 && (
+          <Typography align="center">No available games</Typography>
+        )}
+      </List>
+      <Box m={1}>
+        <Pagination
+          count={response.totalPages}
+          page={page}
+          onChange={handlePageChange}
+          size="large"
+        />
+      </Box>
       {error && <Typography color="error">Could not load games: {error}</Typography>}
       <CreateGameButton />
     </Box>
