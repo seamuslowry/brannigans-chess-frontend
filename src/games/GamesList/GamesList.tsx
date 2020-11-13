@@ -24,7 +24,7 @@ const useStyles = makeStyles(theme => ({
     height: '80vh',
     overflowY: 'auto',
     backgroundColor: theme.palette.background.paper,
-    borderRadius: `0 0 ${theme.shape.borderRadius}px ${theme.shape.borderRadius}px`,
+    borderRadius: `0 0 1rem 1rem`,
     textAlign: 'center'
   },
   listItemContainer: {
