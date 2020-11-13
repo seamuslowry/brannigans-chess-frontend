@@ -114,3 +114,25 @@ test('renders for someone spectating', async () => {
   expect(tiles[0].isSameNode(blackRookTile)).toBeTruthy();
   unmount();
 });
+
+test('renders for someone while the game is not in data', async () => {
+  const spectatorStore = mockStore({
+    ...testStore,
+    auth: {
+      player: playerOne
+    },
+    games: mockEntityAdapterState()
+  });
+  const { getAllByTestId, getByTestId, unmount } = render(
+    <Provider store={spectatorStore}>
+      <Board gameId={0} />
+    </Provider>
+  );
+
+  const tiles = getAllByTestId(/tile-/i);
+  const blackRookTile = getByTestId('tile-0-0');
+
+  expect(tiles).toHaveLength(64);
+  expect(tiles[0].isSameNode(blackRookTile)).toBeTruthy();
+  unmount();
+});

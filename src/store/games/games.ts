@@ -78,5 +78,6 @@ export const { selectById: selectGameById, selectAll: selectGames } = gamesAdapt
 
 export const selectWhiteId = createSelector(selectGameById, game => game?.whitePlayer?.authId);
 export const selectBlackId = createSelector(selectGameById, game => game?.blackPlayer?.authId);
+export const selectGameStatus = createSelector(selectGameById, game => game?.status);
 
 export default gameSlice.reducer;
