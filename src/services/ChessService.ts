@@ -2,6 +2,7 @@ import { chessApi } from './Api';
 import {
   AdditionalPlayerInfo,
   Game,
+  GameStatusGroup,
   Move,
   PageRequest,
   PageResponse,
@@ -9,15 +10,29 @@ import {
   PieceColor,
   PieceStatus,
   PieceType,
-  Player
+  Player,
+  StatusGroupMap
 } from './ChessService.types';
 
-const getGames = (active?: boolean, pageRequest: Partial<PageRequest> = {}) => {
+const statusGroupMap: StatusGroupMap = {
+  [GameStatusGroup.OPEN]: ['WAITING_FOR_BLACK', 'WAITING_FOR_PLAYERS', 'WAITING_FOR_WHITE'],
+  [GameStatusGroup.ACTIVE]: [
+    'WHITE_TURN',
+    'BLACK_TURN',
+    'WHITE_CHECK',
+    'BLACK_CHECK',
+    'WHITE_PROMOTION',
+    'BLACK_PROMOTION'
+  ],
+  [GameStatusGroup.INACTIVE]: ['CHECKMATE', 'STALEMATE']
+};
+
+const getGames = (statusGroup?: GameStatusGroup, pageRequest: Partial<PageRequest> = {}) => {
   const { page, size, order, orderBy } = pageRequest;
 
   const args = [];
 
-  active !== undefined && args.push(`active=${active}`);
+  statusGroup && args.push(`status=${statusGroupMap[statusGroup].join('&status=')}`);
 
   page && args.push(`page=${page}`);
   size && args.push(`size=${size}`);

@@ -2,6 +2,7 @@ import React from 'react';
 import {
   Box,
   Button,
+  ButtonGroup,
   CircularProgress,
   List,
   ListItem,
@@ -15,6 +16,7 @@ import { Pagination } from '@material-ui/lab';
 import CreateGameButton from '../CreateGameButton/CreateGameButton';
 import ChessService from '../../services/ChessService';
 import useServiceCall from '../../utils/useServiceCall';
+import { GameStatusGroup } from '../../services/ChessService.types';
 
 const useStyles = makeStyles(theme => ({
   list: {
@@ -22,11 +24,15 @@ const useStyles = makeStyles(theme => ({
     height: '80vh',
     overflowY: 'auto',
     backgroundColor: theme.palette.background.paper,
-    borderRadius: '1rem'
+    borderRadius: `0 0 ${theme.shape.borderRadius}px ${theme.shape.borderRadius}px`
   },
   listItemContainer: {
     height: '10%',
     display: 'flex'
+  },
+  buttonGroup: {
+    borderBottomLeftRadius: 0,
+    borderBottomRightRadius: 0
   },
   root: {
     width: '40vw',
@@ -40,10 +46,12 @@ const GamesList: React.FC = () => {
   const classes = useStyles();
 
   const [page, setPage] = React.useState(1);
+  const [statusGroup, setStatusGroup] = React.useState<GameStatusGroup>(GameStatusGroup.ACTIVE);
 
-  const memoizedCall = React.useCallback(() => ChessService.getGames(true, { page: page - 1 }), [
-    page
-  ]);
+  const memoizedCall = React.useCallback(
+    () => ChessService.getGames(statusGroup, { page: page - 1 }),
+    [page, statusGroup]
+  );
   const {
     loading,
     response = {
@@ -55,12 +63,38 @@ const GamesList: React.FC = () => {
   } = useServiceCall(memoizedCall);
 
   const handlePageChange = (e: React.ChangeEvent<unknown>, newPage: number) => setPage(newPage);
+  const handleStatusGroupChange = (newGroup: GameStatusGroup) => () => setStatusGroup(newGroup);
 
   return (
     <Box display="flex" flexDirection="column" className={classes.root} alignItems="center">
       {loading && <CircularProgress />}
       {response.content && (
         <>
+          <ButtonGroup
+            classes={{ groupedContainedHorizontal: classes.buttonGroup }}
+            fullWidth
+            variant="contained"
+            color="primary"
+          >
+            <Button
+              onClick={handleStatusGroupChange(GameStatusGroup.OPEN)}
+              color={statusGroup === GameStatusGroup.OPEN ? 'secondary' : undefined}
+            >
+              Open
+            </Button>
+            <Button
+              onClick={handleStatusGroupChange(GameStatusGroup.ACTIVE)}
+              color={statusGroup === GameStatusGroup.ACTIVE ? 'secondary' : undefined}
+            >
+              Active
+            </Button>
+            <Button
+              onClick={handleStatusGroupChange(GameStatusGroup.INACTIVE)}
+              color={statusGroup === GameStatusGroup.INACTIVE ? 'secondary' : undefined}
+            >
+              Inactive
+            </Button>
+          </ButtonGroup>
           <List className={classes.list}>
             {response.content.map(game => (
               <ListItem

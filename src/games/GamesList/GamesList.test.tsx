@@ -1,5 +1,12 @@
 import React from 'react';
-import { render, waitFor, screen, fireEvent, act } from '@testing-library/react';
+import {
+  render,
+  waitFor,
+  screen,
+  fireEvent,
+  act,
+  waitForElementToBeRemoved
+} from '@testing-library/react';
 import { rest } from 'msw';
 import { setupServer } from 'msw/node';
 import { MemoryRouter } from 'react-router-dom';
@@ -106,4 +113,69 @@ test('handles a page change', async () => {
   pageTwo = await waitFor(() => getByText('2'));
 
   expect(pageTwo.className).toContain('selected');
+});
+
+test('defaults to active games', async () => {
+  const { getByText } = render(
+    <Provider store={mockedStore}>
+      <MemoryRouter>
+        <GamesList />
+      </MemoryRouter>
+    </Provider>
+  );
+
+  const activeButtonLabel = await waitFor(() => getByText('Active'));
+  const inactiveButtonLabel = await waitFor(() => getByText('Inactive'));
+  const openButtonLabel = await waitFor(() => getByText('Open'));
+
+  // MUI default button secondary color
+  expect(activeButtonLabel.parentElement).toHaveStyle('background-color: rgb(245, 0, 87)');
+  expect(inactiveButtonLabel.parentElement).not.toHaveStyle('background-color: rgb(245, 0, 87)');
+  expect(openButtonLabel.parentElement).not.toHaveStyle('background-color: rgb(245, 0, 87)');
+});
+
+test('selects open games', async () => {
+  const { getByText, getAllByRole } = render(
+    <Provider store={mockedStore}>
+      <MemoryRouter>
+        <GamesList />
+      </MemoryRouter>
+    </Provider>
+  );
+
+  const activeButtonLabel = await waitFor(() => getByText('Active'));
+  const inactiveButtonLabel = await waitFor(() => getByText('Inactive'));
+  const openButtonLabel = await waitFor(() => getByText('Open'));
+
+  fireEvent.click(openButtonLabel);
+
+  await waitForElementToBeRemoved(() => getAllByRole('progressbar')); // wait for service calls to complete
+
+  // MUI default button secondary color
+  expect(activeButtonLabel.parentElement).not.toHaveStyle('background-color: rgb(245, 0, 87)');
+  expect(inactiveButtonLabel.parentElement).not.toHaveStyle('background-color: rgb(245, 0, 87)');
+  expect(openButtonLabel.parentElement).toHaveStyle('background-color: rgb(245, 0, 87)');
+});
+
+test('selects inactive games', async () => {
+  const { getByText, getAllByRole } = render(
+    <Provider store={mockedStore}>
+      <MemoryRouter>
+        <GamesList />
+      </MemoryRouter>
+    </Provider>
+  );
+
+  const activeButtonLabel = await waitFor(() => getByText('Active'));
+  const inactiveButtonLabel = await waitFor(() => getByText('Inactive'));
+  const openButtonLabel = await waitFor(() => getByText('Open'));
+
+  fireEvent.click(inactiveButtonLabel);
+
+  await waitForElementToBeRemoved(() => getAllByRole('progressbar')); // wait for service calls to complete
+
+  // MUI default button secondary color
+  expect(activeButtonLabel.parentElement).not.toHaveStyle('background-color: rgb(245, 0, 87)');
+  expect(inactiveButtonLabel.parentElement).toHaveStyle('background-color: rgb(245, 0, 87)');
+  expect(openButtonLabel.parentElement).not.toHaveStyle('background-color: rgb(245, 0, 87)');
 });

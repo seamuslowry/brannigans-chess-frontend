@@ -14,8 +14,20 @@ export type GameStatus =
   | 'BLACK_TURN'
   | 'WHITE_CHECK'
   | 'BLACK_CHECK'
+  | 'WHITE_PROMOTION'
+  | 'BLACK_PROMOTION'
   | 'STALEMATE'
   | 'CHECKMATE';
+
+export enum GameStatusGroup {
+  OPEN = 1,
+  ACTIVE,
+  INACTIVE
+}
+
+export type StatusGroupMap = {
+  [key in GameStatusGroup]: GameStatus[];
+};
 
 export interface Piece {
   color: PieceColor;
