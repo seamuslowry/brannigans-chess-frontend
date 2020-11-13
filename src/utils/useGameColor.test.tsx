@@ -70,3 +70,20 @@ test('should determine that the logged in player is not in the game', async () =
 
   expect(result.current).toEqual(['WHITE', 'BLACK']);
 });
+
+test('should determine that the game is not loaded and suggest no colors', async () => {
+  const mockedBlackStore = mockStore({
+    ...testStore,
+    games: mockEntityAdapterState(),
+    auth: {
+      ...testStore.auth,
+      player: playerTwo
+    }
+  });
+
+  const { result } = renderHook(() => useGameColors(emptyGame.id), {
+    wrapper: ({ children }) => <Provider store={mockedBlackStore}>{children}</Provider>
+  });
+
+  expect(result.current).toEqual([]);
+});

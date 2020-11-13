@@ -13,6 +13,7 @@ const useServiceCall = <T>(servicePromise: () => Promise<AxiosResponse<T>>) => {
   });
 
   React.useEffect(() => {
+    setState({ loading: true });
     servicePromise()
       .then(res => setState({ error: undefined, response: res.data, loading: false }))
       .catch(e => setState({ error: e.message, response: undefined, loading: false }));

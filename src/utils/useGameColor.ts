@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { PieceColor, Player } from '../services/ChessService.types';
-import { selectBlackId, selectWhiteId } from '../store/games/games';
+import { selectBlackId, selectGameStatus, selectWhiteId } from '../store/games/games';
 import { AppState } from '../store/store';
 
 const useGameColors = (gameId: number): PieceColor[] => {
@@ -12,13 +12,19 @@ const useGameColors = (gameId: number): PieceColor[] => {
   const blackAuth = useSelector<AppState, string | undefined>(state =>
     selectBlackId(state.games, gameId)
   );
+  const gameStatus = useSelector<AppState, string | undefined>(state =>
+    selectGameStatus(state.games, gameId)
+  );
 
-  const isWhite = player?.authId === whiteAuth;
-  const isBlack = player?.authId === blackAuth;
+  const authId = player?.authId;
+
+  const isWhite = authId === whiteAuth;
+  const isBlack = authId === blackAuth;
 
   const colors = React.useMemo<PieceColor[]>(
-    () => (isWhite && ['WHITE']) || (isBlack && ['BLACK']) || ['WHITE', 'BLACK'],
-    [isWhite, isBlack]
+    () =>
+      (isWhite && ['WHITE']) || (isBlack && ['BLACK']) || (gameStatus && ['WHITE', 'BLACK']) || [],
+    [isWhite, isBlack, gameStatus]
   );
 
   return colors;

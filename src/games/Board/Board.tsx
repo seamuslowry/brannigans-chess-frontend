@@ -20,14 +20,14 @@ interface Props {
   gameId: number;
 }
 
+const rows = {
+  WHITE: Array.from(Array(8).keys()),
+  BLACK: Array.from(Array(8).keys()).reverse()
+};
+
+const cols = Array.from(Array(8).keys());
+
 const Board: React.FC<Props> = ({ gameId }) => {
-  const rows = {
-    WHITE: Array.from(Array(8).keys()),
-    BLACK: Array.from(Array(8).keys()).reverse()
-  };
-
-  const cols = Array.from(Array(8).keys());
-
   const dispatch = useAppDispatch();
   const pieceSize = usePieceSize();
   const colors = useGameColors(gameId);
@@ -39,6 +39,8 @@ const Board: React.FC<Props> = ({ gameId }) => {
 
   const tileTemplate = `repeat(8, ${pieceSize})`;
 
+  const renderRows = rows[colors[0] || 'WHITE'];
+
   return (
     <>
       <PawnPromotion color="WHITE" gameId={gameId} />
@@ -48,7 +50,7 @@ const Board: React.FC<Props> = ({ gameId }) => {
         gridTemplateColumns={`2rem ${tileTemplate} 2rem`}
         gridTemplateRows={`2rem ${tileTemplate} 2rem`}
       >
-        {rows[colors[0]].map((r, index) => (
+        {renderRows.map((r, index) => (
           <React.Fragment key={`row-markers-${gameId}-${r}`}>
             <Marker gridRow={index + 2} gridColumn={1}>
               {displayRow(r)}
@@ -76,7 +78,7 @@ const Board: React.FC<Props> = ({ gameId }) => {
           gridTemplateRows={tileTemplate}
           className={classes.borderRadius}
         >
-          {rows[colors[0]].map(row =>
+          {renderRows.map(row =>
             cols.map(col => (
               <Tile key={`tile-${gameId}-${row}-${col}`} gameId={gameId} row={row} col={col} />
             ))

@@ -1,5 +1,12 @@
 import React from 'react';
-import { render, waitFor, screen, fireEvent, act } from '@testing-library/react';
+import {
+  render,
+  waitFor,
+  screen,
+  fireEvent,
+  act,
+  waitForElementToBeRemoved
+} from '@testing-library/react';
 import { rest } from 'msw';
 import { setupServer } from 'msw/node';
 import { MemoryRouter } from 'react-router-dom';
@@ -106,4 +113,66 @@ test('handles a page change', async () => {
   pageTwo = await waitFor(() => getByText('2'));
 
   expect(pageTwo.className).toContain('selected');
+});
+
+test('defaults to active games', async () => {
+  const { getByText } = render(
+    <Provider store={mockedStore}>
+      <MemoryRouter>
+        <GamesList />
+      </MemoryRouter>
+    </Provider>
+  );
+
+  const activeButtonLabel = await waitFor(() => getByText('Active'));
+  const inactiveButtonLabel = await waitFor(() => getByText('Complete'));
+  const openButtonLabel = await waitFor(() => getByText('Open'));
+
+  expect(activeButtonLabel.parentElement?.className).toContain('Secondary');
+  expect(inactiveButtonLabel.parentElement?.className).not.toContain('Secondary');
+  expect(openButtonLabel.parentElement?.className).not.toContain('Secondary');
+});
+
+test('selects open games', async () => {
+  const { getByText, getAllByRole } = render(
+    <Provider store={mockedStore}>
+      <MemoryRouter>
+        <GamesList />
+      </MemoryRouter>
+    </Provider>
+  );
+
+  const activeButtonLabel = await waitFor(() => getByText('Active'));
+  const inactiveButtonLabel = await waitFor(() => getByText('Complete'));
+  const openButtonLabel = await waitFor(() => getByText('Open'));
+
+  fireEvent.click(openButtonLabel);
+
+  await waitForElementToBeRemoved(() => getAllByRole('progressbar')); // wait for service calls to complete
+
+  expect(activeButtonLabel.parentElement?.className).not.toContain('Secondary');
+  expect(inactiveButtonLabel.parentElement?.className).not.toContain('Secondary');
+  expect(openButtonLabel.parentElement?.className).toContain('Secondary');
+});
+
+test('selects inactive games', async () => {
+  const { getByText, getAllByRole } = render(
+    <Provider store={mockedStore}>
+      <MemoryRouter>
+        <GamesList />
+      </MemoryRouter>
+    </Provider>
+  );
+
+  const activeButtonLabel = await waitFor(() => getByText('Active'));
+  const inactiveButtonLabel = await waitFor(() => getByText('Complete'));
+  const openButtonLabel = await waitFor(() => getByText('Open'));
+
+  fireEvent.click(inactiveButtonLabel);
+
+  await waitForElementToBeRemoved(() => getAllByRole('progressbar')); // wait for service calls to complete
+
+  expect(activeButtonLabel.parentElement?.className).not.toContain('Secondary');
+  expect(inactiveButtonLabel.parentElement?.className).toContain('Secondary');
+  expect(openButtonLabel.parentElement?.className).not.toContain('Secondary');
 });
