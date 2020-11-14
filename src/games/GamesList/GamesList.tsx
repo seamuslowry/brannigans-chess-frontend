@@ -76,22 +76,23 @@ const GamesList: React.FC = () => {
       </Tabs>
       <List className={classes.list}>
         {loading && <CircularProgress />}
-        {response.content.map(game => (
-          <ListItem
-            classes={{
-              container: classes.listItemContainer
-            }}
-            data-testid="game-list-item"
-            key={`game-item-${game.id}`}
-          >
-            <ListItemText primary={game.uuid} />
-            <ListItemSecondaryAction>
-              <Button component={Link} to={`/game/${game.id}`} color="primary">
-                View
-              </Button>
-            </ListItemSecondaryAction>
-          </ListItem>
-        ))}
+        {!error &&
+          response.content.map(game => (
+            <ListItem
+              classes={{
+                container: classes.listItemContainer
+              }}
+              data-testid="game-list-item"
+              key={`game-item-${game.id}`}
+            >
+              <ListItemText primary={game.uuid} />
+              <ListItemSecondaryAction>
+                <Button component={Link} to={`/game/${game.id}`} color="primary">
+                  View
+                </Button>
+              </ListItemSecondaryAction>
+            </ListItem>
+          ))}
         {!loading && response.content.length === 0 && (
           <Typography align="center">No available games</Typography>
         )}
