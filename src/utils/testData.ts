@@ -164,9 +164,13 @@ export const whiteQueenSideCastle: Move = {
   id: 7
 };
 
+// expires in 4021
+export const twoThousandYearToken =
+  'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJPbmxpbmUgSldUIEJ1aWxkZXIiLCJpYXQiOjE2MDUzMTk4MDksImV4cCI6NjQ3NTA3NTk4MTcsImF1ZCI6Ind3dy50ZXN0LmNvbSIsInN1YiI6InRlc3RAZXhhbXBsZS5jb20ifQ.YKIqwT0OOgzabxDSpwokQ5izhAuEC4JjBkWN04LARaA';
+
 export const unauthenticatedAuth0: Auth0ContextInterface = {
   isAuthenticated: false,
-  getAccessTokenSilently: jest.fn(),
+  getAccessTokenSilently: jest.fn().mockResolvedValue(twoThousandYearToken),
   getAccessTokenWithPopup: jest.fn(),
   getIdTokenClaims: jest.fn(),
   loginWithPopup: jest.fn(),

@@ -28,8 +28,6 @@ beforeAll(() => server.listen());
 afterEach(() => server.resetHandlers());
 afterAll(() => server.close());
 
-jest.mock('jwt-decode', () => jest.fn().mockReturnValue({ exp: Date.now() + 60 * 60 }));
-
 jest.mock('@auth0/auth0-react');
 const mockedAuth0 = useAuth0 as jest.MockedFunction<typeof useAuth0>;
 
