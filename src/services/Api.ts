@@ -13,7 +13,7 @@ chessApi.interceptors.request.use(axiosConfig => {
   if (!token) return axiosConfig;
 
   const claims = jwtDecode(token) as { exp: number };
-  if (claims.exp * 1000 > Date.now()) {
+  if (claims.exp * 1000 < Date.now()) {
     localStorage.removeItem('token');
     return axiosConfig;
   }
