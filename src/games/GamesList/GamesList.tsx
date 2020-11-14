@@ -76,24 +76,24 @@ const GamesList: React.FC = () => {
       </Tabs>
       <List className={classes.list}>
         {loading && <CircularProgress />}
-        {!error &&
-          response.content.map(game => (
-            <ListItem
-              classes={{
-                container: classes.listItemContainer
-              }}
-              data-testid="game-list-item"
-              key={`game-item-${game.id}`}
-            >
-              <ListItemText primary={game.uuid} />
-              <ListItemSecondaryAction>
-                <Button component={Link} to={`/game/${game.id}`} color="primary">
-                  View
-                </Button>
-              </ListItemSecondaryAction>
-            </ListItem>
-          ))}
-        {!loading && response.content.length === 0 && (
+        {response.content.map(game => (
+          <ListItem
+            classes={{
+              container: classes.listItemContainer
+            }}
+            data-testid="game-list-item"
+            key={`game-item-${game.id}`}
+          >
+            <ListItemText primary={game.uuid} />
+            <ListItemSecondaryAction>
+              <Button component={Link} to={`/game/${game.id}`} color="primary">
+                View
+              </Button>
+            </ListItemSecondaryAction>
+          </ListItem>
+        ))}
+        {error && <Typography color="error">Could not load games: {error}</Typography>}
+        {!loading && !error && response.content.length === 0 && (
           <Typography align="center">No available games</Typography>
         )}
       </List>
@@ -105,7 +105,6 @@ const GamesList: React.FC = () => {
           size="large"
         />
       </Box>
-      {error && <Typography color="error">Could not load games: {error}</Typography>}
       <CreateGameButton />
     </Box>
   );

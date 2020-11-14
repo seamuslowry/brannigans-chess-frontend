@@ -1,5 +1,5 @@
 import reducer, { authenticatePlayer, clearAuth, initialState } from './auth';
-import { playerOne, testStore } from '../../utils/testData';
+import { playerOne, testStore, twoThousandYearToken } from '../../utils/testData';
 import { waitFor } from '@testing-library/react';
 import { ActionCreator, AnyAction, getDefaultMiddleware } from '@reduxjs/toolkit';
 import { rest } from 'msw';
@@ -26,7 +26,7 @@ test('tries to get the player', async () => {
   await waitFor(() =>
     mockedStore.dispatch(
       authenticatePlayer({
-        getAccessToken: jest.fn().mockResolvedValue('test'),
+        getAccessToken: jest.fn().mockResolvedValue(twoThousandYearToken),
         playerInfo: {
           name: 'test',
           imageUrl: 'image'
