@@ -125,12 +125,10 @@ test('defaults to active games', async () => {
   );
 
   const activeButtonLabel = await waitFor(() => getByText('Active'));
-  const inactiveButtonLabel = await waitFor(() => getByText('Complete'));
   const openButtonLabel = await waitFor(() => getByText('Open'));
 
-  expect(activeButtonLabel.parentElement?.className).toContain('Secondary');
-  expect(inactiveButtonLabel.parentElement?.className).not.toContain('Secondary');
-  expect(openButtonLabel.parentElement?.className).not.toContain('Secondary');
+  expect(activeButtonLabel.parentElement).toHaveAttribute('aria-selected', 'true');
+  expect(openButtonLabel.parentElement).toHaveAttribute('aria-selected', 'false');
 });
 
 test('selects open games', async () => {
@@ -143,36 +141,12 @@ test('selects open games', async () => {
   );
 
   const activeButtonLabel = await waitFor(() => getByText('Active'));
-  const inactiveButtonLabel = await waitFor(() => getByText('Complete'));
   const openButtonLabel = await waitFor(() => getByText('Open'));
 
   fireEvent.click(openButtonLabel);
 
   await waitForElementToBeRemoved(() => getAllByRole('progressbar')); // wait for service calls to complete
 
-  expect(activeButtonLabel.parentElement?.className).not.toContain('Secondary');
-  expect(inactiveButtonLabel.parentElement?.className).not.toContain('Secondary');
-  expect(openButtonLabel.parentElement?.className).toContain('Secondary');
-});
-
-test('selects inactive games', async () => {
-  const { getByText, getAllByRole } = render(
-    <Provider store={mockedStore}>
-      <MemoryRouter>
-        <GamesList />
-      </MemoryRouter>
-    </Provider>
-  );
-
-  const activeButtonLabel = await waitFor(() => getByText('Active'));
-  const inactiveButtonLabel = await waitFor(() => getByText('Complete'));
-  const openButtonLabel = await waitFor(() => getByText('Open'));
-
-  fireEvent.click(inactiveButtonLabel);
-
-  await waitForElementToBeRemoved(() => getAllByRole('progressbar')); // wait for service calls to complete
-
-  expect(activeButtonLabel.parentElement?.className).not.toContain('Secondary');
-  expect(inactiveButtonLabel.parentElement?.className).toContain('Secondary');
-  expect(openButtonLabel.parentElement?.className).not.toContain('Secondary');
+  expect(openButtonLabel.parentElement).toHaveAttribute('aria-selected', 'true');
+  expect(activeButtonLabel.parentElement).toHaveAttribute('aria-selected', 'false');
 });
