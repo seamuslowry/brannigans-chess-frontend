@@ -1,4 +1,5 @@
 import axios from 'axios';
+import jwtDecode from 'jwt-decode';
 import config from '../config';
 
 export const chessApi = axios.create({
@@ -10,6 +11,9 @@ chessApi.interceptors.request.use(axiosConfig => {
   const token = localStorage.getItem('token');
 
   if (!token) return axiosConfig;
+
+  const claims = jwtDecode(token) as { exp: number };
+  if (claims.exp * 1000 > Date.now()) return axiosConfig;
 
   return {
     ...axiosConfig,
