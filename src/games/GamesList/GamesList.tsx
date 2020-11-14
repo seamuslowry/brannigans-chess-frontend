@@ -2,13 +2,14 @@ import React from 'react';
 import {
   Box,
   Button,
-  ButtonGroup,
   CircularProgress,
   List,
   ListItem,
   ListItemSecondaryAction,
   ListItemText,
   makeStyles,
+  Tab,
+  Tabs,
   Typography
 } from '@material-ui/core';
 import { Link } from 'react-router-dom';
@@ -21,7 +22,7 @@ import { GameStatusGroup } from '../../services/ChessService.types';
 const useStyles = makeStyles(theme => ({
   list: {
     width: '100%',
-    height: '80vh',
+    height: '75vh',
     overflowY: 'auto',
     backgroundColor: theme.palette.background.paper,
     borderRadius: `0 0 1rem 1rem`,
@@ -64,58 +65,39 @@ const GamesList: React.FC = () => {
   } = useServiceCall(memoizedCall);
 
   const handlePageChange = (e: React.ChangeEvent<unknown>, newPage: number) => setPage(newPage);
-  const handleStatusGroupChange = (newGroup: GameStatusGroup) => () => setStatusGroup(newGroup);
+  const handleStatusGroupChange = (e: React.ChangeEvent<unknown>, newGroup: GameStatusGroup) =>
+    setStatusGroup(newGroup);
 
   return (
-    <Box display="flex" flexDirection="column" className={classes.root} alignItems="center">
-      <ButtonGroup
-        classes={{ groupedContainedHorizontal: classes.buttonGroup }}
-        fullWidth
-        variant="contained"
-        color="primary"
-      >
-        <Button
-          onClick={handleStatusGroupChange(GameStatusGroup.OPEN)}
-          color={statusGroup === GameStatusGroup.OPEN ? 'secondary' : undefined}
-        >
-          Open
-        </Button>
-        <Button
-          onClick={handleStatusGroupChange(GameStatusGroup.ACTIVE)}
-          color={statusGroup === GameStatusGroup.ACTIVE ? 'secondary' : undefined}
-        >
-          Active
-        </Button>
-        <Button
-          onClick={handleStatusGroupChange(GameStatusGroup.INACTIVE)}
-          color={statusGroup === GameStatusGroup.INACTIVE ? 'secondary' : undefined}
-        >
-          Complete
-        </Button>
-      </ButtonGroup>
+    <Box className={classes.root}>
+      <Tabs value={statusGroup} onChange={handleStatusGroupChange} variant="fullWidth">
+        <Tab value={GameStatusGroup.OPEN} label="Open" />
+        <Tab value={GameStatusGroup.ACTIVE} label="Active" />
+      </Tabs>
       <List className={classes.list}>
         {loading && <CircularProgress />}
-        {response.content.map(game => (
-          <ListItem
-            classes={{
-              container: classes.listItemContainer
-            }}
-            data-testid="game-list-item"
-            key={`game-item-${game.id}`}
-          >
-            <ListItemText primary={game.uuid} />
-            <ListItemSecondaryAction>
-              <Button component={Link} to={`/game/${game.id}`} color="primary">
-                View
-              </Button>
-            </ListItemSecondaryAction>
-          </ListItem>
-        ))}
+        {!error &&
+          response.content.map(game => (
+            <ListItem
+              classes={{
+                container: classes.listItemContainer
+              }}
+              data-testid="game-list-item"
+              key={`game-item-${game.id}`}
+            >
+              <ListItemText primary={game.uuid} />
+              <ListItemSecondaryAction>
+                <Button component={Link} to={`/game/${game.id}`} color="primary">
+                  View
+                </Button>
+              </ListItemSecondaryAction>
+            </ListItem>
+          ))}
         {!loading && response.content.length === 0 && (
           <Typography align="center">No available games</Typography>
         )}
       </List>
-      <Box m={1}>
+      <Box my={1} display="flex" justifyContent="center">
         <Pagination
           count={response.totalPages}
           page={page}
