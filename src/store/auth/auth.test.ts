@@ -9,6 +9,8 @@ import { Player } from '../../services/ChessService.types';
 import config from '../../config';
 import { AppState } from '../store';
 
+jest.mock('jwt-decode', () => jest.fn().mockReturnValue({ exp: Date.now() + 60 * 60 }));
+
 const server = setupServer(
   rest.post(`${config.serviceUrl}/players/auth`, (req, res, ctx) => {
     return res(ctx.json<Player>(playerOne));
