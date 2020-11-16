@@ -57,7 +57,7 @@ const GamesList: React.FC<Props> = ({ games, loading, error }) => {
       ))}
       {error && <Typography color="error">Could not load games: {error}</Typography>}
       {!loading && !error && games.length === 0 && (
-        <Typography align="center">No available games</Typography>
+        <Typography align="center">No matching games</Typography>
       )}
     </List>
   );

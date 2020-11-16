@@ -31,10 +31,10 @@ test('displays error when provided', async () => {
   expect(games).toHaveLength(0);
 });
 
-test('shows a message when there are no available games', async () => {
+test('shows a message when there are no matching games', async () => {
   render(<GamesList games={[]} />);
 
-  const message = await waitFor(() => screen.getByText('No available games'));
+  const message = await waitFor(() => screen.getByText('No matching games'));
 
   expect(message).toBeInTheDocument();
 });
