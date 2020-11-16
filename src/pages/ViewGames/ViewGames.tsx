@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, makeStyles, Tab, Tabs } from '@material-ui/core';
 import { Pagination } from '@material-ui/lab';
-import CreateGameButton from '../../molecules/CreateGameButton/CreateGameButton';
+import CreateGameButton from '../../organisms/CreateGameButton/CreateGameButton';
 import ChessService from '../../services/ChessService';
 import useServiceCall from '../../utils/useServiceCall';
 import { GameStatusGroup } from '../../services/ChessService.types';
