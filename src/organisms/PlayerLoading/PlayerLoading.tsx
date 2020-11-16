@@ -12,19 +12,19 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const PlayerLoading: React.FC = () => {
-  const { user, isAuthenticated, getAccessTokenSilently } = useAuth0();
+  const { user, isAuthenticated, isLoading: auth0Loading, getAccessTokenSilently } = useAuth0();
   const loggedIn = useLoggedIn();
 
   const classes = useStyles();
 
   const dispatch = useAppDispatch();
 
-  const [loading, setLoading] = React.useState(false);
+  const [authenticatingPlayer, setAuthenticatingPlayer] = React.useState(false);
 
   React.useEffect(() => {
     if (!isAuthenticated) return;
     const fullyAuthenticate = () => {
-      setLoading(true);
+      setAuthenticatingPlayer(true);
       dispatch(
         authenticatePlayer({
           getAccessToken: getAccessTokenSilently,
@@ -34,7 +34,7 @@ const PlayerLoading: React.FC = () => {
           }
         })
       ).finally(() => {
-        setLoading(false);
+        setAuthenticatingPlayer(false);
       });
     };
 
@@ -48,7 +48,10 @@ const PlayerLoading: React.FC = () => {
   }, [isAuthenticated, dispatch, getAccessTokenSilently, user]);
 
   return (
-    <Backdrop className={classes.backdrop} open={loading && !loggedIn}>
+    <Backdrop
+      className={classes.backdrop}
+      open={(auth0Loading || authenticatingPlayer) && !loggedIn}
+    >
       <CircularProgress />
     </Backdrop>
   );
