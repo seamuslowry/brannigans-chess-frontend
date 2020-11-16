@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, makeStyles } from '@material-ui/core';
-import Tile from '../Tile/Tile';
+import Tile from '../../molecules/Tile/Tile';
 import usePieceSize from '../../utils/usePieceSize';
 import PawnPromotion from '../PawnPromotion/PawnPromotion';
 import { useAppDispatch } from '../../store/store';

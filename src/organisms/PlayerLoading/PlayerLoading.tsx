@@ -1,27 +1,30 @@
 import React from 'react';
-import { Avatar, AvatarProps, makeStyles } from '@material-ui/core';
+import { Backdrop, CircularProgress, makeStyles } from '@material-ui/core';
 import { useAuth0 } from '@auth0/auth0-react';
 import { authenticatePlayer, clearAuth } from '../../store/auth/auth';
 import { useAppDispatch } from '../../store/store';
 import useLoggedIn from '../../utils/useLoggedIn';
 
 const useStyles = makeStyles(theme => ({
-  small: {
-    width: theme.spacing(4),
-    height: theme.spacing(4)
+  backdrop: {
+    zIndex: theme.zIndex.drawer + 1
   }
 }));
 
-const UserAvatar: React.FC<Omit<AvatarProps, 'alt' | 'src' | 'className'>> = props => {
+const PlayerLoading: React.FC = () => {
   const { user, isAuthenticated, getAccessTokenSilently } = useAuth0();
   const loggedIn = useLoggedIn();
 
-  const dispatch = useAppDispatch();
   const classes = useStyles();
+
+  const dispatch = useAppDispatch();
+
+  const [loading, setLoading] = React.useState(false);
 
   React.useEffect(() => {
     if (!isAuthenticated) return;
     const fullyAuthenticate = () => {
+      setLoading(true);
       dispatch(
         authenticatePlayer({
           getAccessToken: getAccessTokenSilently,
@@ -30,7 +33,9 @@ const UserAvatar: React.FC<Omit<AvatarProps, 'alt' | 'src' | 'className'>> = pro
             name: user.name
           }
         })
-      );
+      ).finally(() => {
+        setLoading(false);
+      });
     };
 
     fullyAuthenticate();
@@ -42,14 +47,11 @@ const UserAvatar: React.FC<Omit<AvatarProps, 'alt' | 'src' | 'className'>> = pro
     };
   }, [isAuthenticated, dispatch, getAccessTokenSilently, user]);
 
-  return loggedIn && user ? (
-    <Avatar
-      alt={user.name}
-      src={user.picture}
-      className={classes.small}
-      imgProps={{ referrerPolicy: 'no-referrer' }}
-    />
-  ) : null;
+  return (
+    <Backdrop className={classes.backdrop} open={loading && !loggedIn}>
+      <CircularProgress />
+    </Backdrop>
+  );
 };
 
-export default UserAvatar;
+export default PlayerLoading;

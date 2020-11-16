@@ -14,7 +14,7 @@ import {
 } from '@material-ui/core';
 import { Link } from 'react-router-dom';
 import { Pagination } from '@material-ui/lab';
-import CreateGameButton from '../CreateGameButton/CreateGameButton';
+import CreateGameButton from '../../molecules/CreateGameButton/CreateGameButton';
 import ChessService from '../../services/ChessService';
 import useServiceCall from '../../utils/useServiceCall';
 import { GameStatusGroup } from '../../services/ChessService.types';

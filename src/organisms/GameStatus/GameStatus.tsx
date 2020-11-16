@@ -6,7 +6,7 @@ import startCase from 'lodash.startcase';
 import { AppState } from '../../store/store';
 import useSubscription from '../../utils/useSubscription';
 import { Game } from '../../services/ChessService.types';
-import JoinAndLeaveButton from '../JoinAndLeaveButton/JoinAndLeaveButton';
+import JoinAndLeaveButton from '../../molecules/JoinAndLeaveButton/JoinAndLeaveButton';
 import { getStatusTopic, selectGameById } from '../../store/games/games';
 
 interface Props {

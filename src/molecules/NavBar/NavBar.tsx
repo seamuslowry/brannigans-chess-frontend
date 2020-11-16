@@ -2,10 +2,10 @@ import React from 'react';
 import { AppBar, Box, Button, IconButton, Toolbar, Typography } from '@material-ui/core';
 import { Link } from 'react-router-dom';
 import { GitHub } from '@material-ui/icons';
-import Logout from '../../auth/Logout/Logout';
-import Login from '../../auth/Login/Login';
+import Logout from '../../organisms/Logout/Logout';
+import Login from '../../organisms/Login/Login';
 import useLoggedIn from '../../utils/useLoggedIn';
-import UserAvatar from '../../information/UserAvatar/UserAvatar';
+import UserAvatar from '../UserAvatar/UserAvatar';
 
 const NavBar: React.FC = () => {
   const loggedIn = useLoggedIn();
