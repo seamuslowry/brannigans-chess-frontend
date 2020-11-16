@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box } from '@material-ui/core';
-import Faq from './Faq/Faq';
+import Faq from '../../molecules/Faq/Faq';
 
 const faqs = [
   {

@@ -5,7 +5,7 @@ import { GitHub } from '@material-ui/icons';
 import Logout from '../../auth/Logout/Logout';
 import Login from '../../auth/Login/Login';
 import useLoggedIn from '../../utils/useLoggedIn';
-import UserAvatar from '../UserAvatar/UserAvatar';
+import UserAvatar from '../../information/UserAvatar/UserAvatar';
 
 const NavBar: React.FC = () => {
   const loggedIn = useLoggedIn();

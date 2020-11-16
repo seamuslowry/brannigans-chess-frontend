@@ -3,7 +3,7 @@ import { Box, CircularProgress, makeStyles, Paper } from '@material-ui/core';
 import { useSelector } from 'react-redux';
 import { Move as MoveEntity } from '../../services/ChessService.types';
 import { AppState, useAppDispatch } from '../../store/store';
-import Move from '../Move/Move';
+import Move from '../../molecules/Move/Move';
 import useGameColors from '../../utils/useGameColor';
 import useSubscription from '../../utils/useSubscription';
 import { getMoves, getSharedMovesTopic, makeSelectMoves } from '../../store/moves/moves';
