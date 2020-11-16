@@ -16,12 +16,24 @@ const mockedStore = mockStore({
   }
 });
 
-test('renders', () => {
+test('renders with a player', () => {
   const { container } = render(
     <Provider store={mockedStore}>
       <Profile />
     </Provider>
   );
 
-  expect(container.children).not.toBeNull();
+  expect(container.firstChild).not.toBeNull();
+});
+
+test('renders nothing without a player', () => {
+  const noPlayerStore = mockStore(testStore);
+
+  const { container } = render(
+    <Provider store={noPlayerStore}>
+      <Profile />
+    </Provider>
+  );
+
+  expect(container.firstChild).toBeNull();
 });
