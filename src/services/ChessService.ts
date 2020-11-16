@@ -76,6 +76,8 @@ const createGame = () => chessApi.post<Game>('games/create');
 const authenticatePlayer = (playerInfo: AdditionalPlayerInfo) =>
   chessApi.post<Player>('players/auth', playerInfo);
 
+const changeName = (newName: string) => chessApi.post<Player>('players/name', { name: newName });
+
 const joinGame = (gameId: number, color: PieceColor) =>
   chessApi.post<Game>(`players/join/${gameId}?color=${color}`);
 
@@ -89,6 +91,7 @@ export default {
   promote,
   move,
   authenticatePlayer,
+  changeName,
   joinGame,
   leaveGame
 };
