@@ -4,7 +4,7 @@ const usePieceSize = () => {
   const theme = useTheme();
   const sm = useMediaQuery(theme.breakpoints.down('sm'));
 
-  return sm ? '8vw' : '5vw';
+  return sm ? '7vw' : '5vw';
 };
 
 export default usePieceSize;

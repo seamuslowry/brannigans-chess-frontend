@@ -23,9 +23,9 @@ const NavBar: React.FC = () => {
             In the game of chess, you can never let your adversary see your pieces. -Zapp Brannigan
           </Typography>
         </Box>
-        <Box ml={1} mr={2}>
+        <IconButton component={Link} to="/user" color="secondary">
           <UserAvatar />
-        </Box>
+        </IconButton>
         <IconButton
           color="secondary"
           component="a"
