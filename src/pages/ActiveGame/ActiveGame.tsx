@@ -1,10 +1,10 @@
 import React from 'react';
 import { Grid } from '@material-ui/core';
 import { useParams } from 'react-router-dom';
-import Board from '../Board/Board';
-import MoveList from '../MoveList/MoveList';
-import TakenPieces from '../TakenPieces/TakenPieces';
-import GameStatus from '../GameStatus/GameStatus';
+import Board from '../../organisms/Board/Board';
+import MoveList from '../../organisms/MoveList/MoveList';
+import TakenPieces from '../../organisms/TakenPieces/TakenPieces';
+import GameStatus from '../../organisms/GameStatus/GameStatus';
 
 interface ExpectedRouteParams {
   id?: string;

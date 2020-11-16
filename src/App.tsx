@@ -1,15 +1,15 @@
 import { Box } from '@material-ui/core';
 import React from 'react';
 import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-dom';
-import PrivateRoute from './auth/PrivateRoute/PrivateRoute';
-import ActiveGame from './organisms/ActiveGame/ActiveGame';
-import GamesList from './games/GamesList/GamesList';
+import PrivateRoute from './organisms/PrivateRoute/PrivateRoute';
+import ActiveGame from './pages/ActiveGame/ActiveGame';
 import Attributions from './molecules/Attributions/Attributions';
 import Faqs from './organisms/Faqs/Faqs';
 import NavBar from './molecules/NavBar/NavBar';
 import Notifications from './organisms/Notifications/Notifications';
-import Profile from './user/Profile/Profile';
+import Profile from './pages/Profile/Profile';
 import PlayerLoading from './organisms/PlayerLoading/PlayerLoading';
+import ViewGames from './pages/ViewGames/ViewGames';
 
 const App = () => {
   return (
@@ -29,7 +29,7 @@ const App = () => {
               <Faqs />
             </Route>
             <Route exact path="/">
-              <GamesList />
+              <ViewGames />
             </Route>
             <Redirect to="/" />
           </Switch>
