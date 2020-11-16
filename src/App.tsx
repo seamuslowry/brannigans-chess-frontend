@@ -5,7 +5,7 @@ import PrivateRoute from './organisms/PrivateRoute/PrivateRoute';
 import ActiveGame from './pages/ActiveGame/ActiveGame';
 import Attributions from './molecules/Attributions/Attributions';
 import Faqs from './pages/Faqs/Faqs';
-import NavBar from './molecules/NavBar/NavBar';
+import NavBar from './organisms/NavBar/NavBar';
 import Notifications from './organisms/Notifications/Notifications';
 import Profile from './pages/Profile/Profile';
 import PlayerLoading from './organisms/PlayerLoading/PlayerLoading';
