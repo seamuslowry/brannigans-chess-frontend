@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box } from '@material-ui/core';
-import DisplayNameChange from '../../organisms/DisplayNameChange/DisplayNameChange';
+import DisplayNameChange from '../../molecules/DisplayNameChange/DisplayNameChange';
 import { useSelector } from 'react-redux';
 import { Player } from '../../services/ChessService.types';
 import { AppState } from '../../store/store';
