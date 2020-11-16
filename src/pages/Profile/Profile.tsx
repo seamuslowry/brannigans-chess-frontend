@@ -11,8 +11,10 @@ const Profile: React.FC = () => {
   if (!player) return null;
 
   return (
-    <Box width="100%">
-      <DisplayName player={player} />
+    <Box width="80%" display="flex">
+      <Box width="50%">
+        <DisplayName player={player} />
+      </Box>
     </Box>
   );
 };
