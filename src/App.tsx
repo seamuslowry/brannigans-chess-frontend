@@ -1,8 +1,8 @@
 import { Box } from '@material-ui/core';
 import React from 'react';
 import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-dom';
+import PrivateRoute from './atoms/PrivateRoute/PrivateRoute';
 import Attributions from './molecules/Attributions/Attributions';
-import PrivateRoute from './organisms/PrivateRoute/PrivateRoute';
 import Notifications from './organisms/Notifications/Notifications';
 import PlayerLoading from './organisms/PlayerLoading/PlayerLoading';
 import NavBar from './organisms/NavBar/NavBar';
