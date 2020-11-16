@@ -8,6 +8,7 @@ import Attributions from './information/Attributions/Attributions';
 import Faqs from './information/Faqs/Faqs';
 import NavBar from './information/NavBar/NavBar';
 import Notifications from './notifications/Notifications/Notifications';
+import Profile from './user/Profile/Profile';
 
 const App = () => {
   return (
@@ -18,6 +19,9 @@ const App = () => {
           <Switch>
             <PrivateRoute path="/game/:id">
               <ActiveGame />
+            </PrivateRoute>
+            <PrivateRoute path="/user">
+              <Profile />
             </PrivateRoute>
             <Route path="/faq">
               <Faqs />
