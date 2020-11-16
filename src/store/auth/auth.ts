@@ -18,6 +18,14 @@ export const authenticatePlayer = createAsyncThunk(
   }
 );
 
+export const updateDisplayName = createAsyncThunk(
+  'chess/auth/updateDisplayName',
+  async (name: string) => {
+    const response = await ChessService.changeName(name);
+    return response.data;
+  }
+);
+
 export interface AuthState {
   player?: Player;
 }
@@ -38,6 +46,9 @@ const authSlice = createSlice({
   extraReducers: builder => {
     builder
       .addCase(authenticatePlayer.fulfilled, (state, action) => {
+        state.player = action.payload;
+      })
+      .addCase(updateDisplayName.fulfilled, (state, action) => {
         state.player = action.payload;
       })
       .addCase(authenticatePlayer.rejected, sharedClearAuth);
