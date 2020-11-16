@@ -5,7 +5,7 @@ import { Piece as PieceEntity } from '../../services/ChessService.types';
 import { clickTile, makeGetSelected } from '../../store/boards/boards';
 import { makeGetActivePiece } from '../../store/pieces/pieces';
 import { AppState, useAppDispatch } from '../../store/store';
-import Piece from '../Piece/Piece';
+import Piece from '../../atoms/Piece/Piece';
 
 interface Props {
   gameId: number;

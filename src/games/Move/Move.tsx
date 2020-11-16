@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, Typography, useTheme } from '@material-ui/core';
 import { Move as MoveEntity, MoveType } from '../../services/ChessService.types';
-import Piece from '../Piece/Piece';
+import Piece from '../../atoms/Piece/Piece';
 import { displayRow, displayCol } from '../../utils/markerHelper';
 
 interface Props {

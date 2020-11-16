@@ -2,7 +2,7 @@ import React from 'react';
 import { Box, CircularProgress } from '@material-ui/core';
 import { useSelector } from 'react-redux';
 import { Piece as PieceEntity, PieceColor } from '../../services/ChessService.types';
-import Piece from '../Piece/Piece';
+import Piece from '../../atoms/Piece/Piece';
 import { AppState, useAppDispatch } from '../../store/store';
 import usePieceSize from '../../utils/usePieceSize';
 import { getPieces, makeGetTakenPieces } from '../../store/pieces/pieces';

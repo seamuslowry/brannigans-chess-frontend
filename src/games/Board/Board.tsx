@@ -6,7 +6,7 @@ import PawnPromotion from '../PawnPromotion/PawnPromotion';
 import { useAppDispatch } from '../../store/store';
 import useGameColors from '../../utils/useGameColor';
 import { getPieces } from '../../store/pieces/pieces';
-import Marker from '../Marker/Marker';
+import Marker from '../../atoms/Marker/Marker';
 import { displayCol, displayRow } from '../../utils/markerHelper';
 
 const useStyles = makeStyles({

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Dialog, DialogActions, DialogTitle, IconButton } from '@material-ui/core';
 import { useSelector } from 'react-redux';
-import Piece from '../Piece/Piece';
+import Piece from '../../atoms/Piece/Piece';
 import { AppState, useAppDispatch } from '../../store/store';
 import { PieceColor, PieceType, Piece as PieceEntity } from '../../services/ChessService.types';
 import { makeGetPromatablePawn, promotePawn } from '../../store/pieces/pieces';
