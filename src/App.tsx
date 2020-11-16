@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-d
 import PrivateRoute from './organisms/PrivateRoute/PrivateRoute';
 import ActiveGame from './pages/ActiveGame/ActiveGame';
 import Attributions from './molecules/Attributions/Attributions';
-import Faqs from './organisms/Faqs/Faqs';
+import Faqs from './pages/Faqs/Faqs';
 import NavBar from './molecules/NavBar/NavBar';
 import Notifications from './organisms/Notifications/Notifications';
 import Profile from './pages/Profile/Profile';
