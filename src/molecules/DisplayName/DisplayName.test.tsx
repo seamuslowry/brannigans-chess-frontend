@@ -5,7 +5,7 @@ import { ActionCreator, AnyAction, getDefaultMiddleware } from '@reduxjs/toolkit
 import createMockStore from 'redux-mock-store';
 import { AppState } from '../../store/store';
 import { playerOne, testStore } from '../../utils/testData';
-import DisplayNameChange from './DisplayNameChange';
+import DisplayName from './DisplayName';
 import { updateDisplayName } from '../../store/auth/auth';
 import { rest } from 'msw';
 import { setupServer } from 'msw/node';
@@ -31,7 +31,7 @@ test('changes the player name', async () => {
   const newName = 'new Name';
   const { getByRole, getByLabelText, getByDisplayValue } = render(
     <Provider store={mockedStore}>
-      <DisplayNameChange player={playerOne} />
+      <DisplayName player={playerOne} />
     </Provider>
   );
 
@@ -57,7 +57,7 @@ test('cancels changes the player name', async () => {
   const newName = 'new Name';
   const { getByLabelText, getByDisplayValue } = render(
     <Provider store={mockedStore}>
-      <DisplayNameChange player={playerOne} />
+      <DisplayName player={playerOne} />
     </Provider>
   );
 

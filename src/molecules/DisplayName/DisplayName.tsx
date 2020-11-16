@@ -85,7 +85,7 @@ interface Props {
   player: Player;
 }
 
-const DisplayNameChange: React.FC<Props> = ({ player }) => {
+const DisplayName: React.FC<Props> = ({ player }) => {
   const dispatch = useAppDispatch();
 
   const [localState, localDispatch] = React.useReducer(reducer, {
@@ -161,4 +161,4 @@ const DisplayNameChange: React.FC<Props> = ({ player }) => {
   );
 };
 
-export default DisplayNameChange;
+export default DisplayName;

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box } from '@material-ui/core';
-import DisplayNameChange from '../../molecules/DisplayNameChange/DisplayNameChange';
+import DisplayName from '../../molecules/DisplayName/DisplayName';
 import { useSelector } from 'react-redux';
 import { Player } from '../../services/ChessService.types';
 import { AppState } from '../../store/store';
@@ -12,7 +12,7 @@ const Profile: React.FC = () => {
 
   return (
     <Box width="100%">
-      <DisplayNameChange player={player} />
+      <DisplayName player={player} />
     </Box>
   );
 };
