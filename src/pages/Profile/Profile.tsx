@@ -1,8 +1,13 @@
 import React from 'react';
-import { Typography } from '@material-ui/core';
+import { Box } from '@material-ui/core';
+import DisplayNameChange from '../../organisms/DisplayNameChange/DisplayNameChange';
 
 const Profile: React.FC = () => {
-  return <Typography align="center">Coming Soon</Typography>;
+  return (
+    <Box width="100%">
+      <DisplayNameChange />
+    </Box>
+  );
 };
 
 export default Profile;
