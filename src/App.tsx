@@ -1,14 +1,14 @@
 import { Box } from '@material-ui/core';
 import React from 'react';
 import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-dom';
-import PrivateRoute from './organisms/PrivateRoute/PrivateRoute';
-import ActiveGame from './pages/ActiveGame/ActiveGame';
 import Attributions from './molecules/Attributions/Attributions';
-import Faqs from './pages/Faqs/Faqs';
-import NavBar from './organisms/NavBar/NavBar';
+import PrivateRoute from './organisms/PrivateRoute/PrivateRoute';
 import Notifications from './organisms/Notifications/Notifications';
-import Profile from './pages/Profile/Profile';
 import PlayerLoading from './organisms/PlayerLoading/PlayerLoading';
+import NavBar from './organisms/NavBar/NavBar';
+import ActiveGame from './pages/ActiveGame/ActiveGame';
+import Faqs from './pages/Faqs/Faqs';
+import Profile from './pages/Profile/Profile';
 import ViewGames from './pages/ViewGames/ViewGames';
 
 const App = () => {
