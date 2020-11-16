@@ -1,5 +1,12 @@
 import React from 'react';
-import { Box, CircularProgress, IconButton, Input } from '@material-ui/core';
+import {
+  CircularProgress,
+  FormControl,
+  IconButton,
+  InputLabel,
+  makeStyles,
+  OutlinedInput
+} from '@material-ui/core';
 import { Player } from '../../services/ChessService.types';
 import { useAppDispatch } from '../../store/store';
 import { Check, Close, Edit } from '@material-ui/icons';
@@ -9,6 +16,7 @@ interface DisplayNameChangeState {
   loading: boolean;
   editing: boolean;
   name: string;
+  initialName: string;
 }
 
 interface StartEditAction {
@@ -55,7 +63,8 @@ const reducer = (state: DisplayNameChangeState, action: DisplayNameChangeAction)
       return {
         ...state,
         loading: false,
-        editing: false
+        editing: false,
+        initialName: state.name
       };
     case 'submit/failure':
       return {
@@ -76,10 +85,17 @@ const reducer = (state: DisplayNameChangeState, action: DisplayNameChangeAction)
     default:
       return {
         ...state,
-        editing: false
+        editing: false,
+        name: state.initialName
       };
   }
 };
+
+const useStyles = makeStyles({
+  formControl: {
+    margin: '0.1rem'
+  }
+});
 
 interface Props {
   player: Player;
@@ -87,11 +103,13 @@ interface Props {
 
 const DisplayName: React.FC<Props> = ({ player }) => {
   const dispatch = useAppDispatch();
+  const classes = useStyles();
 
   const [localState, localDispatch] = React.useReducer(reducer, {
     loading: false,
     editing: false,
-    name: player.name
+    name: player.name,
+    initialName: player.name
   });
 
   const { name, loading, editing } = localState;
@@ -149,15 +167,21 @@ const DisplayName: React.FC<Props> = ({ player }) => {
   }
 
   return (
-    <Box width="100%">
-      <Input
+    <FormControl fullWidth className={classes.formControl} variant="outlined">
+      <InputLabel color="secondary" htmlFor={`display-name-${player.id}`}>
+        Display Name
+      </InputLabel>
+      <OutlinedInput
+        id={`display-name-${player.id}`}
         fullWidth
         value={name}
-        disabled={!editing}
+        disabled={loading || !editing}
         onChange={handleChange}
         endAdornment={adornments}
+        label="Display Name"
+        color="secondary"
       />
-    </Box>
+    </FormControl>
   );
 };
 

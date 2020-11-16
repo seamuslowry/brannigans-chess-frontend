@@ -70,6 +70,7 @@ test('cancels changes the player name', async () => {
   const submitButton = getByLabelText('cancel');
   fireEvent.click(submitButton);
 
+  expect(getByDisplayValue(playerOne.name)).toBeInTheDocument();
   expect(mockedStore.getActions()).not.toContainEqual(
     expect.objectContaining({
       type: updateDisplayName.pending.type
