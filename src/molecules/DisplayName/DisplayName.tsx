@@ -180,6 +180,7 @@ const DisplayName: React.FC<Props> = ({ player }) => {
         endAdornment={adornments}
         label="Display Name"
         color="secondary"
+        spellCheck={false}
       />
     </FormControl>
   );
