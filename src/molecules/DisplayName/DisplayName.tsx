@@ -4,7 +4,6 @@ import {
   FormControl,
   IconButton,
   InputLabel,
-  makeStyles,
   OutlinedInput
 } from '@material-ui/core';
 import { Player } from '../../services/ChessService.types';
@@ -91,19 +90,12 @@ const reducer = (state: DisplayNameChangeState, action: DisplayNameChangeAction)
   }
 };
 
-const useStyles = makeStyles({
-  formControl: {
-    margin: '0.1rem'
-  }
-});
-
 interface Props {
   player: Player;
 }
 
 const DisplayName: React.FC<Props> = ({ player }) => {
   const dispatch = useAppDispatch();
-  const classes = useStyles();
 
   const [localState, localDispatch] = React.useReducer(reducer, {
     loading: false,
@@ -167,7 +159,7 @@ const DisplayName: React.FC<Props> = ({ player }) => {
   }
 
   return (
-    <FormControl fullWidth className={classes.formControl} variant="outlined">
+    <FormControl fullWidth margin="normal" variant="outlined">
       <InputLabel color="secondary" htmlFor={`display-name-${player.id}`}>
         Display Name
       </InputLabel>
