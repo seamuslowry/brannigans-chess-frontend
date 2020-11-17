@@ -1,11 +1,11 @@
 import React from 'react';
-import { Box, makeStyles, Tab, Tabs } from '@material-ui/core';
-import { Pagination } from '@material-ui/lab';
+import { Box, makeStyles } from '@material-ui/core';
 import CreateGameButton from '../../molecules/CreateGameButton/CreateGameButton';
 import ChessService from '../../services/ChessService';
 import useServiceCall from '../../utils/useServiceCall';
 import { GameStatusGroup } from '../../services/ChessService.types';
 import GamesList from '../../organisms/GamesList/GamesList';
+import TabbedList from '../../organisms/TabbedList/TabbedList';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -36,25 +36,24 @@ const ViewGames: React.FC = () => {
     error
   } = useServiceCall(memoizedCall);
 
-  const handlePageChange = (e: React.ChangeEvent<unknown>, newPage: number) => setPage(newPage);
-  const handleStatusGroupChange = (e: React.ChangeEvent<unknown>, newGroup: GameStatusGroup) =>
-    setStatusGroup(newGroup);
+  const handlePageChange = (newPage: number) => setPage(newPage);
+  const handleStatusGroupChange = (newGroup: GameStatusGroup) => setStatusGroup(newGroup);
 
   return (
     <Box className={classes.root}>
-      <Tabs value={statusGroup} onChange={handleStatusGroupChange} variant="fullWidth">
-        <Tab value={GameStatusGroup.OPEN} label="Open" />
-        <Tab value={GameStatusGroup.ACTIVE} label="Active" />
-      </Tabs>
-      <GamesList games={response.content} loading={loading} error={error} />
-      <Box my={1} display="flex" justifyContent="center">
-        <Pagination
-          count={response.totalPages}
-          page={page}
-          onChange={handlePageChange}
-          size="large"
-        />
-      </Box>
+      <TabbedList
+        tabOptions={[
+          { label: 'Open', value: GameStatusGroup.OPEN },
+          { label: 'Active', value: GameStatusGroup.ACTIVE }
+        ]}
+        tabValue={statusGroup}
+        onTabChange={handleStatusGroupChange}
+        page={page}
+        totalPages={response.totalPages}
+        onPageChange={handlePageChange}
+      >
+        <GamesList games={response.content} loading={loading} error={error} />
+      </TabbedList>
       <CreateGameButton />
     </Box>
   );
