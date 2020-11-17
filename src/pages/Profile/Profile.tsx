@@ -12,7 +12,7 @@ const Profile: React.FC = () => {
 
   return (
     <Box width="80%" display="flex">
-      <Box width="50%">
+      <Box width="30%">
         <DisplayName player={player} />
       </Box>
     </Box>
