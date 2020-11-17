@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box } from '@material-ui/core';
+import { Grid } from '@material-ui/core';
 import DisplayName from '../../molecules/DisplayName/DisplayName';
 import { useSelector } from 'react-redux';
 import { Player } from '../../services/ChessService.types';
@@ -11,11 +11,11 @@ const Profile: React.FC = () => {
   if (!player) return null;
 
   return (
-    <Box width="80%" display="flex">
-      <Box width="30%">
+    <Grid item container xs={9}>
+      <Grid item xs={12} md={4}>
         <DisplayName player={player} />
-      </Box>
-    </Box>
+      </Grid>
+    </Grid>
   );
 };
 
