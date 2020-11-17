@@ -159,7 +159,7 @@ const DisplayName: React.FC<Props> = ({ player }) => {
   }
 
   return (
-    <FormControl fullWidth margin="normal" variant="outlined">
+    <FormControl fullWidth margin="none" variant="outlined">
       <InputLabel color="secondary" htmlFor={`display-name-${player.id}`}>
         Display Name
       </InputLabel>
@@ -173,6 +173,7 @@ const DisplayName: React.FC<Props> = ({ player }) => {
         label="Display Name"
         color="secondary"
         spellCheck={false}
+        margin="dense"
       />
     </FormControl>
   );
