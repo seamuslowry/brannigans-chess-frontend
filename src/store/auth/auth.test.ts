@@ -1,4 +1,4 @@
-import reducer, { authenticatePlayer, clearAuth, initialState } from './auth';
+import reducer, { authenticatePlayer, clearAuth, initialState, updateDisplayName } from './auth';
 import { playerOne, testStore } from '../../utils/testData';
 import { waitFor } from '@testing-library/react';
 import { ActionCreator, AnyAction, getDefaultMiddleware } from '@reduxjs/toolkit';
@@ -11,6 +11,9 @@ import { AppState } from '../store';
 
 const server = setupServer(
   rest.post(`${config.serviceUrl}/players/auth`, (req, res, ctx) => {
+    return res(ctx.json<Player>(playerOne));
+  }),
+  rest.post(`${config.serviceUrl}/players/name`, (req, res, ctx) => {
     return res(ctx.json<Player>(playerOne));
   })
 );
@@ -108,4 +111,35 @@ test('clears authentication', async () => {
   );
 
   expect(result).toEqual(initialState);
+});
+
+test('tries to change the player name', async () => {
+  await waitFor(() => mockedStore.dispatch(updateDisplayName('new-name')));
+
+  expect(mockedStore.getActions()).toContainEqual(
+    expect.objectContaining({
+      type: updateDisplayName.fulfilled.type
+    })
+  );
+});
+
+test('dispatches an error when failing to change the player name', async () => {
+  server.use(
+    rest.post(`${config.serviceUrl}/players/name`, (req, res, ctx) => {
+      return res(ctx.status(500));
+    })
+  );
+  await waitFor(() => mockedStore.dispatch(updateDisplayName('test')));
+
+  expect(mockedStore.getActions()).toContainEqual(
+    expect.objectContaining({
+      type: updateDisplayName.rejected.type
+    })
+  );
+});
+
+test('handles successful player name change', async () => {
+  const result = reducer(undefined, updateDisplayName.fulfilled(playerOne, '', 'test'));
+
+  expect(result.player).toEqual(playerOne);
 });

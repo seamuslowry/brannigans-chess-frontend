@@ -1,5 +1,5 @@
 import { errorAlertInfo, successAlertInfo } from '../../utils/testData';
-import { authenticatePlayer } from '../auth/auth';
+import { authenticatePlayer, updateDisplayName } from '../auth/auth';
 import { clickTile } from '../boards/boards';
 import { createGame, joinGame, leaveGame } from '../games/games';
 import { getMoves } from '../moves/moves';
@@ -132,6 +132,17 @@ test('shows a notification on player authenticate failure', async () => {
       playerInfo: { name: 'test', imageUrl: 'test' }
     })
   );
+
+  expect(result.pendingAlerts).toContainEqual(
+    expect.objectContaining({
+      message: expect.stringContaining(message)
+    })
+  );
+});
+
+test('shows a notification on name update failure', async () => {
+  const message = 'test message';
+  const result = reducer(undefined, updateDisplayName.rejected(new Error(message), '', 'test'));
 
   expect(result.pendingAlerts).toContainEqual(
     expect.objectContaining({

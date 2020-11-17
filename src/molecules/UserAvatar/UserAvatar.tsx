@@ -1,7 +1,9 @@
 import React from 'react';
 import { Avatar, AvatarProps, makeStyles } from '@material-ui/core';
-import { useAuth0 } from '@auth0/auth0-react';
 import useLoggedIn from '../../utils/useLoggedIn';
+import { useSelector } from 'react-redux';
+import { Player } from '../../services/ChessService.types';
+import { AppState } from '../../store/store';
 
 const useStyles = makeStyles(theme => ({
   small: {
@@ -11,16 +13,16 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const UserAvatar: React.FC<Omit<AvatarProps, 'alt' | 'src' | 'className' | 'imgProps'>> = props => {
-  const { user } = useAuth0();
   const loggedIn = useLoggedIn();
+  const player = useSelector<AppState, Player | undefined>(state => state.auth.player);
 
   const classes = useStyles();
 
-  return loggedIn && user ? (
+  return loggedIn && player ? (
     <Avatar
       {...props}
-      alt={user.name}
-      src={user.picture}
+      alt={player.name}
+      src={player.imageUrl}
       className={classes.small}
       imgProps={{ referrerPolicy: 'no-referrer' }}
     />

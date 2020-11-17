@@ -46,7 +46,7 @@ test('renders an avatar when fully logged in', async () => {
     </Provider>
   );
 
-  const avatar = await waitFor(() => getByAltText(authenticatedAuth0.user.name));
+  const avatar = await waitFor(() => getByAltText(playerOne.name));
 
   expect(avatar).toBeInTheDocument();
 });

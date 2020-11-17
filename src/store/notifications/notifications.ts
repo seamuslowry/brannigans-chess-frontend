@@ -1,6 +1,6 @@
 import { Color } from '@material-ui/lab';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { authenticatePlayer } from '../auth/auth';
+import { authenticatePlayer, updateDisplayName } from '../auth/auth';
 import { clickTile } from '../boards/boards';
 import { createGame, joinGame, leaveGame } from '../games/games';
 import { getMoves } from '../moves/moves';
@@ -85,6 +85,12 @@ const notificationsSlice = createSlice({
       .addCase(authenticatePlayer.rejected, (state, action) => {
         state.pendingAlerts.push({
           message: `Error finding Player: ${action.error.message}`,
+          severity: 'error'
+        });
+      })
+      .addCase(updateDisplayName.rejected, (state, action) => {
+        state.pendingAlerts.push({
+          message: `Error updating name: ${action.error.message}`,
           severity: 'error'
         });
       })
