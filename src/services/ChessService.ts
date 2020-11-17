@@ -36,10 +36,25 @@ const getGames = (statusGroup?: GameStatusGroup, pageRequest: Partial<PageReques
 
   page && args.push(`page=${page}`);
   size && args.push(`size=${size}`);
-  order && args.push(`active=${order}`);
+  order && args.push(`order=${order}`);
   orderBy && args.push(`orderBy=${orderBy}`);
 
   return chessApi.get<PageResponse<Game>>(`/games?${args.join('&')}`);
+};
+
+const getPlayerGames = (statusGroup?: GameStatusGroup, pageRequest: Partial<PageRequest> = {}) => {
+  const { page, size, order, orderBy } = pageRequest;
+
+  const args = [];
+
+  statusGroup && args.push(`status=${statusGroupMap[statusGroup].join('&status=')}`);
+
+  page && args.push(`page=${page}`);
+  size && args.push(`size=${size}`);
+  order && args.push(`active=${order}`);
+  orderBy && args.push(`orderBy=${orderBy}`);
+
+  return chessApi.get<PageResponse<Game>>(`/players/games?${args.join('&')}`);
 };
 
 const getPieces = (gameId: number, colors?: PieceColor[], status?: PieceStatus) => {
@@ -85,6 +100,7 @@ const leaveGame = (gameId: number) => chessApi.post<Game>(`players/leave/${gameI
 
 export default {
   getGames,
+  getPlayerGames,
   getPieces,
   getMoves,
   createGame,
