@@ -13,10 +13,10 @@ const Profile: React.FC = () => {
 
   return (
     <Grid item container xs={9} spacing={2}>
-      <Grid item xs={12} md={4}>
+      <Grid item xs={12} md={3}>
         <DisplayName player={player} />
       </Grid>
-      <Grid item xs={12} md={8}>
+      <Grid item xs={12} md={9}>
         <PlayerGames player={player} />
       </Grid>
     </Grid>
