@@ -37,7 +37,7 @@ const Board: React.FC<Props> = ({ gameId }) => {
 
   const tileTemplate = `repeat(8, ${pieceSize})`;
 
-  // const renderOrder = order[colors[0] || 'WHITE'];
+  const renderOrder = order[colors[0] || 'WHITE'];
 
   return (
     <>
