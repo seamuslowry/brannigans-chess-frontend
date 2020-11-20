@@ -20,12 +20,10 @@ interface Props {
   gameId: number;
 }
 
-const rows = {
+const order = {
   WHITE: Array.from(Array(8).keys()),
   BLACK: Array.from(Array(8).keys()).reverse()
 };
-
-const cols = Array.from(Array(8).keys());
 
 const Board: React.FC<Props> = ({ gameId }) => {
   const dispatch = useAppDispatch();
@@ -39,7 +37,7 @@ const Board: React.FC<Props> = ({ gameId }) => {
 
   const tileTemplate = `repeat(8, ${pieceSize})`;
 
-  const renderRows = rows[colors[0] || 'WHITE'];
+  // const renderOrder = order[colors[0] || 'WHITE'];
 
   return (
     <>
@@ -50,7 +48,7 @@ const Board: React.FC<Props> = ({ gameId }) => {
         gridTemplateColumns={`2rem ${tileTemplate} 2rem`}
         gridTemplateRows={`2rem ${tileTemplate} 2rem`}
       >
-        {renderRows.map((r, index) => (
+        {renderOrder.map((r, index) => (
           <React.Fragment key={`row-markers-${gameId}-${r}`}>
             <Marker gridRow={index + 2} gridColumn={1}>
               {displayRow(r)}
@@ -60,12 +58,12 @@ const Board: React.FC<Props> = ({ gameId }) => {
             </Marker>
           </React.Fragment>
         ))}
-        {cols.map(c => (
+        {renderOrder.map((c, index) => (
           <React.Fragment key={`col-markers-${gameId}-${c}`}>
-            <Marker gridRow={1} gridColumn={c + 2}>
+            <Marker gridRow={1} gridColumn={index + 2}>
               {displayCol(c)}
             </Marker>
-            <Marker gridRow={10} gridColumn={c + 2}>
+            <Marker gridRow={10} gridColumn={index + 2}>
               {displayCol(c)}
             </Marker>
           </React.Fragment>
@@ -78,8 +76,8 @@ const Board: React.FC<Props> = ({ gameId }) => {
           gridTemplateRows={tileTemplate}
           className={classes.borderRadius}
         >
-          {renderRows.map(row =>
-            cols.map(col => (
+          {renderOrder.map(row =>
+            renderOrder.map(col => (
               <Tile key={`tile-${gameId}-${row}-${col}`} gameId={gameId} row={row} col={col} />
             ))
           )}
