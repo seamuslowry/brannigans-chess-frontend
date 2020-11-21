@@ -83,7 +83,7 @@ test('renders for someone playing black', async () => {
   );
 
   const tiles = getAllByTestId(/tile-/i);
-  const whiteRookTile = getByTestId('tile-7-0');
+  const whiteRookTile = getByTestId('tile-7-7');
 
   expect(tiles).toHaveLength(64);
   expect(tiles[0].isSameNode(whiteRookTile)).toBeTruthy();
