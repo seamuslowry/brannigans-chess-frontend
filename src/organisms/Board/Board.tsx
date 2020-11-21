@@ -45,32 +45,22 @@ const Board: React.FC<Props> = ({ gameId }) => {
       <PawnPromotion color="BLACK" gameId={gameId} />
       <Box
         display="grid"
-        gridTemplateColumns={`2rem ${tileTemplate} 2rem`}
-        gridTemplateRows={`2rem ${tileTemplate} 2rem`}
+        gridTemplateColumns={`2rem ${tileTemplate}`}
+        gridTemplateRows={`${tileTemplate} 2rem`}
       >
-        {renderOrder.map((r, index) => (
-          <React.Fragment key={`row-markers-${gameId}-${r}`}>
-            <Marker gridRow={index + 2} gridColumn={1}>
-              {displayRow(r)}
+        {renderOrder.map((o, index) => (
+          <React.Fragment key={`row-markers-${gameId}-${o}`}>
+            <Marker gridRow={index + 1} gridColumn={1}>
+              {displayRow(o)}
             </Marker>
-            <Marker gridRow={index + 2} gridColumn={10}>
-              {displayRow(r)}
-            </Marker>
-          </React.Fragment>
-        ))}
-        {renderOrder.map((c, index) => (
-          <React.Fragment key={`col-markers-${gameId}-${c}`}>
-            <Marker gridRow={1} gridColumn={index + 2}>
-              {displayCol(c)}
-            </Marker>
-            <Marker gridRow={10} gridColumn={index + 2}>
-              {displayCol(c)}
+            <Marker gridRow={9} gridColumn={index + 2}>
+              {displayCol(o)}
             </Marker>
           </React.Fragment>
         ))}
         <Box
           display="grid"
-          gridRow="2/10"
+          gridRow="1/9"
           gridColumn="2/10"
           gridTemplateColumns={tileTemplate}
           gridTemplateRows={tileTemplate}
