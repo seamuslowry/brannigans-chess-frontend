@@ -9,13 +9,13 @@ interface Props {
   player: Player;
 }
 
-const PlayerGames: React.FC<Props> = () => {
+const PlayerGames: React.FC<Props> = ({ player }) => {
   const [page, setPage] = React.useState(1);
   const [statusGroup, setStatusGroup] = React.useState<GameStatusGroup>(GameStatusGroup.ACTIVE);
 
   const memoizedCall = React.useCallback(
-    () => ChessService.getPlayerGames(statusGroup, { page: page - 1 }),
-    [page, statusGroup]
+    () => ChessService.getPlayerGames(player.authId, statusGroup, { page: page - 1 }),
+    [player.authId, page, statusGroup]
   );
   const {
     loading,
