@@ -42,7 +42,11 @@ const getGames = (statusGroup?: GameStatusGroup, pageRequest: Partial<PageReques
   return chessApi.get<PageResponse<Game>>(`/games?${args.join('&')}`);
 };
 
-const getPlayerGames = (statusGroup?: GameStatusGroup, pageRequest: Partial<PageRequest> = {}) => {
+const getPlayerGames = (
+  authId: string,
+  statusGroup?: GameStatusGroup,
+  pageRequest: Partial<PageRequest> = {}
+) => {
   const { page, size, order, orderBy } = pageRequest;
 
   const args = [];
@@ -54,7 +58,7 @@ const getPlayerGames = (statusGroup?: GameStatusGroup, pageRequest: Partial<Page
   order && args.push(`active=${order}`);
   orderBy && args.push(`orderBy=${orderBy}`);
 
-  return chessApi.get<PageResponse<Game>>(`/players/games?${args.join('&')}`);
+  return chessApi.get<PageResponse<Game>>(`/players/games/${authId}?${args.join('&')}`);
 };
 
 const getPieces = (gameId: number, colors?: PieceColor[], status?: PieceStatus) => {
