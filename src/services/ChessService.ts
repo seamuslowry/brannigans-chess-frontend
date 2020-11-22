@@ -27,7 +27,11 @@ const statusGroupMap: StatusGroupMap = {
   [GameStatusGroup.INACTIVE]: ['WHITE_CHECKMATE', 'BLACK_CHECKMATE', 'STALEMATE']
 };
 
-const getGames = (statusGroup?: GameStatusGroup, pageRequest: Partial<PageRequest> = {}) => {
+const getGames = (
+  authId: string,
+  statusGroup?: GameStatusGroup,
+  pageRequest: Partial<PageRequest> = {}
+) => {
   const { page, size, order, orderBy } = pageRequest;
 
   const args = [];
@@ -39,7 +43,7 @@ const getGames = (statusGroup?: GameStatusGroup, pageRequest: Partial<PageReques
   order && args.push(`order=${order}`);
   orderBy && args.push(`orderBy=${orderBy}`);
 
-  return chessApi.get<PageResponse<Game>>(`/games?${args.join('&')}`);
+  return chessApi.get<PageResponse<Game>>(`/games/${authId}?${args.join('&')}`);
 };
 
 const getPlayerGames = (statusGroup?: GameStatusGroup, pageRequest: Partial<PageRequest> = {}) => {
