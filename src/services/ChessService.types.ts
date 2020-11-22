@@ -17,7 +17,8 @@ export type GameStatus =
   | 'WHITE_PROMOTION'
   | 'BLACK_PROMOTION'
   | 'STALEMATE'
-  | 'CHECKMATE';
+  | 'WHITE_CHECKMATE'
+  | 'BLACK_CHECKMATE';
 
 export enum GameStatusGroup {
   OPEN = 1,
