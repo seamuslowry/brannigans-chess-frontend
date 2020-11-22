@@ -27,7 +27,22 @@ const statusGroupMap: StatusGroupMap = {
   [GameStatusGroup.INACTIVE]: ['WHITE_CHECKMATE', 'BLACK_CHECKMATE', 'STALEMATE']
 };
 
-const getGames = (
+const getGames = (statusGroup?: GameStatusGroup, pageRequest: Partial<PageRequest> = {}) => {
+  const { page, size, order, orderBy } = pageRequest;
+
+  const args = [];
+
+  statusGroup && args.push(`status=${statusGroupMap[statusGroup].join('&status=')}`);
+
+  page && args.push(`page=${page}`);
+  size && args.push(`size=${size}`);
+  order && args.push(`order=${order}`);
+  orderBy && args.push(`orderBy=${orderBy}`);
+
+  return chessApi.get<PageResponse<Game>>(`/games?${args.join('&')}`);
+};
+
+const getPlayerGames = (
   authId: string,
   statusGroup?: GameStatusGroup,
   pageRequest: Partial<PageRequest> = {}
@@ -40,25 +55,10 @@ const getGames = (
 
   page && args.push(`page=${page}`);
   size && args.push(`size=${size}`);
-  order && args.push(`order=${order}`);
-  orderBy && args.push(`orderBy=${orderBy}`);
-
-  return chessApi.get<PageResponse<Game>>(`/games/${authId}?${args.join('&')}`);
-};
-
-const getPlayerGames = (statusGroup?: GameStatusGroup, pageRequest: Partial<PageRequest> = {}) => {
-  const { page, size, order, orderBy } = pageRequest;
-
-  const args = [];
-
-  statusGroup && args.push(`status=${statusGroupMap[statusGroup].join('&status=')}`);
-
-  page && args.push(`page=${page}`);
-  size && args.push(`size=${size}`);
   order && args.push(`active=${order}`);
   orderBy && args.push(`orderBy=${orderBy}`);
 
-  return chessApi.get<PageResponse<Game>>(`/players/games?${args.join('&')}`);
+  return chessApi.get<PageResponse<Game>>(`/players/games/${authId}?${args.join('&')}`);
 };
 
 const getPieces = (gameId: number, colors?: PieceColor[], status?: PieceStatus) => {
