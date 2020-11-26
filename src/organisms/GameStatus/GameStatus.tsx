@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Paper, Typography } from '@material-ui/core';
+import { Box, Paper } from '@material-ui/core';
 import { Sync, SyncProblem } from '@material-ui/icons';
 import { useSelector } from 'react-redux';
 import startCase from 'lodash.startcase';
@@ -9,6 +9,7 @@ import { Game } from '../../services/ChessService.types';
 import JoinAndLeaveButton from '../../molecules/JoinAndLeaveButton/JoinAndLeaveButton';
 import { getStatusTopic, selectGameById } from '../../store/games/games';
 import DataLabel from '../../atoms/DataLabel/DataLabel';
+import DataValue from '../../atoms/DataValue/DataValue';
 
 interface Props {
   gameId: number;
@@ -37,24 +38,20 @@ const GameStatus: React.FC<Props> = ({ gameId }) => {
           )}
         </Box>
         <Box my={1}>
-          <Typography display="inline" color="secondary">
-            STATUS:{' '}
-          </Typography>
-          <Typography display="inline">
-            {status ? startCase(status.toLowerCase()) : 'Unknown'}
-          </Typography>
+          <DataLabel>STATUS:</DataLabel>
+          <DataValue>{status ? startCase(status.toLowerCase()) : 'Unknown'}</DataValue>
         </Box>
         <Box my={1}>
           <DataLabel>WHITE PLAYER:</DataLabel>
-          <Typography display="inline">
+          <DataValue>
             {whitePlayer && whitePlayer.name} <JoinAndLeaveButton gameId={gameId} color="WHITE" />
-          </Typography>
+          </DataValue>
         </Box>
         <Box>
           <DataLabel>BLACK PLAYER:</DataLabel>
-          <Typography display="inline">
+          <DataValue>
             {blackPlayer && blackPlayer.name} <JoinAndLeaveButton gameId={gameId} color="BLACK" />
-          </Typography>
+          </DataValue>
         </Box>
       </Box>
     </Paper>
