@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Paper } from '@material-ui/core';
+import { Paper } from '@material-ui/core';
 import { Sync, SyncProblem } from '@material-ui/icons';
 import { useSelector } from 'react-redux';
 import startCase from 'lodash.startcase';
@@ -10,6 +10,8 @@ import JoinAndLeaveButton from '../../molecules/JoinAndLeaveButton/JoinAndLeaveB
 import { getStatusTopic, selectGameById } from '../../store/games/games';
 import DataLabel from '../../atoms/DataLabel/DataLabel';
 import DataValue from '../../atoms/DataValue/DataValue';
+import Data from '../../molecules/Data/Data';
+import DataGroup from '../../molecules/DataGroup/DataGroup';
 
 interface Props {
   gameId: number;
@@ -28,32 +30,32 @@ const GameStatus: React.FC<Props> = ({ gameId }) => {
 
   return (
     <Paper>
-      <Box width="100%" p={2}>
-        <Box display="flex" alignItems="center">
+      <DataGroup p={2}>
+        <Data display="flex" alignItems="center">
           <DataLabel>CONNECTION:</DataLabel>
           {connected ? (
             <Sync data-testid="sync-connected" />
           ) : (
             <SyncProblem data-testid="sync-disconnected" color="error" />
           )}
-        </Box>
-        <Box my={1}>
+        </Data>
+        <Data>
           <DataLabel>STATUS:</DataLabel>
           <DataValue>{status ? startCase(status.toLowerCase()) : 'Unknown'}</DataValue>
-        </Box>
-        <Box my={1}>
+        </Data>
+        <Data>
           <DataLabel>WHITE PLAYER:</DataLabel>
           <DataValue>
             {whitePlayer && whitePlayer.name} <JoinAndLeaveButton gameId={gameId} color="WHITE" />
           </DataValue>
-        </Box>
-        <Box>
+        </Data>
+        <Data>
           <DataLabel>BLACK PLAYER:</DataLabel>
           <DataValue>
             {blackPlayer && blackPlayer.name} <JoinAndLeaveButton gameId={gameId} color="BLACK" />
           </DataValue>
-        </Box>
-      </Box>
+        </Data>
+      </DataGroup>
     </Paper>
   );
 };
