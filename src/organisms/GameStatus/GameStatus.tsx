@@ -8,6 +8,7 @@ import useSubscription from '../../utils/useSubscription';
 import { Game } from '../../services/ChessService.types';
 import JoinAndLeaveButton from '../../molecules/JoinAndLeaveButton/JoinAndLeaveButton';
 import { getStatusTopic, selectGameById } from '../../store/games/games';
+import DataLabel from '../../atoms/DataLabel/DataLabel';
 
 interface Props {
   gameId: number;
@@ -28,9 +29,7 @@ const GameStatus: React.FC<Props> = ({ gameId }) => {
     <Paper>
       <Box width="100%" p={2}>
         <Box display="flex" alignItems="center">
-          <Typography display="inline" color="secondary">
-            CONNECTION:{' '}
-          </Typography>
+          <DataLabel>CONNECTION:</DataLabel>
           {connected ? (
             <Sync data-testid="sync-connected" />
           ) : (
@@ -46,17 +45,13 @@ const GameStatus: React.FC<Props> = ({ gameId }) => {
           </Typography>
         </Box>
         <Box my={1}>
-          <Typography display="inline" color="secondary">
-            WHITE PLAYER:{' '}
-          </Typography>
+          <DataLabel>WHITE PLAYER:</DataLabel>
           <Typography display="inline">
             {whitePlayer && whitePlayer.name} <JoinAndLeaveButton gameId={gameId} color="WHITE" />
           </Typography>
         </Box>
         <Box>
-          <Typography display="inline" color="secondary">
-            BLACK PLAYER:{' '}
-          </Typography>
+          <DataLabel>BLACK PLAYER:</DataLabel>
           <Typography display="inline">
             {blackPlayer && blackPlayer.name} <JoinAndLeaveButton gameId={gameId} color="BLACK" />
           </Typography>
