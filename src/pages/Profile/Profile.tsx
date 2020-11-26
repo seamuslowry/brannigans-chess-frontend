@@ -19,7 +19,7 @@ const Profile: React.FC = () => {
     <Grid item container xs={9} spacing={2}>
       <Grid item xs={12} md={3}>
         <DisplayName player={player} />
-        <DataGroup my={1}>
+        <DataGroup my={3}>
           <Data>
             <DataLabel>TOTAL GAMES</DataLabel>
             <DataValue>200</DataValue>
@@ -40,6 +40,8 @@ const Profile: React.FC = () => {
             <DataLabel>DRAW PERCENTAGE</DataLabel>
             <DataValue>50%</DataValue>
           </Data>
+        </DataGroup>
+        <DataGroup my={3}>
           <Data>
             <DataLabel>WHITE GAMES</DataLabel>
             <DataValue>100</DataValue>
@@ -60,6 +62,8 @@ const Profile: React.FC = () => {
             <DataLabel>WHITE DRAW PERCENTAGE</DataLabel>
             <DataValue>50%</DataValue>
           </Data>
+        </DataGroup>
+        <DataGroup my={3}>
           <Data>
             <DataLabel>BLACK GAMES</DataLabel>
             <DataValue>100</DataValue>
