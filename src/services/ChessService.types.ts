@@ -40,6 +40,15 @@ export interface Piece {
   id: number;
 }
 
+export interface PlayerStatInfo {
+  whiteGames: number;
+  blackGames: number;
+  whiteWins: number;
+  blackWins: number;
+  whiteDraws: number;
+  blackDraws: number;
+}
+
 export interface Player {
   authId: string;
   name: string;

@@ -11,6 +11,7 @@ import {
   PieceStatus,
   PieceType,
   Player,
+  PlayerStatInfo,
   StatusGroupMap
 } from './ChessService.types';
 
@@ -61,6 +62,8 @@ const getPlayerGames = (
   return chessApi.get<PageResponse<Game>>(`/players/games/${authId}?${args.join('&')}`);
 };
 
+const getPlayerStats = (authId: string) => chessApi.get<PlayerStatInfo>(`/players/stats/${authId}`);
+
 const getPieces = (gameId: number, colors?: PieceColor[], status?: PieceStatus) => {
   const args = [];
 
@@ -105,6 +108,7 @@ const leaveGame = (gameId: number) => chessApi.post<Game>(`players/leave/${gameI
 export default {
   getGames,
   getPlayerGames,
+  getPlayerStats,
   getPieces,
   getMoves,
   createGame,
