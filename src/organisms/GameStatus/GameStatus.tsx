@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Paper, Typography } from '@material-ui/core';
+import { Paper } from '@material-ui/core';
 import { Sync, SyncProblem } from '@material-ui/icons';
 import { useSelector } from 'react-redux';
 import startCase from 'lodash.startcase';
@@ -8,6 +8,10 @@ import useSubscription from '../../utils/useSubscription';
 import { Game } from '../../services/ChessService.types';
 import JoinAndLeaveButton from '../../molecules/JoinAndLeaveButton/JoinAndLeaveButton';
 import { getStatusTopic, selectGameById } from '../../store/games/games';
+import DataLabel from '../../atoms/DataLabel/DataLabel';
+import DataValue from '../../atoms/DataValue/DataValue';
+import Data from '../../molecules/Data/Data';
+import DataGroup from '../../molecules/DataGroup/DataGroup';
 
 interface Props {
   gameId: number;
@@ -26,42 +30,32 @@ const GameStatus: React.FC<Props> = ({ gameId }) => {
 
   return (
     <Paper>
-      <Box width="100%" p={2}>
-        <Box display="flex" alignItems="center">
-          <Typography display="inline" color="secondary">
-            CONNECTION:{' '}
-          </Typography>
+      <DataGroup p={2}>
+        <Data display="flex" alignItems="center">
+          <DataLabel>CONNECTION:</DataLabel>
           {connected ? (
             <Sync data-testid="sync-connected" />
           ) : (
             <SyncProblem data-testid="sync-disconnected" color="error" />
           )}
-        </Box>
-        <Box my={1}>
-          <Typography display="inline" color="secondary">
-            STATUS:{' '}
-          </Typography>
-          <Typography display="inline">
-            {status ? startCase(status.toLowerCase()) : 'Unknown'}
-          </Typography>
-        </Box>
-        <Box my={1}>
-          <Typography display="inline" color="secondary">
-            WHITE PLAYER:{' '}
-          </Typography>
-          <Typography display="inline">
+        </Data>
+        <Data>
+          <DataLabel>STATUS:</DataLabel>
+          <DataValue>{status ? startCase(status.toLowerCase()) : 'Unknown'}</DataValue>
+        </Data>
+        <Data>
+          <DataLabel>WHITE PLAYER:</DataLabel>
+          <DataValue>
             {whitePlayer && whitePlayer.name} <JoinAndLeaveButton gameId={gameId} color="WHITE" />
-          </Typography>
-        </Box>
-        <Box>
-          <Typography display="inline" color="secondary">
-            BLACK PLAYER:{' '}
-          </Typography>
-          <Typography display="inline">
+          </DataValue>
+        </Data>
+        <Data>
+          <DataLabel>BLACK PLAYER:</DataLabel>
+          <DataValue>
             {blackPlayer && blackPlayer.name} <JoinAndLeaveButton gameId={gameId} color="BLACK" />
-          </Typography>
-        </Box>
-      </Box>
+          </DataValue>
+        </Data>
+      </DataGroup>
     </Paper>
   );
 };

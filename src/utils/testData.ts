@@ -6,7 +6,8 @@ import {
   PieceColor,
   PieceStatus,
   PieceType,
-  Player
+  Player,
+  PlayerStatInfo
 } from '../services/ChessService.types';
 import { initialState as initialAuthState } from '../store/auth/auth';
 import {
@@ -162,6 +163,15 @@ export const whiteQueenSideCastle: Move = {
   dstCol: 2,
   moveType: 'QUEEN_SIDE_CASTLE',
   id: 7
+};
+
+export const statData: PlayerStatInfo = {
+  whiteGames: 100,
+  blackGames: 150,
+  whiteWins: 60,
+  blackWins: 75,
+  whiteDraws: 20,
+  blackDraws: 50
 };
 
 export const unauthenticatedAuth0: Auth0ContextInterface = {
