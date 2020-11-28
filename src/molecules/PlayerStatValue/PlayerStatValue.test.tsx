@@ -15,7 +15,7 @@ test('renders as a percentage', () => {
 
   const { getByText } = render(<PlayerStatValue percentage>{number}</PlayerStatValue>);
 
-  expect(getByText(`33.33%`)).toBeInTheDocument();
+  expect(getByText('33.33%')).toBeInTheDocument();
 });
 
 test('handles NaN', () => {
