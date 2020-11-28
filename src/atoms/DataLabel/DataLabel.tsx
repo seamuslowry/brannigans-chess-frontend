@@ -7,10 +7,18 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const DataLabel: React.FC<TypographyProps> = props => {
+const DataLabel: React.FC<TypographyProps<'label'>> = props => {
   const classes = useStyles();
 
-  return <Typography display="inline" color="secondary" className={classes.margin} {...props} />;
+  return (
+    <Typography
+      component="label"
+      display="inline"
+      color="secondary"
+      className={classes.margin}
+      {...props}
+    />
+  );
 };
 
 export default DataLabel;
