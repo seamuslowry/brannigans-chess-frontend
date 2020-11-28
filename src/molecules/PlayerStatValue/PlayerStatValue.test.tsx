@@ -11,29 +11,11 @@ test('renders a number', () => {
 });
 
 test('renders as a percentage', () => {
-  const number = 25;
+  const number = 1 / 3;
 
   const { getByText } = render(<PlayerStatValue percentage>{number}</PlayerStatValue>);
 
-  expect(getByText(`${number}%`)).toBeInTheDocument();
-});
-
-test('renders loading', () => {
-  const number = 25;
-
-  const { getByText, queryByText } = render(<PlayerStatValue loading>{number}</PlayerStatValue>);
-
-  expect(getByText('...')).toBeInTheDocument();
-  expect(queryByText(number.toString())).not.toBeInTheDocument();
-});
-
-test('renders in error', () => {
-  const number = 25;
-
-  const { getByText, queryByText } = render(<PlayerStatValue error>{number}</PlayerStatValue>);
-
-  expect(getByText('-')).toBeInTheDocument();
-  expect(queryByText(number.toString())).not.toBeInTheDocument();
+  expect(getByText(`33.33%`)).toBeInTheDocument();
 });
 
 test('handles NaN', () => {

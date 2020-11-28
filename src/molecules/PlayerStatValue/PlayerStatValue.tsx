@@ -3,27 +3,20 @@ import { TypographyProps } from '@material-ui/core';
 import DataValue from '../../atoms/DataValue/DataValue';
 
 interface Props {
-  error?: boolean;
-  loading?: boolean;
   percentage?: boolean;
   children: number;
 }
 
-const PlayerStatValue: React.FC<TypographyProps & Props> = ({
-  children,
-  error,
-  loading,
-  percentage,
-  ...rest
-}) => {
+const PlayerStatValue: React.FC<TypographyProps & Props> = ({ children, percentage, ...rest }) => {
   const validatedChildren = isNaN(children) || !isFinite(children) ? 0 : children;
+  const alteredChildren = percentage
+    ? parseFloat((validatedChildren * 100).toFixed(2))
+    : validatedChildren;
 
   return (
-    <DataValue color={error ? 'error' : undefined} {...rest}>
-      {loading && '...'}
-      {error && '-'}
-      {!loading && !error && validatedChildren}
-      {!loading && !error && percentage && '%'}
+    <DataValue {...rest}>
+      {alteredChildren}
+      {percentage && '%'}
     </DataValue>
   );
 };
