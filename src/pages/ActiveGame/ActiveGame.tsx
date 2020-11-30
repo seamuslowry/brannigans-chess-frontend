@@ -2,9 +2,9 @@ import React from 'react';
 import { Grid } from '@material-ui/core';
 import { useParams } from 'react-router-dom';
 import Board from '../../organisms/Board/Board';
-import MoveList from '../../organisms/MoveList/MoveList';
 import TakenPieces from '../../organisms/TakenPieces/TakenPieces';
 import GameStatus from '../../organisms/GameStatus/GameStatus';
+import PlayerMoveList from '../../organisms/PlayerMoveList/PlayerMoveList';
 
 interface ExpectedRouteParams {
   id?: string;
@@ -33,7 +33,7 @@ const ActiveGame: React.FC = () => {
           <GameStatus gameId={gameId} />
         </Grid>
         <Grid item xs={12}>
-          <MoveList gameId={gameId} />
+          <PlayerMoveList gameId={gameId} />
         </Grid>
       </Grid>
     </Grid>
