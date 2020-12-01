@@ -14,8 +14,8 @@ const PlayerGames: React.FC<Props> = ({ player }) => {
   const [statusGroup, setStatusGroup] = React.useState<GameStatusGroup>(GameStatusGroup.ACTIVE);
 
   const memoizedCall = React.useCallback(
-    () => ChessService.getPlayerGames(player.authId, statusGroup, { page: page - 1 }),
-    [player.authId, page, statusGroup]
+    () => ChessService.getPlayerGames(player.id, statusGroup, { page: page - 1 }),
+    [player.id, page, statusGroup]
   );
   const {
     loading,

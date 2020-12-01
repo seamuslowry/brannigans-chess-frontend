@@ -44,7 +44,7 @@ const getGames = (statusGroup?: GameStatusGroup, pageRequest: Partial<PageReques
 };
 
 const getPlayerGames = (
-  authId: string,
+  playerId: number,
   statusGroup?: GameStatusGroup,
   pageRequest: Partial<PageRequest> = {}
 ) => {
@@ -59,10 +59,11 @@ const getPlayerGames = (
   order && args.push(`active=${order}`);
   orderBy && args.push(`orderBy=${orderBy}`);
 
-  return chessApi.get<PageResponse<Game>>(`/players/games/${authId}?${args.join('&')}`);
+  return chessApi.get<PageResponse<Game>>(`/players/games/${playerId}?${args.join('&')}`);
 };
 
-const getPlayerStats = (authId: string) => chessApi.get<PlayerStatInfo>(`/players/stats/${authId}`);
+const getPlayerStats = (playerId: number) =>
+  chessApi.get<PlayerStatInfo>(`/players/stats/${playerId}`);
 
 const getPieces = (gameId: number, colors?: PieceColor[], status?: PieceStatus) => {
   const args = [];

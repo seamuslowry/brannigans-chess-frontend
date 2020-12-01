@@ -18,7 +18,7 @@ import { emptyGame, playerOne } from '../../utils/testData';
 const gamesResponse: Game[] = [emptyGame, { ...emptyGame, id: 2 }];
 
 const server = setupServer(
-  rest.get(`${config.serviceUrl}/players/games/${playerOne.authId}`, (req, res, ctx) => {
+  rest.get(`${config.serviceUrl}/players/games/${playerOne.id}`, (req, res, ctx) => {
     return res(
       ctx.json<PageResponse<Game>>({
         content: gamesResponse,
@@ -47,7 +47,7 @@ test('renders games as a list', async () => {
 
 test('handles error when getting lists', async () => {
   server.use(
-    rest.get(`${config.serviceUrl}/players/games/${playerOne.authId}`, (req, res, ctx) => {
+    rest.get(`${config.serviceUrl}/players/games/${playerOne.id}`, (req, res, ctx) => {
       return res(ctx.status(500));
     })
   );
