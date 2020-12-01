@@ -13,9 +13,7 @@ interface Props {
 }
 
 const PlayerStats: React.FC<Props> = ({ player }) => {
-  const memoizedCall = React.useCallback(() => ChessService.getPlayerStats(player.authId), [
-    player.authId
-  ]);
+  const memoizedCall = React.useCallback(() => ChessService.getPlayerStats(player.id), [player.id]);
   const { loading, response, error } = useServiceCall(memoizedCall);
 
   const {
