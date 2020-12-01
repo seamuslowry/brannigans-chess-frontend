@@ -8,7 +8,7 @@ import { playerOne, statData } from '../../utils/testData';
 import PlayerStats from './PlayerStats';
 
 const server = setupServer(
-  rest.get(`${config.serviceUrl}/players/stats/${playerOne.authId}`, (req, res, ctx) => {
+  rest.get(`${config.serviceUrl}/players/stats/${playerOne.id}`, (req, res, ctx) => {
     return res(ctx.json<PlayerStatInfo>(statData));
   })
 );
@@ -43,7 +43,7 @@ test('renders player stats', async () => {
 
 test('handles an error', async () => {
   server.use(
-    rest.get(`${config.serviceUrl}/players/stats/${playerOne.authId}`, (req, res, ctx) => {
+    rest.get(`${config.serviceUrl}/players/stats/${playerOne.id}`, (req, res, ctx) => {
       return res(ctx.status(500));
     })
   );
