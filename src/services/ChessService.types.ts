@@ -97,5 +97,5 @@ export interface AdditionalPlayerInfo {
 export interface AllGameData {
   game: Game;
   pieces: Piece[];
-  move: Move[];
+  moves: Move[];
 }
