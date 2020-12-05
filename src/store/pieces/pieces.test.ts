@@ -8,7 +8,6 @@ import config from '../../config';
 import { Piece } from '../../services/ChessService.types';
 import {
   allGameData,
-  blackMove,
   blackRook,
   fullGame,
   makePiece,
