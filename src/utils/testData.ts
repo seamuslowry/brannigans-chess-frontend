@@ -21,6 +21,7 @@ import { initialState as initialPieceState } from '../store/pieces/pieces';
 import { initialState as initialMoveState } from '../store/moves/moves';
 import { initialState as initialSocketState } from '../store/socket/socket';
 import { AppState } from '../store/store';
+import { EntityState } from '@reduxjs/toolkit';
 
 export const successAlertInfo: AlertInfo = {
   message: 'test success',
@@ -71,7 +72,9 @@ export const fullGame: Game = {
   status: 'WHITE_TURN'
 };
 
-export const mockEntityAdapterState = <T extends { id: number }>(...testEntities: T[]) => ({
+export const mockEntityAdapterState = <T extends { id: number }>(
+  ...testEntities: T[]
+): EntityState<T> => ({
   ids: testEntities.map(e => e.id),
   entities: testEntities.reduce((obj, key) => ({ ...obj, [key.id]: { ...key } }), {})
 });
