@@ -5,6 +5,7 @@ import Board from '../../organisms/Board/Board';
 import TakenPieces from '../../organisms/TakenPieces/TakenPieces';
 import GameStatus from '../../organisms/GameStatus/GameStatus';
 import GameMoveList from '../../organisms/GameMoveList/GameMoveList';
+import SpectatorStatus from '../../organisms/SpectatorStatus/SpectatorStatus';
 
 interface ExpectedRouteParams {
   id?: string;
@@ -31,6 +32,9 @@ const ActiveGame: React.FC = () => {
       <Grid item container xs={12} md={3} spacing={2} alignContent="flex-start">
         <Grid item xs={12}>
           <GameStatus gameId={gameId} />
+        </Grid>
+        <Grid item xs={12}>
+          <SpectatorStatus gameId={gameId} />
         </Grid>
         <Grid item xs={12}>
           <GameMoveList gameId={gameId} />
