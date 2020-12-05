@@ -7,6 +7,7 @@ import createMockStore from 'redux-mock-store';
 import config from '../../config';
 import { Piece } from '../../services/ChessService.types';
 import {
+  allGameData,
   blackRook,
   fullGame,
   makePiece,
@@ -19,7 +20,7 @@ import {
   whiteTake
 } from '../../utils/testData';
 import { clickTile } from '../boards/boards';
-import { joinGame, leaveGame } from '../games/games';
+import { getAllGameData, joinGame, leaveGame } from '../games/games';
 import { STOMP_MESSAGE } from '../middleware/stomp/stomp';
 import { getSharedMovesTopic } from '../moves/moves';
 import reducer, { addPieces, getPieces, initialState, promotePawn } from './pieces';
@@ -265,4 +266,10 @@ test('does not handle leaving a game', async () => {
   const result = reducer(undefined, leaveGame.fulfilled(fullGame, '', 0));
 
   expect(result).toEqual(initialState);
+});
+
+test('handles successful full game data retrival', async () => {
+  const result = reducer(undefined, getAllGameData.fulfilled(allGameData, '', 0));
+
+  expect(result.ids).toEqual(allGameData.pieces.map(m => m.id));
 });

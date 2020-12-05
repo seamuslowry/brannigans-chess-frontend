@@ -32,7 +32,7 @@ const server = setupServer(
   rest.post(`${config.serviceUrl}/players/leave/0`, (req, res, ctx) => {
     return res(ctx.json<Game>(fullGame));
   }),
-  rest.post(`${config.serviceUrl}/games/0`, (req, res, ctx) => {
+  rest.get(`${config.serviceUrl}/games/0`, (req, res, ctx) => {
     return res(ctx.json<AllGameData>(allGameData));
   }),
   rest.get(`${config.serviceUrl}/games`, (req, res, ctx) => {

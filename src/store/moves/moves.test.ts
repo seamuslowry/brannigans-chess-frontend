@@ -5,8 +5,9 @@ import { setupServer } from 'msw/node';
 import createMockStore from 'redux-mock-store';
 import config from '../../config';
 import { Move } from '../../services/ChessService.types';
-import { blackMove, testStore, whiteMove, whiteTake } from '../../utils/testData';
+import { allGameData, blackMove, testStore, whiteMove, whiteTake } from '../../utils/testData';
 import { clickTile } from '../boards/boards';
+import { getAllGameData } from '../games/games';
 import { STOMP_MESSAGE } from '../middleware/stomp/stomp';
 import { AppState } from '../store';
 import reducer, { addMoves, getMoves, getSharedMovesTopic, initialState } from './moves';
@@ -118,11 +119,17 @@ test('dispatches an error when failing to get moves', async () => {
   );
 });
 
-test('handles successful piece retrival', async () => {
+test('handles successful move retrival', async () => {
   const result = reducer(
     undefined,
     getMoves.fulfilled([whiteMove], '', { gameId: 0, colors: ['BLACK'] })
   );
 
   expect(result.ids).toContain(whiteMove.id);
+});
+
+test('handles successful full game data retrival', async () => {
+  const result = reducer(undefined, getAllGameData.fulfilled(allGameData, '', 0));
+
+  expect(result.ids).toEqual(allGameData.moves.map(m => m.id));
 });
