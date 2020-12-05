@@ -2,7 +2,7 @@ import { Color } from '@material-ui/lab';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { authenticatePlayer, updateDisplayName } from '../auth/auth';
 import { clickTile } from '../boards/boards';
-import { createGame, joinGame, leaveGame } from '../games/games';
+import { createGame, getAllGameData, joinGame, leaveGame } from '../games/games';
 import { getMoves } from '../moves/moves';
 import { getPieces, promotePawn } from '../pieces/pieces';
 
@@ -61,6 +61,12 @@ const notificationsSlice = createSlice({
       .addCase(createGame.rejected, (state, action) => {
         state.pendingAlerts.push({
           message: `Could not create game: ${action.error.message}`,
+          severity: 'error'
+        });
+      })
+      .addCase(getAllGameData.rejected, (state, action) => {
+        state.pendingAlerts.push({
+          message: `Could not retrieve specator data: ${action.error.message}`,
           severity: 'error'
         });
       })
