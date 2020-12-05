@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom';
 import Board from '../../organisms/Board/Board';
 import TakenPieces from '../../organisms/TakenPieces/TakenPieces';
 import GameStatus from '../../organisms/GameStatus/GameStatus';
-import PlayerMoveList from '../../organisms/PlayerMoveList/PlayerMoveList';
+import GameMoveList from '../../organisms/GameMoveList/GameMoveList';
 
 interface ExpectedRouteParams {
   id?: string;
@@ -33,7 +33,7 @@ const ActiveGame: React.FC = () => {
           <GameStatus gameId={gameId} />
         </Grid>
         <Grid item xs={12}>
-          <PlayerMoveList gameId={gameId} />
+          <GameMoveList gameId={gameId} />
         </Grid>
       </Grid>
     </Grid>
