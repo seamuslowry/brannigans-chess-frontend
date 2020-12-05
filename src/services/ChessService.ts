@@ -16,7 +16,7 @@ import {
   StatusGroupMap
 } from './ChessService.types';
 
-export const statusGroupMap: StatusGroupMap = {
+const statusGroupMap: StatusGroupMap = {
   [GameStatusGroup.OPEN]: ['WAITING_FOR_BLACK', 'WAITING_FOR_PLAYERS', 'WAITING_FOR_WHITE'],
   [GameStatusGroup.ACTIVE]: [
     'WHITE_TURN',

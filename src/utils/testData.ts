@@ -1,5 +1,6 @@
 import { Auth0ContextInterface } from '@auth0/auth0-react';
 import {
+  AllGameData,
   Game,
   Move,
   Piece,
@@ -43,6 +44,13 @@ export const playerTwo: Player = {
   authId: 'playerTwo',
   name: 'Player Two',
   imageUrl: 'www.two.com'
+};
+
+export const playerThree: Player = {
+  id: 3,
+  authId: 'playerThree',
+  name: 'Player Three',
+  imageUrl: 'www.three.com'
 };
 
 export const emptyGame: Game = {
@@ -163,6 +171,13 @@ export const whiteQueenSideCastle: Move = {
   dstCol: 2,
   moveType: 'QUEEN_SIDE_CASTLE',
   id: 7
+};
+
+// not at all accurate
+export const allGameData: AllGameData = {
+  game: fullGame,
+  pieces: [makePiece('KING', 'WHITE'), makePiece('KING', 'BLACK')],
+  moves: [whiteMove, blackMove]
 };
 
 export const statData: PlayerStatInfo = {
