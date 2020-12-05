@@ -62,7 +62,20 @@ const pieceSlice = createSlice({
         state = piecesAdapter.removeMany(state, removeIds);
       })
       .addCase(getAllGameData.fulfilled, (state, action) => {
-        state = piecesAdapter.upsertMany(state, action.payload.pieces);
+        const updatedPieces = action.payload.pieces.filter(newPiece => {
+          const oldPiece = state.entities[newPiece.id];
+
+          return !(
+            oldPiece &&
+            oldPiece.positionCol === newPiece.positionCol &&
+            oldPiece.positionRow === newPiece.positionRow &&
+            oldPiece.status === newPiece.status
+          );
+        });
+
+        console.log(updatedPieces);
+
+        state = piecesAdapter.upsertMany(state, updatedPieces);
       })
       .addCase(getPieces.fulfilled, (state, action) => {
         state = piecesAdapter.upsertMany(state, action.payload);

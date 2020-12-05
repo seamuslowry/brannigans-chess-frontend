@@ -8,6 +8,7 @@ import config from '../../config';
 import { Piece } from '../../services/ChessService.types';
 import {
   allGameData,
+  blackMove,
   blackRook,
   fullGame,
   makePiece,
@@ -272,4 +273,28 @@ test('handles successful full game data retrival', async () => {
   const result = reducer(undefined, getAllGameData.fulfilled(allGameData, '', 0));
 
   expect(result.ids).toEqual(allGameData.pieces.map(m => m.id));
+});
+
+test('will not update unmodified pieces', async () => {
+  const mockedState = mockEntityAdapterState(...allGameData.pieces);
+
+  const result = reducer(
+    mockedState,
+    getAllGameData.fulfilled(
+      {
+        ...allGameData,
+        pieces: [allGameData.pieces[0], { ...allGameData.pieces[1], status: 'REMOVED' }]
+      },
+      '',
+      0
+    )
+  );
+
+  expect(result.entities[allGameData.pieces[0].id]).toBe(
+    mockedState.entities[allGameData.pieces[0].id]
+  );
+  expect(result.entities[allGameData.pieces[1].id]).not.toBe(
+    mockedState.entities[allGameData.pieces[1].id]
+  );
+  expect(result.entities[allGameData.pieces[1].id]!.status).toEqual('REMOVED');
 });
