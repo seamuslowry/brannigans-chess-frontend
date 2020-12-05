@@ -5,5 +5,5 @@ import DataValue from './DataValue';
 test('renders', () => {
   const { container } = render(<DataValue />);
 
-  expect(container.children).not.toBeNull();
+  expect(container.children).not.toHaveLength(0);
 });
