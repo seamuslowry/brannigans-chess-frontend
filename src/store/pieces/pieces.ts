@@ -73,8 +73,6 @@ const pieceSlice = createSlice({
           );
         });
 
-        console.log(updatedPieces);
-
         state = piecesAdapter.upsertMany(state, updatedPieces);
       })
       .addCase(getPieces.fulfilled, (state, action) => {

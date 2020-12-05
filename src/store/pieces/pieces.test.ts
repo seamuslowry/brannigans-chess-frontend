@@ -275,7 +275,7 @@ test('handles successful full game data retrival', async () => {
   expect(result.ids).toEqual(allGameData.pieces.map(m => m.id));
 });
 
-test('will not update unmodified pieces', async () => {
+test('will not update unmodified pieces on full game update', async () => {
   const mockedState = mockEntityAdapterState(...allGameData.pieces);
 
   const result = reducer(

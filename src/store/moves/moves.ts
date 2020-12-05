@@ -46,7 +46,9 @@ const moveSlice = createSlice({
         state = movesAdapter.upsertMany(state, action.payload);
       })
       .addCase(getAllGameData.fulfilled, (state, action) => {
-        state = movesAdapter.upsertMany(state, action.payload.moves);
+        const updatedMoves = action.payload.moves.filter(newMove => !state.entities[newMove.id]);
+
+        state = movesAdapter.upsertMany(state, updatedMoves);
       })
       .addCase(clickTile.fulfilled, (state, action) => {
         if (action.payload && typeof action.payload === 'object') {
