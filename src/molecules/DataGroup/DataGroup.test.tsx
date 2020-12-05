@@ -40,5 +40,5 @@ test('renders with multiple elements', () => {
 test('does not crash when passed non-elements', () => {
   const { container } = render(<DataGroup>not an element</DataGroup>);
 
-  expect(container.children).not.toBeNull();
+  expect(container.children).not.toHaveLength(0);
 });

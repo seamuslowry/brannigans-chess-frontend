@@ -5,5 +5,5 @@ import Marker from './Marker';
 test('renders', async () => {
   const { container } = render(<Marker />);
 
-  expect(container.children).not.toBeNull();
+  expect(container.children).not.toHaveLength(0);
 });

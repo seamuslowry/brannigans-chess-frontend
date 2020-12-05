@@ -5,5 +5,5 @@ import DataLabel from './DataLabel';
 test('renders', () => {
   const { container } = render(<DataLabel />);
 
-  expect(container.children).not.toBeNull();
+  expect(container.children).not.toHaveLength(0);
 });

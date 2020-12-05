@@ -8,6 +8,7 @@ import {
 import ChessService from '../../services/ChessService';
 import { Move, PieceColor } from '../../services/ChessService.types';
 import { clickTile } from '../boards/boards';
+import { getAllGameData } from '../games/games';
 import { StompMessage, STOMP_MESSAGE } from '../middleware/stomp/stomp';
 
 export const SHARED_MOVES_PREFIX = `/game/moves/`;
@@ -43,6 +44,11 @@ const moveSlice = createSlice({
     builder
       .addCase(getMoves.fulfilled, (state, action) => {
         state = movesAdapter.upsertMany(state, action.payload);
+      })
+      .addCase(getAllGameData.fulfilled, (state, action) => {
+        const updatedMoves = action.payload.moves.filter(newMove => !state.entities[newMove.id]);
+
+        state = movesAdapter.upsertMany(state, updatedMoves);
       })
       .addCase(clickTile.fulfilled, (state, action) => {
         if (action.payload && typeof action.payload === 'object') {

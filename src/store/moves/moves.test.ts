@@ -5,8 +5,16 @@ import { setupServer } from 'msw/node';
 import createMockStore from 'redux-mock-store';
 import config from '../../config';
 import { Move } from '../../services/ChessService.types';
-import { blackMove, testStore, whiteMove, whiteTake } from '../../utils/testData';
+import {
+  allGameData,
+  blackMove,
+  mockEntityAdapterState,
+  testStore,
+  whiteMove,
+  whiteTake
+} from '../../utils/testData';
 import { clickTile } from '../boards/boards';
+import { getAllGameData } from '../games/games';
 import { STOMP_MESSAGE } from '../middleware/stomp/stomp';
 import { AppState } from '../store';
 import reducer, { addMoves, getMoves, getSharedMovesTopic, initialState } from './moves';
@@ -118,11 +126,42 @@ test('dispatches an error when failing to get moves', async () => {
   );
 });
 
-test('handles successful piece retrival', async () => {
+test('handles successful move retrival', async () => {
   const result = reducer(
     undefined,
     getMoves.fulfilled([whiteMove], '', { gameId: 0, colors: ['BLACK'] })
   );
 
   expect(result.ids).toContain(whiteMove.id);
+});
+
+test('handles successful full game data retrival', async () => {
+  const result = reducer(undefined, getAllGameData.fulfilled(allGameData, '', 0));
+
+  expect(result.ids).toEqual(allGameData.moves.map(m => m.id));
+});
+
+test('will not update existing moves on full game update', async () => {
+  const mockedState = mockEntityAdapterState(...allGameData.moves);
+  const newMove = { ...whiteMove, id: 101 };
+
+  const result = reducer(
+    mockedState,
+    getAllGameData.fulfilled(
+      {
+        ...allGameData,
+        moves: [...allGameData.moves, newMove]
+      },
+      '',
+      0
+    )
+  );
+
+  expect(result.entities[allGameData.moves[0].id]).toBe(
+    mockedState.entities[allGameData.moves[0].id]
+  );
+  expect(result.entities[allGameData.moves[1].id]).toBe(
+    mockedState.entities[allGameData.moves[1].id]
+  );
+  expect(result.ids).toContain(newMove.id);
 });

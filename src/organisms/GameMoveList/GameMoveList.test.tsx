@@ -8,7 +8,7 @@ import { getDefaultMiddleware } from '@reduxjs/toolkit';
 import { mockEntityAdapterState, testStore, whiteMove } from '../../utils/testData';
 import { Move } from '../../services/ChessService.types';
 import config from '../../config';
-import PlayerMoveList from './PlayerMoveList';
+import GameMoveList from './GameMoveList';
 import { getMoves } from '../../store/moves/moves';
 
 const mockStore = createMockStore(getDefaultMiddleware());
@@ -33,7 +33,7 @@ afterAll(() => server.close());
 test('gets player moves on mount', async () => {
   const { getByRole } = render(
     <Provider store={mockedStore}>
-      <PlayerMoveList gameId={0} />
+      <GameMoveList gameId={0} />
     </Provider>
   );
 
@@ -55,7 +55,7 @@ test('handles an error getting moves on mount', async () => {
 
   const { getByRole } = render(
     <Provider store={mockedStore}>
-      <PlayerMoveList gameId={0} />
+      <GameMoveList gameId={0} />
     </Provider>
   );
 

@@ -93,3 +93,9 @@ export interface AdditionalPlayerInfo {
   name: string;
   imageUrl: string;
 }
+
+export interface AllGameData {
+  game: Game;
+  pieces: Piece[];
+  moves: Move[];
+}

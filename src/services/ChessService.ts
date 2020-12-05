@@ -1,6 +1,7 @@
 import { chessApi } from './Api';
 import {
   AdditionalPlayerInfo,
+  AllGameData,
   Game,
   GameStatusGroup,
   Move,
@@ -96,6 +97,8 @@ const promote = (pieceId: number, type: PieceType) =>
 
 const createGame = () => chessApi.post<Game>('games/create');
 
+const getAllGameData = (id: number) => chessApi.get<AllGameData>(`games/${id}`);
+
 const authenticatePlayer = (playerInfo: AdditionalPlayerInfo) =>
   chessApi.post<Player>('players/auth', playerInfo);
 
@@ -113,6 +116,7 @@ export default {
   getPieces,
   getMoves,
   createGame,
+  getAllGameData,
   promote,
   move,
   authenticatePlayer,

@@ -11,7 +11,7 @@ interface Props {
   gameId: number;
 }
 
-const PlayerMoveList: React.FC<Props> = ({ gameId }) => {
+const GameMoveList: React.FC<Props> = ({ gameId }) => {
   useSubscription(getSharedMovesTopic(gameId));
 
   const dispatch = useAppDispatch();
@@ -31,4 +31,4 @@ const PlayerMoveList: React.FC<Props> = ({ gameId }) => {
   return <MoveList moves={moves} loading={loading} />;
 };
 
-export default PlayerMoveList;
+export default GameMoveList;

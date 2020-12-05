@@ -8,7 +8,7 @@ import {
 import ChessService from '../../services/ChessService';
 import { Move, Piece, PieceColor, PieceStatus, PieceType } from '../../services/ChessService.types';
 import { clickTile, TilePosition } from '../boards/boards';
-import { joinGame } from '../games/games';
+import { getAllGameData, joinGame } from '../games/games';
 import { StompMessage, STOMP_MESSAGE } from '../middleware/stomp/stomp';
 import { SHARED_MOVES_PREFIX } from '../moves/moves';
 
@@ -60,6 +60,20 @@ const pieceSlice = createSlice({
         ) as Piece[];
         const removeIds = removePieces.map(p => p.id);
         state = piecesAdapter.removeMany(state, removeIds);
+      })
+      .addCase(getAllGameData.fulfilled, (state, action) => {
+        const updatedPieces = action.payload.pieces.filter(newPiece => {
+          const oldPiece = state.entities[newPiece.id];
+
+          return !(
+            oldPiece &&
+            oldPiece.positionCol === newPiece.positionCol &&
+            oldPiece.positionRow === newPiece.positionRow &&
+            oldPiece.status === newPiece.status
+          );
+        });
+
+        state = piecesAdapter.upsertMany(state, updatedPieces);
       })
       .addCase(getPieces.fulfilled, (state, action) => {
         state = piecesAdapter.upsertMany(state, action.payload);

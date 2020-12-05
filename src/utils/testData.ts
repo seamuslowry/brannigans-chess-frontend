@@ -1,5 +1,6 @@
 import { Auth0ContextInterface } from '@auth0/auth0-react';
 import {
+  AllGameData,
   Game,
   Move,
   Piece,
@@ -20,6 +21,7 @@ import { initialState as initialPieceState } from '../store/pieces/pieces';
 import { initialState as initialMoveState } from '../store/moves/moves';
 import { initialState as initialSocketState } from '../store/socket/socket';
 import { AppState } from '../store/store';
+import { EntityState } from '@reduxjs/toolkit';
 
 export const successAlertInfo: AlertInfo = {
   message: 'test success',
@@ -45,6 +47,13 @@ export const playerTwo: Player = {
   imageUrl: 'www.two.com'
 };
 
+export const playerThree: Player = {
+  id: 3,
+  authId: 'playerThree',
+  name: 'Player Three',
+  imageUrl: 'www.three.com'
+};
+
 export const emptyGame: Game = {
   id: 1,
   uuid: 'empty game',
@@ -63,7 +72,9 @@ export const fullGame: Game = {
   status: 'WHITE_TURN'
 };
 
-export const mockEntityAdapterState = <T extends { id: number }>(...testEntities: T[]) => ({
+export const mockEntityAdapterState = <T extends { id: number }>(
+  ...testEntities: T[]
+): EntityState<T> => ({
   ids: testEntities.map(e => e.id),
   entities: testEntities.reduce((obj, key) => ({ ...obj, [key.id]: { ...key } }), {})
 });
@@ -163,6 +174,13 @@ export const whiteQueenSideCastle: Move = {
   dstCol: 2,
   moveType: 'QUEEN_SIDE_CASTLE',
   id: 7
+};
+
+// not at all accurate
+export const allGameData: AllGameData = {
+  game: fullGame,
+  pieces: [makePiece('KING', 'WHITE'), makePiece('KING', 'BLACK')],
+  moves: [whiteMove, blackMove]
 };
 
 export const statData: PlayerStatInfo = {

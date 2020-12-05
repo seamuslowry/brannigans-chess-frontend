@@ -11,10 +11,10 @@ import { rest } from 'msw';
 import config from '../../config';
 
 const server = setupServer(
-  rest.get(`${config.serviceUrl}/players/stats/${playerOne.authId}`, (req, res, ctx) => {
+  rest.get(`${config.serviceUrl}/players/stats/${playerOne.id}`, (req, res, ctx) => {
     return res(ctx.status(500));
   }),
-  rest.get(`${config.serviceUrl}/players/games/${playerOne.authId}`, (req, res, ctx) => {
+  rest.get(`${config.serviceUrl}/players/games/${playerOne.id}`, (req, res, ctx) => {
     return res(ctx.status(500));
   })
 );

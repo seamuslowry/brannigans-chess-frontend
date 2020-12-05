@@ -1,7 +1,7 @@
 import { errorAlertInfo, successAlertInfo } from '../../utils/testData';
 import { authenticatePlayer, updateDisplayName } from '../auth/auth';
 import { clickTile } from '../boards/boards';
-import { createGame, joinGame, leaveGame } from '../games/games';
+import { createGame, getAllGameData, joinGame, leaveGame } from '../games/games';
 import { getMoves } from '../moves/moves';
 import { getPieces, promotePawn } from '../pieces/pieces';
 import reducer, { initialState, AlertInfo, removeAlert } from './notifications';
@@ -76,6 +76,17 @@ test('shows a notification on an attempted move failure', async () => {
 test('shows a notification on a game creation failure', async () => {
   const message = 'test message';
   const result = reducer(undefined, createGame.rejected(new Error(message), '', undefined));
+
+  expect(result.pendingAlerts).toContainEqual(
+    expect.objectContaining({
+      message: expect.stringContaining(message)
+    })
+  );
+});
+
+test('shows a notification on a al game data retrieval failure', async () => {
+  const message = 'test message';
+  const result = reducer(undefined, getAllGameData.rejected(new Error(message), '', 0));
 
   expect(result.pendingAlerts).toContainEqual(
     expect.objectContaining({

@@ -4,10 +4,11 @@ import { rest } from 'msw';
 import { setupServer } from 'msw/node';
 import createMockStore from 'redux-mock-store';
 import config from '../../config';
-import { Game, PageResponse } from '../../services/ChessService.types';
-import { emptyGame, fullGame, testStore } from '../../utils/testData';
+import { AllGameData, Game, PageResponse } from '../../services/ChessService.types';
+import { allGameData, emptyGame, fullGame, testStore } from '../../utils/testData';
 import reducer, {
   createGame,
+  getAllGameData,
   getStatusTopic,
   initialState,
   joinGame,
@@ -30,6 +31,9 @@ const server = setupServer(
   }),
   rest.post(`${config.serviceUrl}/players/leave/0`, (req, res, ctx) => {
     return res(ctx.json<Game>(fullGame));
+  }),
+  rest.get(`${config.serviceUrl}/games/0`, (req, res, ctx) => {
+    return res(ctx.json<AllGameData>(allGameData));
   }),
   rest.get(`${config.serviceUrl}/games`, (req, res, ctx) => {
     return res(
@@ -202,4 +206,14 @@ test('does not handle leaving a game', async () => {
   const result = reducer(undefined, leaveGame.fulfilled(emptyGame, '', 0));
 
   expect(result).toEqual(initialState);
+});
+
+test('tries to get all game data', async () => {
+  await waitFor(() => mockedStore.dispatch(getAllGameData(0)));
+
+  expect(mockedStore.getActions()).toContainEqual(
+    expect.objectContaining({
+      type: getAllGameData.fulfilled.type
+    })
+  );
 });
