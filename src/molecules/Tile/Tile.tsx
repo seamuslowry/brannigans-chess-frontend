@@ -11,6 +11,7 @@ interface Props {
   gameId: number;
   row: number;
   col: number;
+  disabled?: boolean;
 }
 
 const getBgColor = (theme: Theme, row: number, col: number, selected: boolean) => {
@@ -23,7 +24,7 @@ const getBgColor = (theme: Theme, row: number, col: number, selected: boolean) =
   }
 };
 
-const Tile: React.FC<Props> = ({ row, col, gameId }) => {
+const Tile: React.FC<Props> = ({ row, col, gameId, disabled }) => {
   const theme = useTheme();
   const dispatch = useAppDispatch();
 
@@ -40,7 +41,7 @@ const Tile: React.FC<Props> = ({ row, col, gameId }) => {
   const bgColor = getBgColor(theme, row, col, selected);
 
   const handleClick = () => {
-    dispatch(clickTile({ row, col, gameId }));
+    !disabled && dispatch(clickTile({ row, col, gameId }));
   };
 
   return (

@@ -30,6 +30,23 @@ test('clicks a tile', async () => {
   );
 });
 
+test('will not click a tile while disabled', async () => {
+  const { getByTestId } = render(
+    <Provider store={mockedStore}>
+      <Tile gameId={0} row={0} col={0} disabled />
+    </Provider>
+  );
+
+  const tile = getByTestId('tile-0-0');
+  fireEvent.click(tile);
+
+  expect(mockedStore.getActions()).not.toContainEqual(
+    expect.objectContaining({
+      type: clickTile.pending.type
+    })
+  );
+});
+
 test('renders selected', async () => {
   const selectedTileStore = mockStore({
     ...testStore,
