@@ -68,7 +68,13 @@ const Board: React.FC<Props> = ({ gameId }) => {
         >
           {renderOrder.map(row =>
             renderOrder.map(col => (
-              <Tile key={`tile-${gameId}-${row}-${col}`} gameId={gameId} row={row} col={col} />
+              <Tile
+                key={`tile-${gameId}-${row}-${col}`}
+                gameId={gameId}
+                row={row}
+                col={col}
+                disabled={colors.length === 2}
+              />
             ))
           )}
         </Box>
