@@ -1,9 +1,4 @@
-import {
-  createAsyncThunk,
-  createEntityAdapter,
-  createSelector,
-  createSlice
-} from '@reduxjs/toolkit';
+import { createAsyncThunk, createEntityAdapter, createSlice } from '@reduxjs/toolkit';
 import ChessService from '../../services/ChessService';
 import { Piece } from '../../services/ChessService.types';
 
@@ -13,7 +8,6 @@ export interface TilePosition {
 }
 
 interface Board {
-  selectedPosition?: TilePosition; // TODO use or make into array
   id: number;
 }
 
@@ -57,13 +51,3 @@ const boardSlice = createSlice({
 export const { selectById: selectBoardById } = boardAdapter.getSelectors();
 
 export default boardSlice.reducer;
-
-export const makeGetSelected = () =>
-  createSelector(
-    selectBoardById,
-    (_, __, position: TilePosition) => position,
-    (board, givenPosition) =>
-      !!board?.selectedPosition &&
-      board?.selectedPosition.row === givenPosition.row &&
-      board?.selectedPosition.col === givenPosition.col
-  );

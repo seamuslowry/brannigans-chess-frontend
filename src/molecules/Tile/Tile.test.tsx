@@ -4,45 +4,43 @@ import { ActionCreator, AnyAction, getDefaultMiddleware } from '@reduxjs/toolkit
 import { Provider } from 'react-redux';
 import createMockStore from 'redux-mock-store';
 import Tile from './Tile';
-import { blackRook, mockEntityAdapterState, testStore } from '../../utils/testData';
+import { blackRook, makePiece, mockEntityAdapterState, testStore } from '../../utils/testData';
 import { AppState } from '../../store/store';
-import { clickTile } from '../../store/boards/boards';
+import { dragMove } from '../../store/boards/boards';
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
+import DraggablePiece from '../DraggablePiece/DraggablePiece';
 
 const mockStore = createMockStore<AppState, ActionCreator<AnyAction>>(getDefaultMiddleware());
 const mockedStore = mockStore(testStore);
 
 beforeEach(() => mockedStore.clearActions());
 
-test('clicks a tile', async () => {
+test('handles a piece drop', async () => {
+  const withPieceStore = mockStore({
+    ...testStore,
+    pieces: mockEntityAdapterState(blackRook)
+  });
+
   const { getByTestId } = render(
-    <Provider store={mockedStore}>
-      <Tile gameId={0} row={0} col={0} />
-    </Provider>
+    <DndProvider backend={HTML5Backend}>
+      <Provider store={withPieceStore}>
+        <Tile gameId={0} row={0} col={0} />
+      </Provider>
+    </DndProvider>
   );
 
   const tile = getByTestId('tile-0-0');
-  fireEvent.click(tile);
+  const draggablePiece = tile.firstChild;
 
-  expect(mockedStore.getActions()).toContainEqual(
+  expect(draggablePiece).not.toBeNull();
+
+  draggablePiece && fireEvent.dragStart(draggablePiece);
+  fireEvent.drop(tile);
+
+  expect(withPieceStore.getActions()).toContainEqual(
     expect.objectContaining({
-      type: clickTile.pending.type
-    })
-  );
-});
-
-test('will not click a tile while disabled', async () => {
-  const { getByTestId } = render(
-    <Provider store={mockedStore}>
-      <Tile gameId={0} row={0} col={0} disabled />
-    </Provider>
-  );
-
-  const tile = getByTestId('tile-0-0');
-  fireEvent.click(tile);
-
-  expect(mockedStore.getActions()).not.toContainEqual(
-    expect.objectContaining({
-      type: clickTile.pending.type
+      type: dragMove.pending.type
     })
   );
 });
@@ -57,21 +55,30 @@ test('renders selected', async () => {
   });
 
   const { getByTestId } = render(
-    <Provider store={selectedTileStore}>
-      <Tile gameId={0} row={0} col={0} />
-    </Provider>
+    <DndProvider backend={HTML5Backend}>
+      <Provider store={selectedTileStore}>
+        <Tile gameId={0} row={0} col={0} />
+        <DraggablePiece data-testid="draggable-piece" piece={makePiece('ROOK', 'WHITE')} />
+      </Provider>
+    </DndProvider>
   );
 
   const tile = getByTestId('tile-0-0');
+  const draggablePiece = getByTestId('draggable-piece');
+  fireEvent.dragStart(draggablePiece);
+  fireEvent.dragOver(tile);
+
   // MUI default selected color
   expect(tile).toHaveStyle('background-color: rgba(0, 0, 0, 0.08)');
 });
 
 test('renders secondary color', async () => {
   const { getByTestId } = render(
-    <Provider store={mockedStore}>
-      <Tile gameId={0} row={0} col={0} />
-    </Provider>
+    <DndProvider backend={HTML5Backend}>
+      <Provider store={mockedStore}>
+        <Tile gameId={0} row={0} col={0} />
+      </Provider>
+    </DndProvider>
   );
 
   const tile = getByTestId('tile-0-0');
@@ -81,9 +88,11 @@ test('renders secondary color', async () => {
 
 test('renders primary color', async () => {
   const { getByTestId } = render(
-    <Provider store={mockedStore}>
-      <Tile gameId={0} row={0} col={1} />
-    </Provider>
+    <DndProvider backend={HTML5Backend}>
+      <Provider store={mockedStore}>
+        <Tile gameId={0} row={0} col={1} />
+      </Provider>
+    </DndProvider>
   );
 
   const tile = getByTestId('tile-0-1');
@@ -98,9 +107,11 @@ test('renders a piece', async () => {
   });
 
   const { getByAltText } = render(
-    <Provider store={withPieceStore}>
-      <Tile gameId={0} row={0} col={0} />
-    </Provider>
+    <DndProvider backend={HTML5Backend}>
+      <Provider store={withPieceStore}>
+        <Tile gameId={0} row={0} col={0} />
+      </Provider>
+    </DndProvider>
   );
 
   const tile = getByAltText('BLACK-ROOK');

@@ -9,7 +9,7 @@ interface Props {
 }
 
 const Piece = React.forwardRef<HTMLImageElement, Props>(
-  ({ type, color, height = '100%', width = '100%' }, ref) => {
+  ({ type, color, height = '100%', width = '100%', ...rest }, ref) => {
     return (
       <img
         ref={ref}
@@ -17,6 +17,7 @@ const Piece = React.forwardRef<HTMLImageElement, Props>(
         height={height}
         width={width}
         src={`/pieces/${color}_${type}.svg`}
+        {...rest}
       />
     );
   }

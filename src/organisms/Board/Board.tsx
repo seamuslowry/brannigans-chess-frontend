@@ -8,6 +8,8 @@ import useGameColors from '../../utils/useGameColor';
 import { getPieces } from '../../store/pieces/pieces';
 import Marker from '../../atoms/Marker/Marker';
 import { displayCol, displayRow } from '../../utils/markerHelper';
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 
 const useStyles = makeStyles({
   borderRadius: {
@@ -43,42 +45,44 @@ const Board: React.FC<Props> = ({ gameId }) => {
     <>
       <PawnPromotion color="WHITE" gameId={gameId} />
       <PawnPromotion color="BLACK" gameId={gameId} />
-      <Box
-        display="grid"
-        gridTemplateColumns={`2rem ${tileTemplate}`}
-        gridTemplateRows={`${tileTemplate} 2rem`}
-      >
-        {renderOrder.map((o, index) => (
-          <React.Fragment key={`row-markers-${gameId}-${o}`}>
-            <Marker gridRow={index + 1} gridColumn={1}>
-              {displayRow(o)}
-            </Marker>
-            <Marker gridRow={9} gridColumn={index + 2}>
-              {displayCol(o)}
-            </Marker>
-          </React.Fragment>
-        ))}
+      <DndProvider backend={HTML5Backend}>
         <Box
           display="grid"
-          gridRow="1/9"
-          gridColumn="2/10"
-          gridTemplateColumns={tileTemplate}
-          gridTemplateRows={tileTemplate}
-          className={classes.borderRadius}
+          gridTemplateColumns={`2rem ${tileTemplate}`}
+          gridTemplateRows={`${tileTemplate} 2rem`}
         >
-          {renderOrder.map(row =>
-            renderOrder.map(col => (
-              <Tile
-                key={`tile-${gameId}-${row}-${col}`}
-                gameId={gameId}
-                row={row}
-                col={col}
-                disabled={colors.length === 2}
-              />
-            ))
-          )}
+          {renderOrder.map((o, index) => (
+            <React.Fragment key={`row-markers-${gameId}-${o}`}>
+              <Marker gridRow={index + 1} gridColumn={1}>
+                {displayRow(o)}
+              </Marker>
+              <Marker gridRow={9} gridColumn={index + 2}>
+                {displayCol(o)}
+              </Marker>
+            </React.Fragment>
+          ))}
+          <Box
+            display="grid"
+            gridRow="1/9"
+            gridColumn="2/10"
+            gridTemplateColumns={tileTemplate}
+            gridTemplateRows={tileTemplate}
+            className={classes.borderRadius}
+          >
+            {renderOrder.map(row =>
+              renderOrder.map(col => (
+                <Tile
+                  key={`tile-${gameId}-${row}-${col}`}
+                  gameId={gameId}
+                  row={row}
+                  col={col}
+                  disabled={colors.length === 2}
+                />
+              ))
+            )}
+          </Box>
         </Box>
-      </Box>
+      </DndProvider>
     </>
   );
 };
