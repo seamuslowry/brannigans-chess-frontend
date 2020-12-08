@@ -2,23 +2,24 @@ import React from 'react';
 import { PieceColor, PieceType } from '../../services/ChessService.types';
 
 interface Props {
-  type?: PieceType;
-  color?: PieceColor;
+  type: PieceType;
+  color: PieceColor;
   height?: string;
   width?: string;
 }
 
-const Piece: React.FC<Props> = ({ type, color, height = '100%', width = '100%' }) => {
-  if (!(type && color)) return null;
-
-  return (
-    <img
-      alt={`${color}-${type}`}
-      height={height}
-      width={width}
-      src={`/pieces/${color}_${type}.svg`}
-    />
-  );
-};
+const Piece = React.forwardRef<HTMLImageElement, Props>(
+  ({ type, color, height = '100%', width = '100%' }, ref) => {
+    return (
+      <img
+        ref={ref}
+        alt={`${color}-${type}`}
+        height={height}
+        width={width}
+        src={`/pieces/${color}_${type}.svg`}
+      />
+    );
+  }
+);
 
 export default Piece;
