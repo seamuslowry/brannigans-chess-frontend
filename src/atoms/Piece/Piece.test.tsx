@@ -9,9 +9,3 @@ test('renders with values', async () => {
 
   expect(tile).toBeInTheDocument();
 });
-
-test('renders nothing when no values are passed', async () => {
-  const { container } = render(<Piece />);
-
-  expect(container.firstChild).toBeNull();
-});

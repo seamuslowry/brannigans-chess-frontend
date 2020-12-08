@@ -45,7 +45,7 @@ test('handles a piece drop', async () => {
   );
 });
 
-test('renders selected', async () => {
+test('renders when hovered', async () => {
   const selectedTileStore = mockStore({
     ...testStore,
     boards: mockEntityAdapterState({
