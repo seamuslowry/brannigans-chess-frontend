@@ -7,7 +7,7 @@ import {
 } from '@reduxjs/toolkit';
 import ChessService from '../../services/ChessService';
 import { Move, PieceColor } from '../../services/ChessService.types';
-import { clickTile } from '../boards/boards';
+import { dragMove } from '../boards/boards';
 import { getAllGameData } from '../games/games';
 import { StompMessage, STOMP_MESSAGE } from '../middleware/stomp/stomp';
 
@@ -50,11 +50,8 @@ const moveSlice = createSlice({
 
         state = movesAdapter.upsertMany(state, updatedMoves);
       })
-      .addCase(clickTile.fulfilled, (state, action) => {
-        if (action.payload && typeof action.payload === 'object') {
-          const move = action.payload;
-          state = movesAdapter.upsertOne(state, move);
-        }
+      .addCase(dragMove.fulfilled, (state, action) => {
+        state = movesAdapter.upsertOne(state, action.payload);
       })
       .addMatcher(
         (action: AnyAction): action is StompMessage =>

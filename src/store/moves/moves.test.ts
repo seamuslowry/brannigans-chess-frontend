@@ -13,7 +13,7 @@ import {
   whiteMove,
   whiteTake
 } from '../../utils/testData';
-import { clickTile } from '../boards/boards';
+import { dragMove } from '../boards/boards';
 import { getAllGameData } from '../games/games';
 import { STOMP_MESSAGE } from '../middleware/stomp/stomp';
 import { AppState } from '../store';
@@ -64,17 +64,13 @@ test('sorts moves by id', () => {
 });
 
 test('moves a piece', async () => {
-  const request = { row: whiteMove.dstRow, col: whiteMove.dstCol, gameId: 0 };
-  const result = reducer(undefined, clickTile.fulfilled(whiteMove, '', request));
+  const request = {
+    piece: whiteMove.movingPiece,
+    to: { row: whiteMove.dstRow, col: whiteMove.dstCol }
+  };
+  const result = reducer(undefined, dragMove.fulfilled(whiteMove, '', request));
 
   expect(result.ids).toContainEqual(whiteMove.id);
-});
-
-test('unrelated click request - reducer', async () => {
-  const request = { row: whiteMove.dstRow, col: whiteMove.dstCol, gameId: 0 };
-  const result = reducer(undefined, clickTile.fulfilled(true, '', request));
-
-  expect(result).toEqual(initialState);
 });
 
 test('handles a shared move on the move topic', () => {
