@@ -8,7 +8,7 @@ interface Props {
   width?: string;
 }
 
-const Piece = React.forwardRef<HTMLImageElement, Props>(
+const Piece = React.forwardRef<HTMLImageElement, Props & React.ImgHTMLAttributes<HTMLImageElement>>(
   ({ type, color, height = '100%', width = '100%', ...rest }, ref) => {
     return (
       <img
