@@ -58,6 +58,7 @@ const Tile: React.FC<Props> = ({ row, col, gameId, disabled }) => {
       height="100%"
       data-testid={`tile-${row}-${col}`}
       bgcolor={bgColor}
+      // needed until MUI v5 comes out https://github.com/mui-org/material-ui/issues/17010#issuecomment-724187064
       // @ts-ignore
       ref={drop}
     >
