@@ -10,6 +10,7 @@ import Marker from '../../atoms/Marker/Marker';
 import { displayCol, displayRow } from '../../utils/markerHelper';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
+import BoardDragLayer from '../BoardDragLayer/BoardDragLayer';
 
 const useStyles = makeStyles({
   borderRadius: {
@@ -46,6 +47,7 @@ const Board: React.FC<Props> = ({ gameId }) => {
       <PawnPromotion color="WHITE" gameId={gameId} />
       <PawnPromotion color="BLACK" gameId={gameId} />
       <DndProvider backend={HTML5Backend}>
+        <BoardDragLayer />
         <Box
           display="grid"
           gridTemplateColumns={`2rem ${tileTemplate}`}
