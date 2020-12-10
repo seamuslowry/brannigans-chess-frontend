@@ -12,6 +12,8 @@ test('fades the piece while dragging', async () => {
     </DndProvider>
   );
 
+  expect(getByAltText('BLACK-ROOK')).not.toHaveStyle('opacity: 0.1');
+
   const piece = getByAltText('BLACK-ROOK');
   fireEvent.dragStart(piece);
 
