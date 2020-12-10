@@ -1,6 +1,6 @@
-import { errorAlertInfo, successAlertInfo } from '../../utils/testData';
+import { errorAlertInfo, makePiece, successAlertInfo } from '../../utils/testData';
 import { authenticatePlayer, updateDisplayName } from '../auth/auth';
-import { clickTile } from '../boards/boards';
+import { dragMove } from '../boards/boards';
 import { createGame, getAllGameData, joinGame, leaveGame } from '../games/games';
 import { getMoves } from '../moves/moves';
 import { getPieces, promotePawn } from '../pieces/pieces';
@@ -63,7 +63,10 @@ test('shows a notification on an attempted move failure', async () => {
   const message = 'test message';
   const result = reducer(
     undefined,
-    clickTile.rejected(new Error(message), '', { gameId: 0, row: 0, col: 0 })
+    dragMove.rejected(new Error(message), '', {
+      piece: makePiece('BISHOP', 'BLACK'),
+      to: { row: 0, col: 0 }
+    })
   );
 
   expect(result.pendingAlerts).toContainEqual(

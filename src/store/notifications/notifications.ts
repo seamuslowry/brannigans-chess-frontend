@@ -1,7 +1,7 @@
 import { Color } from '@material-ui/lab';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { authenticatePlayer, updateDisplayName } from '../auth/auth';
-import { clickTile } from '../boards/boards';
+import { dragMove } from '../boards/boards';
 import { createGame, getAllGameData, joinGame, leaveGame } from '../games/games';
 import { getMoves } from '../moves/moves';
 import { getPieces, promotePawn } from '../pieces/pieces';
@@ -100,7 +100,7 @@ const notificationsSlice = createSlice({
           severity: 'error'
         });
       })
-      .addCase(clickTile.rejected, (state, action) => {
+      .addCase(dragMove.rejected, (state, action) => {
         state.pendingAlerts.push({
           message: `${action.error.message}`,
           severity: 'error'

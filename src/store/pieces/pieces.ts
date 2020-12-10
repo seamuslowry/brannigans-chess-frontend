@@ -7,7 +7,7 @@ import {
 } from '@reduxjs/toolkit';
 import ChessService from '../../services/ChessService';
 import { Move, Piece, PieceColor, PieceStatus, PieceType } from '../../services/ChessService.types';
-import { clickTile, TilePosition } from '../boards/boards';
+import { dragMove, TilePosition } from '../boards/boards';
 import { getAllGameData, joinGame } from '../games/games';
 import { StompMessage, STOMP_MESSAGE } from '../middleware/stomp/stomp';
 import { SHARED_MOVES_PREFIX } from '../moves/moves';
@@ -83,34 +83,48 @@ const pieceSlice = createSlice({
         state = piecesAdapter.upsertOne(state, action);
         state = piecesAdapter.updateOne(state, { id: pawnId, changes: { status: 'REMOVED' } });
       })
-      .addCase(clickTile.fulfilled, (state, action) => {
-        if (action.payload && typeof action.payload === 'object') {
-          const move = action.payload;
+      .addCase(dragMove.pending, (state, action) => {
+        const { piece, to } = action.meta.arg;
 
-          let newPieces = [move.movingPiece];
-          newPieces = move.takenPiece ? newPieces.concat(move.takenPiece) : newPieces;
-          state = piecesAdapter.upsertMany(state, newPieces);
+        state = piecesAdapter.updateOne(state, {
+          id: piece.id,
+          changes: {
+            positionRow: to.row,
+            positionCol: to.col
+          }
+        });
+      })
+      .addCase(dragMove.rejected, (state, action) => {
+        const { piece } = action.meta.arg;
 
-          if (move.moveType === 'KING_SIDE_CASTLE') {
-            const oldCastle = Object.values(state.entities).find(
-              c => c?.positionRow === move.srcRow && c?.positionCol === move.dstCol + 1
-            );
-            oldCastle &&
-              piecesAdapter.upsertOne(state, {
-                ...oldCastle,
-                positionCol: move.dstCol - 1
-              });
-          }
-          if (move.moveType === 'QUEEN_SIDE_CASTLE') {
-            const oldCastle = Object.values(state.entities).find(
-              c => c?.positionRow === move.srcRow && c?.positionCol === move.dstCol - 2
-            );
-            oldCastle &&
-              piecesAdapter.upsertOne(state, {
-                ...oldCastle,
-                positionCol: move.dstCol + 1
-              });
-          }
+        state = piecesAdapter.upsertOne(state, piece);
+      })
+      .addCase(dragMove.fulfilled, (state, action) => {
+        const move = action.payload;
+
+        let newPieces = [move.movingPiece];
+        newPieces = move.takenPiece ? newPieces.concat(move.takenPiece) : newPieces;
+        state = piecesAdapter.upsertMany(state, newPieces);
+
+        if (move.moveType === 'KING_SIDE_CASTLE') {
+          const oldCastle = Object.values(state.entities).find(
+            c => c?.positionRow === move.srcRow && c?.positionCol === move.dstCol + 1
+          );
+          oldCastle &&
+            piecesAdapter.upsertOne(state, {
+              ...oldCastle,
+              positionCol: move.dstCol - 1
+            });
+        }
+        if (move.moveType === 'QUEEN_SIDE_CASTLE') {
+          const oldCastle = Object.values(state.entities).find(
+            c => c?.positionRow === move.srcRow && c?.positionCol === move.dstCol - 2
+          );
+          oldCastle &&
+            piecesAdapter.upsertOne(state, {
+              ...oldCastle,
+              positionCol: move.dstCol + 1
+            });
         }
       })
       .addMatcher(

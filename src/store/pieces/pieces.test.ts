@@ -19,7 +19,7 @@ import {
   whiteQueenSideCastle,
   whiteTake
 } from '../../utils/testData';
-import { clickTile } from '../boards/boards';
+import { dragMove } from '../boards/boards';
 import { getAllGameData, joinGame, leaveGame } from '../games/games';
 import { STOMP_MESSAGE } from '../middleware/stomp/stomp';
 import { getSharedMovesTopic } from '../moves/moves';
@@ -75,16 +75,40 @@ test('handles a stomp message on an unrelated topic', () => {
   expect(result).toEqual(initialState);
 });
 
-test('unrelated click request - reducer', async () => {
-  const request = { row: whiteMove.dstRow, col: whiteMove.dstCol, gameId: 0 };
-  const result = reducer(undefined, clickTile.fulfilled(true, '', request));
+test('preemptively moves a piece - reducer', async () => {
+  const request = {
+    piece: whiteMove.movingPiece,
+    to: { row: whiteMove.dstRow, col: whiteMove.dstCol }
+  };
+  const result = reducer(
+    mockEntityAdapterState(whiteMove.movingPiece),
+    dragMove.pending('', request)
+  );
 
-  expect(result).toEqual(initialState);
+  expect(result.entities[whiteMove.movingPiece.id]).toEqual(
+    expect.objectContaining({
+      positionRow: whiteMove.dstRow,
+      positionCol: whiteMove.dstCol
+    })
+  );
+});
+
+test('reverts a piece move on fail - reducer', async () => {
+  const request = {
+    piece: whiteMove.movingPiece,
+    to: { row: whiteMove.dstRow, col: whiteMove.dstCol }
+  };
+  const result = reducer(undefined, dragMove.rejected(new Error(''), '', request));
+
+  expect(result.entities[whiteMove.movingPiece.id]).toEqual(whiteMove.movingPiece);
 });
 
 test('moves a piece - reducer', async () => {
-  const request = { row: whiteMove.dstRow, col: whiteMove.dstCol, gameId: 0 };
-  const result = reducer(undefined, clickTile.fulfilled(whiteMove, '', request));
+  const request = {
+    piece: whiteMove.movingPiece,
+    to: { row: whiteMove.dstRow, col: whiteMove.dstCol }
+  };
+  const result = reducer(undefined, dragMove.fulfilled(whiteMove, '', request));
 
   expect(result.entities[whiteMove.movingPiece.id]).toEqual(
     expect.objectContaining({
@@ -95,8 +119,11 @@ test('moves a piece - reducer', async () => {
 });
 
 test('moves to take a piece - reducer', async () => {
-  const request = { row: whiteTake.dstRow, col: whiteTake.dstCol, gameId: 0 };
-  const result = reducer(undefined, clickTile.fulfilled(whiteTake, '', request));
+  const request = {
+    piece: whiteTake.movingPiece,
+    to: { row: whiteTake.dstRow, col: whiteTake.dstCol }
+  };
+  const result = reducer(undefined, dragMove.fulfilled(whiteTake, '', request));
 
   expect(result.entities[whiteTake.movingPiece.id]).toEqual(
     expect.objectContaining({
@@ -112,8 +139,11 @@ test('moves to take a piece - reducer', async () => {
 });
 
 test('en passants a piece - reducer', async () => {
-  const request = { row: whiteEnPassant.dstRow, col: whiteEnPassant.dstCol, gameId: 0 };
-  const result = reducer(undefined, clickTile.fulfilled(whiteEnPassant, '', request));
+  const request = {
+    piece: whiteEnPassant.movingPiece,
+    to: { row: whiteEnPassant.dstRow, col: whiteEnPassant.dstCol }
+  };
+  const result = reducer(undefined, dragMove.fulfilled(whiteEnPassant, '', request));
 
   expect(result.entities[whiteEnPassant.movingPiece.id]).toEqual(
     expect.objectContaining({
@@ -129,7 +159,10 @@ test('en passants a piece - reducer', async () => {
 });
 
 test('king side castles - reducer', async () => {
-  const request = { row: whiteKingSideCastle.dstRow, col: whiteKingSideCastle.dstCol, gameId: 0 };
+  const request = {
+    piece: whiteKingSideCastle.movingPiece,
+    to: { row: whiteKingSideCastle.dstRow, col: whiteKingSideCastle.dstCol }
+  };
   const whiteRook = makePiece(
     'ROOK',
     'BLACK',
@@ -138,7 +171,7 @@ test('king side castles - reducer', async () => {
   );
   const result = reducer(
     mockEntityAdapterState(whiteKingSideCastle.movingPiece, whiteRook),
-    clickTile.fulfilled(whiteKingSideCastle, '', request)
+    dragMove.fulfilled(whiteKingSideCastle, '', request)
   );
 
   expect(result.entities[whiteKingSideCastle.movingPiece.id]).toEqual(
@@ -156,7 +189,10 @@ test('king side castles - reducer', async () => {
 });
 
 test('queen side castles - reducer', async () => {
-  const request = { row: whiteQueenSideCastle.dstRow, col: whiteQueenSideCastle.dstCol, gameId: 0 };
+  const request = {
+    piece: whiteQueenSideCastle.movingPiece,
+    to: { row: whiteQueenSideCastle.dstRow, col: whiteQueenSideCastle.dstCol }
+  };
   const whiteRook = makePiece(
     'ROOK',
     'WHITE',
@@ -165,7 +201,7 @@ test('queen side castles - reducer', async () => {
   );
   const result = reducer(
     mockEntityAdapterState(whiteQueenSideCastle.movingPiece, whiteRook),
-    clickTile.fulfilled(whiteQueenSideCastle, '', request)
+    dragMove.fulfilled(whiteQueenSideCastle, '', request)
   );
 
   expect(result.entities[whiteQueenSideCastle.movingPiece.id]).toEqual(
