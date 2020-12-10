@@ -31,7 +31,7 @@ const Tile: React.FC<Props> = ({ row, col, gameId, disabled }) => {
 
   const [{ isOver }, drop] = useDrop({
     accept: ['KING', 'QUEEN', 'BISHOP', 'KNIGHT', 'ROOK', 'PAWN'],
-    canDrop: () => true,
+    canDrop: item => !(item.positionCol === col && item.positionRow === row),
     drop: (item: PieceEntity) =>
       dispatch(
         dragMove({

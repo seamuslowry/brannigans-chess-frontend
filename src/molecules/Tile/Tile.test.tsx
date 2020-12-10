@@ -26,11 +26,44 @@ test('handles a piece drop', async () => {
     <DndProvider backend={HTML5Backend}>
       <Provider store={withPieceStore}>
         <Tile gameId={0} row={0} col={0} />
+        <Tile gameId={0} row={1} col={0} />
+      </Provider>
+    </DndProvider>
+  );
+
+  const tileOne = getByTestId('tile-0-0');
+  const tileTwo = getByTestId('tile-1-0');
+
+  const draggablePiece = tileOne.firstChild;
+
+  expect(draggablePiece).not.toBeNull();
+
+  draggablePiece && fireEvent.dragStart(draggablePiece);
+  fireEvent.drop(tileTwo);
+
+  expect(withPieceStore.getActions()).toContainEqual(
+    expect.objectContaining({
+      type: dragMove.pending.type
+    })
+  );
+});
+
+test('will not drop a piece on same tile', async () => {
+  const withPieceStore = mockStore({
+    ...testStore,
+    pieces: mockEntityAdapterState(blackRook)
+  });
+
+  const { getByTestId } = render(
+    <DndProvider backend={HTML5Backend}>
+      <Provider store={withPieceStore}>
+        <Tile gameId={0} row={0} col={0} />
       </Provider>
     </DndProvider>
   );
 
   const tile = getByTestId('tile-0-0');
+
   const draggablePiece = tile.firstChild;
 
   expect(draggablePiece).not.toBeNull();
@@ -38,7 +71,7 @@ test('handles a piece drop', async () => {
   draggablePiece && fireEvent.dragStart(draggablePiece);
   fireEvent.drop(tile);
 
-  expect(withPieceStore.getActions()).toContainEqual(
+  expect(withPieceStore.getActions()).not.toContainEqual(
     expect.objectContaining({
       type: dragMove.pending.type
     })
