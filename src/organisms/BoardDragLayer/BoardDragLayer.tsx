@@ -10,7 +10,7 @@ const useStyles = makeStyles({
   }
 });
 
-const getItemOffset = (currentOffset: XYCoord) => {
+const getOffsetStyle = (currentOffset: XYCoord) => {
   let { x, y } = currentOffset;
 
   const transform = `translate(${x}px, ${y}px)`;
@@ -44,7 +44,7 @@ const BoardDragLayer: React.FC = () => {
       zIndex={100}
       data-testid="board-drag-layer"
     >
-      <Box style={getItemOffset(offset)} height={size} width={size}>
+      <Box style={getOffsetStyle(offset)} height={size} width={size}>
         <Piece type={item.type} color={item.color} />
       </Box>
     </Box>
