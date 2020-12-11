@@ -37,6 +37,7 @@ export interface Piece {
   positionCol: number;
   status: PieceStatus;
   gameId: number;
+  gameUuid: string;
   id: number;
 }
 

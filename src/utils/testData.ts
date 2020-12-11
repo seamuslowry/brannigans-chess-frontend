@@ -86,7 +86,8 @@ export const makePiece = (
   row: number = 0,
   col: number = 0,
   status: PieceStatus = 'ACTIVE',
-  gameId: number = 0
+  gameId: number = 0,
+  gameUuid: string = 'uuid'
 ): Piece => ({
   color,
   type,
@@ -94,7 +95,8 @@ export const makePiece = (
   positionRow: row,
   status: status,
   id: ++testPieceId,
-  gameId
+  gameId,
+  gameUuid
 });
 
 export const blackRook: Piece = makePiece('ROOK', 'BLACK');
