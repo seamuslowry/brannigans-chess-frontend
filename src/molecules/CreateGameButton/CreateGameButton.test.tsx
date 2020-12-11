@@ -44,7 +44,7 @@ test('renders a button', async () => {
 
 test('creates a game', async () => {
   const history = createMemoryHistory();
-  const { getByText, getByRole } = render(
+  const { getByText } = render(
     <Router history={history}>
       <Provider store={mockedStore}>
         <CreateGameButton />
@@ -54,7 +54,7 @@ test('creates a game', async () => {
 
   const button = await waitFor(() => getByText('Create Game'));
   fireEvent.click(button);
-  await waitFor(() => expect(history.location.pathname).toEqual(`/game/${emptyGame.id}`));
+  await waitFor(() => expect(history.location.pathname).toEqual(`/game/${emptyGame.uuid}`));
 });
 
 test('fails to create a game', async () => {

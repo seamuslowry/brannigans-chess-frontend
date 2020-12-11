@@ -56,7 +56,7 @@ export const playerThree: Player = {
 
 export const emptyGame: Game = {
   id: 1,
-  uuid: 'empty game',
+  uuid: 'empty-game',
   whitePlayer: null,
   blackPlayer: null,
   winner: null,
@@ -65,7 +65,7 @@ export const emptyGame: Game = {
 
 export const fullGame: Game = {
   id: 2,
-  uuid: 'full game',
+  uuid: 'full-game',
   whitePlayer: playerOne,
   blackPlayer: playerTwo,
   winner: playerOne,

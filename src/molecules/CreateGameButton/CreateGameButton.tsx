@@ -25,7 +25,7 @@ const CreateGameButton: React.FC = () => {
     setLoading(true);
     dispatch(createGame())
       .then(unwrapResult)
-      .then(game => history.push(`/game/${game.id}`))
+      .then(game => history.push(`/game/${game.uuid}`))
       .catch(() => setLoading(false));
   };
 

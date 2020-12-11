@@ -19,7 +19,7 @@ const App = () => {
       <Box m={1}>
         <Box pt={2} display="flex" justifyContent="center">
           <Switch>
-            <PrivateRoute path="/game/:id">
+            <PrivateRoute path="/game/:uuid">
               <ActiveGame />
             </PrivateRoute>
             <PrivateRoute path="/user">
