@@ -33,7 +33,7 @@ test('renders', async () => {
   const { container, getAllByRole } = render(
     <Provider store={mockedStore}>
       <MemoryRouter initialEntries={['/test/1']}>
-        <Route path="/test/:id">
+        <Route path="/test/:uuid">
           <ActiveGame />
         </Route>
       </MemoryRouter>

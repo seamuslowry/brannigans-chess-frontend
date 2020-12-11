@@ -8,25 +8,25 @@ import GameMoveList from '../../organisms/GameMoveList/GameMoveList';
 import SpectatorStatus from '../../organisms/SpectatorStatus/SpectatorStatus';
 
 interface ExpectedRouteParams {
-  id?: string;
+  uuid?: string;
 }
 
 const ActiveGame: React.FC = () => {
-  const { id } = useParams<ExpectedRouteParams>();
+  const { uuid: gameUuid = '' } = useParams<ExpectedRouteParams>();
 
-  const gameId = Number(id);
+  const gameId = 1;
 
   return (
     <Grid container justify="space-evenly" spacing={2}>
       <Grid item container xs={12} md={8} wrap="nowrap" justify="center" spacing={1}>
         <Grid item>
-          <TakenPieces gameId={gameId} color="WHITE" />
+          <TakenPieces gameUuid={gameUuid} color="WHITE" />
         </Grid>
         <Grid item>
           <Board gameId={gameId} />
         </Grid>
         <Grid item>
-          <TakenPieces gameId={gameId} color="BLACK" />
+          <TakenPieces gameUuid={gameUuid} color="BLACK" />
         </Grid>
       </Grid>
       <Grid item container xs={12} md={3} spacing={2} alignContent="flex-start">

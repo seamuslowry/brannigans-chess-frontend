@@ -66,14 +66,14 @@ const getPlayerGames = (
 const getPlayerStats = (playerId: number) =>
   chessApi.get<PlayerStatInfo>(`/players/stats/${playerId}`);
 
-const getPieces = (gameId: number, colors?: PieceColor[], status?: PieceStatus) => {
+const getPieces = (gameUuid: string, colors?: PieceColor[], status?: PieceStatus) => {
   const args = [];
 
   status && args.push(`status=${status}`);
 
   colors && args.push(`color=${colors.join('&color=')}`);
 
-  return chessApi.get<Piece[]>(`pieces/${gameId}?${args.join('&')}`);
+  return chessApi.get<Piece[]>(`pieces/${gameUuid}?${args.join('&')}`);
 };
 
 const getMoves = (gameId: number, colors?: PieceColor[]) => {

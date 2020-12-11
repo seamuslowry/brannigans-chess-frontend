@@ -13,15 +13,15 @@ import { StompMessage, STOMP_MESSAGE } from '../middleware/stomp/stomp';
 import { SHARED_MOVES_PREFIX } from '../moves/moves';
 
 interface GetPiecesParams {
-  gameId: number;
+  gameUuid: string;
   colors: PieceColor[];
   status?: PieceStatus;
 }
 
 export const getPieces = createAsyncThunk(
   'chess/pieces/getPieces',
-  async ({ gameId, colors, status }: GetPiecesParams) => {
-    const response = await ChessService.getPieces(gameId, colors, status);
+  async ({ gameUuid, colors, status }: GetPiecesParams) => {
+    const response = await ChessService.getPieces(gameUuid, colors, status);
     return response.data;
   }
 );
@@ -147,10 +147,10 @@ export default pieceSlice.reducer;
 export const makeGetTakenPieces = () =>
   createSelector(
     selectAllPieces,
-    (_: PieceState, gameId: number) => gameId,
+    (_: PieceState, gameUuid: string) => gameUuid,
     (_: PieceState, __, color: PieceColor) => color,
-    (pieces, gameId, color) =>
-      pieces.filter(p => p.gameId === gameId && p.color === color && p.status === 'TAKEN')
+    (pieces, gameUuid, color) =>
+      pieces.filter(p => p.gameUuid === gameUuid && p.color === color && p.status === 'TAKEN')
   );
 
 export const makeGetActivePiece = () =>

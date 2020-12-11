@@ -219,7 +219,7 @@ test('queen side castles - reducer', async () => {
 });
 
 test('tries to get pieces', async () => {
-  await waitFor(() => mockedStore.dispatch(getPieces({ gameId: 0, colors: ['BLACK'] })));
+  await waitFor(() => mockedStore.dispatch(getPieces({ gameUuid: '0', colors: ['BLACK'] })));
 
   expect(mockedStore.getActions()).toContainEqual(
     expect.objectContaining({
@@ -234,7 +234,7 @@ test('dispatches an error when failing to get pieces', async () => {
       return res(ctx.status(500));
     })
   );
-  await waitFor(() => mockedStore.dispatch(getPieces({ gameId: 0, colors: [] })));
+  await waitFor(() => mockedStore.dispatch(getPieces({ gameUuid: '0', colors: [] })));
 
   expect(mockedStore.getActions()).toContainEqual(
     expect.objectContaining({
@@ -246,7 +246,7 @@ test('dispatches an error when failing to get pieces', async () => {
 test('handles successful piece retrival', async () => {
   const result = reducer(
     undefined,
-    getPieces.fulfilled([blackRook], '', { gameId: 0, colors: ['BLACK'] })
+    getPieces.fulfilled([blackRook], '', { gameUuid: '0', colors: ['BLACK'] })
   );
 
   expect(result.ids).toContain(blackRook.id);

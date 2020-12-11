@@ -35,7 +35,7 @@ afterAll(() => server.close());
 test('gets pieces on mount', async () => {
   const { getByRole } = render(
     <Provider store={mockedStore}>
-      <TakenPieces gameId={0} color="BLACK" />
+      <TakenPieces gameUuid={'0'} color="BLACK" />
     </Provider>
   );
 
@@ -57,7 +57,7 @@ test('handles an error getting pieces on mount', async () => {
 
   const { getByRole } = render(
     <Provider store={mockedStore}>
-      <TakenPieces gameId={0} color="BLACK" />
+      <TakenPieces gameUuid={'0'} color="BLACK" />
     </Provider>
   );
 

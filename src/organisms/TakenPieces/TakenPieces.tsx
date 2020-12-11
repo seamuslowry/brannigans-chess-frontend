@@ -8,11 +8,11 @@ import usePieceSize from '../../utils/usePieceSize';
 import { getPieces, makeGetTakenPieces } from '../../store/pieces/pieces';
 
 interface Props {
-  gameId: number;
+  gameUuid: string;
   color: PieceColor;
 }
 
-const TakenPieces: React.FC<Props> = ({ gameId, color }) => {
+const TakenPieces: React.FC<Props> = ({ gameUuid, color }) => {
   const dispatch = useAppDispatch();
   const pieceSize = usePieceSize();
 
@@ -20,14 +20,14 @@ const TakenPieces: React.FC<Props> = ({ gameId, color }) => {
 
   React.useEffect(() => {
     setLoading(true);
-    dispatch(getPieces({ gameId, colors: [color], status: 'TAKEN' })).finally(() =>
+    dispatch(getPieces({ gameUuid, colors: [color], status: 'TAKEN' })).finally(() =>
       setLoading(false)
     );
-  }, [gameId, color, dispatch]);
+  }, [gameUuid, color, dispatch]);
 
   const getTakenPieces = React.useMemo(makeGetTakenPieces, []);
   const pieces = useSelector<AppState, PieceEntity[]>(state =>
-    getTakenPieces(state.pieces, gameId, color)
+    getTakenPieces(state.pieces, gameUuid, color)
   );
 
   return (
