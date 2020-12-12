@@ -1,5 +1,5 @@
 import React from 'react';
-import { Paper } from '@material-ui/core';
+import { Box, Paper } from '@material-ui/core';
 import { Sync, SyncProblem } from '@material-ui/icons';
 import { useSelector } from 'react-redux';
 import startCase from 'lodash.startcase';
@@ -12,6 +12,7 @@ import DataLabel from '../../atoms/DataLabel/DataLabel';
 import DataValue from '../../atoms/DataValue/DataValue';
 import Data from '../../molecules/Data/Data';
 import DataGroup from '../../molecules/DataGroup/DataGroup';
+import ClipboardTextField from '../../molecules/ClipboardTextField/ClipboardTextField';
 
 interface Props {
   gameId: number;
@@ -56,6 +57,9 @@ const GameStatus: React.FC<Props> = ({ gameId }) => {
           </DataValue>
         </Data>
       </DataGroup>
+      <Box px={2} pb={2}>
+        <ClipboardTextField margin="dense" fullWidth value={window.location.href} />
+      </Box>
     </Paper>
   );
 };
