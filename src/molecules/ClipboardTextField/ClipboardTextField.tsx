@@ -29,7 +29,6 @@ const ClipboardTextField: React.FC<Props & Omit<OutlinedInputProps, 'endAdornmen
   return (
     <OutlinedInput
       value={value}
-      color="secondary"
       spellCheck={false}
       endAdornment={
         <Tooltip

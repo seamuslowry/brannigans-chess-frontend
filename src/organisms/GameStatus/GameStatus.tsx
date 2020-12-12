@@ -12,7 +12,7 @@ import DataLabel from '../../atoms/DataLabel/DataLabel';
 import DataValue from '../../atoms/DataValue/DataValue';
 import Data from '../../molecules/Data/Data';
 import DataGroup from '../../molecules/DataGroup/DataGroup';
-import ClipboardTextField from '../../molecules/ClipboardTextField/ClipboardTextField';
+import ShareGame from '../ShareGame/ShareGame';
 
 interface Props {
   gameId: number;
@@ -58,7 +58,7 @@ const GameStatus: React.FC<Props> = ({ gameId }) => {
         </Data>
       </DataGroup>
       <Box px={2} pb={2}>
-        <ClipboardTextField margin="dense" fullWidth value={window.location.href} />
+        <ShareGame gameId={gameId} />
       </Box>
     </Paper>
   );
