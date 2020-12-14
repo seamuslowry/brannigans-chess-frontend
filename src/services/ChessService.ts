@@ -26,7 +26,7 @@ const statusGroupMap: StatusGroupMap = {
     'WHITE_PROMOTION',
     'BLACK_PROMOTION'
   ],
-  [GameStatusGroup.INACTIVE]: ['WHITE_CHECKMATE', 'BLACK_CHECKMATE', 'STALEMATE']
+  [GameStatusGroup.INACTIVE]: ['WHITE_VICTORY', 'BLACK_VICTORY', 'STALEMATE']
 };
 
 const getGames = (statusGroup?: GameStatusGroup, pageRequest: Partial<PageRequest> = {}) => {
