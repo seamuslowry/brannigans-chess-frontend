@@ -5,6 +5,7 @@ import { selectGameById } from '../../store/games/games';
 import { AppState } from '../../store/store';
 import JoinGameButton from './JoinGameButton/JoinGameButton';
 import LeaveGameButton from './LeaveGameButton/LeaveGameButton';
+import ResignGameButton from './ResignGameButton/ResignGameButton';
 
 interface Props {
   gameId: number;
@@ -18,20 +19,19 @@ const PlayerActionButton: React.FC<Props> = ({ gameId, color }) => {
 
   const currentPlayer = game && game[color === 'WHITE' ? 'whitePlayer' : 'blackPlayer'];
   const loggedInPlayer = useSelector<AppState, Player | undefined>(state => state.auth.player);
+  const playerIsColor = loggedInPlayer?.authId === currentPlayer?.authId;
 
   const fullGame = game && !!game.whitePlayer && !!game.blackPlayer;
-
-  // if (fullGame || loggedInPlayer?.authId !== currentPlayer?.authId) return null; // leave game
-  // if (currentPlayer) return null; // join game
 
   return (
     <>
       {!(currentPlayer || fullGame) && (
         <JoinGameButton size="small" color="primary" gameId={gameId} pieceColor={color} />
       )}
-      {!(fullGame || loggedInPlayer?.authId !== currentPlayer?.authId) && (
+      {!fullGame && playerIsColor && (
         <LeaveGameButton size="small" color="secondary" gameId={gameId} pieceColor={color} />
       )}
+      {fullGame && playerIsColor && <ResignGameButton size="small" gameId={gameId} />}
     </>
   );
 };

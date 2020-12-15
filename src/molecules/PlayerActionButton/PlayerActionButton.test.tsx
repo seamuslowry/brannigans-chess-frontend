@@ -160,7 +160,7 @@ test('will not allow to leave black when not self', async () => {
 });
 
 test('will not allow to leave white when not self', async () => {
-  const playerNotBlackStore = mockStore({
+  const playerNotWhiteStore = mockStore({
     ...testStore,
     auth: {
       ...testStore.auth,
@@ -174,7 +174,7 @@ test('will not allow to leave white when not self', async () => {
   });
 
   const { queryByText } = render(
-    <Provider store={playerNotBlackStore}>
+    <Provider store={playerNotWhiteStore}>
       <PlayerActionButton gameId={1} color="WHITE" />
     </Provider>
   );
@@ -206,6 +206,109 @@ test('will not allow to leave a full game', async () => {
   );
 
   const button = queryByText('Quit');
+
+  expect(button).not.toBeInTheDocument();
+});
+
+test('allows to resign as white', async () => {
+  const fullPlayerWhiteStore = mockStore({
+    ...testStore,
+    auth: {
+      ...testStore.auth,
+      player: playerTwo
+    },
+    games: mockEntityAdapterState({
+      ...emptyGame,
+      id: 1,
+      blackPlayer: playerOne,
+      whitePlayer: playerTwo
+    })
+  });
+
+  const { queryByText } = render(
+    <Provider store={fullPlayerWhiteStore}>
+      <PlayerActionButton gameId={1} color="WHITE" />
+    </Provider>
+  );
+
+  const button = queryByText('Resign');
+
+  expect(button).toBeInTheDocument();
+});
+
+test('allows to resign as black', async () => {
+  const fullPlayerBlackStore = mockStore({
+    ...testStore,
+    auth: {
+      ...testStore.auth,
+      player: playerOne
+    },
+    games: mockEntityAdapterState({
+      ...emptyGame,
+      id: 1,
+      blackPlayer: playerOne,
+      whitePlayer: playerTwo
+    })
+  });
+
+  const { queryByText } = render(
+    <Provider store={fullPlayerBlackStore}>
+      <PlayerActionButton gameId={1} color="BLACK" />
+    </Provider>
+  );
+
+  const button = queryByText('Resign');
+
+  expect(button).toBeInTheDocument();
+});
+
+test('will not allow to resign other player', async () => {
+  const fullPlayerBlackStore = mockStore({
+    ...testStore,
+    auth: {
+      ...testStore.auth,
+      player: playerOne
+    },
+    games: mockEntityAdapterState({
+      ...emptyGame,
+      id: 1,
+      blackPlayer: playerOne,
+      whitePlayer: playerTwo
+    })
+  });
+
+  const { queryByText } = render(
+    <Provider store={fullPlayerBlackStore}>
+      <PlayerActionButton gameId={1} color="WHITE" />
+    </Provider>
+  );
+
+  const button = queryByText('Resign');
+
+  expect(button).not.toBeInTheDocument();
+});
+
+test('will not allow to resign when game is not full', async () => {
+  const fullPlayerBlackStore = mockStore({
+    ...testStore,
+    auth: {
+      ...testStore.auth,
+      player: playerOne
+    },
+    games: mockEntityAdapterState({
+      ...emptyGame,
+      id: 1,
+      blackPlayer: playerOne
+    })
+  });
+
+  const { queryByText } = render(
+    <Provider store={fullPlayerBlackStore}>
+      <PlayerActionButton gameId={1} color="BLACK" />
+    </Provider>
+  );
+
+  const button = queryByText('Resign');
 
   expect(button).not.toBeInTheDocument();
 });
