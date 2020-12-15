@@ -16,7 +16,7 @@ import {
   StatusGroupMap
 } from './ChessService.types';
 
-const statusGroupMap: StatusGroupMap = {
+export const statusGroupMap: StatusGroupMap = {
   [GameStatusGroup.OPEN]: ['WAITING_FOR_BLACK', 'WAITING_FOR_PLAYERS', 'WAITING_FOR_WHITE'],
   [GameStatusGroup.ACTIVE]: [
     'WHITE_TURN',
@@ -26,7 +26,7 @@ const statusGroupMap: StatusGroupMap = {
     'WHITE_PROMOTION',
     'BLACK_PROMOTION'
   ],
-  [GameStatusGroup.INACTIVE]: ['WHITE_CHECKMATE', 'BLACK_CHECKMATE', 'STALEMATE']
+  [GameStatusGroup.INACTIVE]: ['WHITE_VICTORY', 'BLACK_VICTORY', 'STALEMATE']
 };
 
 const getGames = (statusGroup?: GameStatusGroup, pageRequest: Partial<PageRequest> = {}) => {
@@ -109,6 +109,8 @@ const joinGame = (gameId: number, color: PieceColor) =>
 
 const leaveGame = (gameId: number) => chessApi.post<Game>(`players/leave/${gameId}`);
 
+const resignGame = (gameId: number) => chessApi.post<Game>(`players/resign/${gameId}`);
+
 export default {
   getGames,
   getPlayerGames,
@@ -122,5 +124,6 @@ export default {
   authenticatePlayer,
   changeName,
   joinGame,
-  leaveGame
+  leaveGame,
+  resignGame
 };

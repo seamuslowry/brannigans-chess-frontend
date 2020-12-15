@@ -12,7 +12,8 @@ import reducer, {
   getStatusTopic,
   initialState,
   joinGame,
-  leaveGame
+  leaveGame,
+  resignGame
 } from '../games/games';
 import { STOMP_MESSAGE } from '../middleware/stomp/stomp';
 import { AppState } from '../store';
@@ -30,6 +31,9 @@ const server = setupServer(
     return res(ctx.json<Game>(fullGame));
   }),
   rest.post(`${config.serviceUrl}/players/leave/0`, (req, res, ctx) => {
+    return res(ctx.json<Game>(fullGame));
+  }),
+  rest.post(`${config.serviceUrl}/players/resign/0`, (req, res, ctx) => {
     return res(ctx.json<Game>(fullGame));
   }),
   rest.get(`${config.serviceUrl}/games/0`, (req, res, ctx) => {
@@ -206,6 +210,50 @@ test('does not handle leaving a game', async () => {
   const result = reducer(undefined, leaveGame.fulfilled(emptyGame, '', 0));
 
   expect(result).toEqual(initialState);
+});
+
+test('tries to resign a game', async () => {
+  await waitFor(() => mockedStore.dispatch(resignGame(0)));
+
+  expect(mockedStore.getActions()).toContainEqual(
+    expect.objectContaining({
+      type: resignGame.fulfilled.type
+    })
+  );
+});
+
+test('dispatches an error when failing to resign a game', async () => {
+  server.use(
+    rest.post(`${config.serviceUrl}/players/resign/0`, (req, res, ctx) => {
+      return res(ctx.status(500));
+    })
+  );
+  await waitFor(() => mockedStore.dispatch(resignGame(0)));
+
+  expect(mockedStore.getActions()).toContainEqual(
+    expect.objectContaining({
+      type: resignGame.rejected.type
+    })
+  );
+});
+
+test('dispatches an error when failing to join a game from conflict', async () => {
+  const message = 'conflict';
+  server.use(
+    rest.post(`${config.serviceUrl}/players/resign/0`, (req, res, ctx) => {
+      return res(ctx.status(409), ctx.json(message));
+    })
+  );
+  await waitFor(() => mockedStore.dispatch(resignGame(0)));
+
+  expect(mockedStore.getActions()).toContainEqual(
+    expect.objectContaining({
+      type: resignGame.rejected.type,
+      error: expect.objectContaining({
+        message: expect.stringContaining(message)
+      })
+    })
+  );
 });
 
 test('tries to get all game data', async () => {

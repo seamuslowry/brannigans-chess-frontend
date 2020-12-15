@@ -6,7 +6,7 @@ import startCase from 'lodash.startcase';
 import { AppState } from '../../store/store';
 import useSubscription from '../../utils/useSubscription';
 import { Game } from '../../services/ChessService.types';
-import JoinAndLeaveButton from '../../molecules/JoinAndLeaveButton/JoinAndLeaveButton';
+import PlayerActionButton from '../../molecules/PlayerActionButton/PlayerActionButton';
 import { getStatusTopic, selectGameById } from '../../store/games/games';
 import DataLabel from '../../atoms/DataLabel/DataLabel';
 import DataValue from '../../atoms/DataValue/DataValue';
@@ -47,13 +47,13 @@ const GameStatus: React.FC<Props> = ({ gameId }) => {
         <Data>
           <DataLabel>WHITE PLAYER:</DataLabel>
           <DataValue>
-            {whitePlayer && whitePlayer.name} <JoinAndLeaveButton gameId={gameId} color="WHITE" />
+            {whitePlayer && whitePlayer.name} <PlayerActionButton gameId={gameId} color="WHITE" />
           </DataValue>
         </Data>
         <Data>
           <DataLabel>BLACK PLAYER:</DataLabel>
           <DataValue>
-            {blackPlayer && blackPlayer.name} <JoinAndLeaveButton gameId={gameId} color="BLACK" />
+            {blackPlayer && blackPlayer.name} <PlayerActionButton gameId={gameId} color="BLACK" />
           </DataValue>
         </Data>
       </DataGroup>
