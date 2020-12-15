@@ -124,5 +124,6 @@ export default {
   authenticatePlayer,
   changeName,
   joinGame,
-  leaveGame
+  leaveGame,
+  resignGame
 };
