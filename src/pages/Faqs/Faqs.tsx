@@ -11,6 +11,11 @@ const faqs = [
   {
     question: 'Are there plans to allow a draw?',
     answer: 'Coward.'
+  },
+  {
+    question: 'What about a draw by repitition?',
+    answer:
+      "No draw by repetition either. When you can't see the other pieces, it makes a draw by repetition annoying rather than tactical."
   }
 ];
 
