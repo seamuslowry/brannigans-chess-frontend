@@ -109,6 +109,8 @@ const joinGame = (gameId: number, color: PieceColor) =>
 
 const leaveGame = (gameId: number) => chessApi.post<Game>(`players/leave/${gameId}`);
 
+const resignGame = (gameId: number) => chessApi.post<Game>(`players/resign/${gameId}`);
+
 export default {
   getGames,
   getPlayerGames,
