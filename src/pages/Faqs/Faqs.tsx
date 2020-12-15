@@ -13,7 +13,7 @@ const faqs = [
     answer: 'Coward.'
   },
   {
-    question: 'What about a draw by repitition?',
+    question: 'What about a draw by repetition?',
     answer:
       "No draw by repetition either. When you can't see the other pieces, it makes a draw by repetition annoying rather than tactical."
   }
