@@ -52,8 +52,16 @@ export const leaveGame = createAsyncThunk('chess/games/leaveGame', async (gameId
 });
 
 export const resignGame = createAsyncThunk('chess/games/resignGame', async (gameId: number) => {
-  const response = await ChessService.resignGame(gameId);
-  return response.data;
+  try {
+    const response = await ChessService.resignGame(gameId);
+    return response.data;
+  } catch (e) {
+    if (e.response?.status === 409) {
+      throw new Error(e.response.data);
+    } else {
+      throw e;
+    }
+  }
 });
 
 export const getAllGameData = createAsyncThunk('chess/games/getAllData', async (gameId: number) => {
