@@ -4,7 +4,7 @@ import { ActionCreator, AnyAction, getDefaultMiddleware } from '@reduxjs/toolkit
 import createMockStore from 'redux-mock-store';
 import { Provider } from 'react-redux';
 import { AppState } from '@auth0/auth0-react/dist/auth0-provider';
-import JoinAndLeaveButton from './JoinAndLeaveButton';
+import PlayerActionButton from './PlayerActionButton';
 import { emptyGame, mockEntityAdapterState, playerOne, testStore } from '../../utils/testData';
 
 const mockStore = createMockStore<AppState, ActionCreator<AnyAction>>(getDefaultMiddleware());
@@ -15,7 +15,7 @@ beforeEach(() => mockedStore.clearActions());
 test('allows to join a white game', async () => {
   const { getByText } = render(
     <Provider store={mockedStore}>
-      <JoinAndLeaveButton gameId={1} color="WHITE" />
+      <PlayerActionButton gameId={1} color="WHITE" />
     </Provider>
   );
 
@@ -27,7 +27,7 @@ test('allows to join a white game', async () => {
 test('allows to join a black game', async () => {
   const { getByText } = render(
     <Provider store={mockedStore}>
-      <JoinAndLeaveButton gameId={1} color="BLACK" />
+      <PlayerActionButton gameId={1} color="BLACK" />
     </Provider>
   );
 
@@ -52,7 +52,7 @@ test('allows to leave a black game', async () => {
 
   const { getByText } = render(
     <Provider store={playerAsBlackStore}>
-      <JoinAndLeaveButton gameId={1} color="BLACK" />
+      <PlayerActionButton gameId={1} color="BLACK" />
     </Provider>
   );
 
@@ -77,7 +77,7 @@ test('allows to leave a white game', async () => {
 
   const { getByText } = render(
     <Provider store={playerAsBlackStore}>
-      <JoinAndLeaveButton gameId={1} color="WHITE" />
+      <PlayerActionButton gameId={1} color="WHITE" />
     </Provider>
   );
 

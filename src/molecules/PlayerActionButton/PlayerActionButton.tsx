@@ -8,7 +8,7 @@ interface Props {
   color: PieceColor;
 }
 
-const JoinAndLeaveButton: React.FC<Props> = ({ gameId, color }) => {
+const PlayerActionButton: React.FC<Props> = ({ gameId, color }) => {
   return (
     <>
       <JoinGameButton size="small" color="primary" gameId={gameId} pieceColor={color} />
@@ -17,4 +17,4 @@ const JoinAndLeaveButton: React.FC<Props> = ({ gameId, color }) => {
   );
 };
 
-export default JoinAndLeaveButton;
+export default PlayerActionButton;
