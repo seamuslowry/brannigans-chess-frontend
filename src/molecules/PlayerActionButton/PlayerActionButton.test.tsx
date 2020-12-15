@@ -14,8 +14,10 @@ import {
 } from '../../utils/testData';
 
 const mockStore = createMockStore<AppState, ActionCreator<AnyAction>>(getDefaultMiddleware());
-const mockedStore = mockStore(testStore);
-
+const mockedStore = mockStore({
+  ...testStore,
+  games: mockEntityAdapterState(emptyGame)
+});
 beforeEach(() => mockedStore.clearActions());
 
 test('allows to join a white game', async () => {
@@ -184,7 +186,7 @@ test('will not allow to leave white when not self', async () => {
   expect(button).not.toBeInTheDocument();
 });
 
-test('will not allow to leave a full game', async () => {
+test('will not allow to leave an active game', async () => {
   const playerNotBlackStore = mockStore({
     ...testStore,
     auth: {
@@ -193,6 +195,7 @@ test('will not allow to leave a full game', async () => {
     },
     games: mockEntityAdapterState({
       ...emptyGame,
+      status: 'WHITE_TURN',
       id: 1,
       blackPlayer: playerOne,
       whitePlayer: playerTwo
@@ -219,6 +222,7 @@ test('allows to resign as white', async () => {
     },
     games: mockEntityAdapterState({
       ...emptyGame,
+      status: 'WHITE_TURN',
       id: 1,
       blackPlayer: playerOne,
       whitePlayer: playerTwo
@@ -245,6 +249,7 @@ test('allows to resign as black', async () => {
     },
     games: mockEntityAdapterState({
       ...emptyGame,
+      status: 'WHITE_TURN',
       id: 1,
       blackPlayer: playerOne,
       whitePlayer: playerTwo

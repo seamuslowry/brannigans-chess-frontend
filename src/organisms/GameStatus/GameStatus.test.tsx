@@ -64,18 +64,6 @@ test('shows the white player when available', async () => {
   expect(whitePlayer).toBeInTheDocument();
 });
 
-test('shows the join button when white player is not taken', async () => {
-  const { getAllByText } = render(
-    <Provider store={mockedStore}>
-      <GameStatus gameId={1} />
-    </Provider>
-  );
-
-  const playersOpen = await waitFor(() => getAllByText('Play'));
-
-  expect(playersOpen).toHaveLength(2);
-});
-
 test('shows the black player when available', async () => {
   const storeWithStatusMessage = mockStore({
     ...testStore,
@@ -94,18 +82,6 @@ test('shows the black player when available', async () => {
   const blackPlayer = await waitFor(() => getByText(playerOne.name));
 
   expect(blackPlayer).toBeInTheDocument();
-});
-
-test('shows join button when black player is not taken', async () => {
-  const { getAllByText } = render(
-    <Provider store={mockedStore}>
-      <GameStatus gameId={1} />
-    </Provider>
-  );
-
-  const playersOpen = await waitFor(() => getAllByText('Play'));
-
-  expect(playersOpen).toHaveLength(2);
 });
 
 test('shows the connection status - disconnected', async () => {

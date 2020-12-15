@@ -1,6 +1,7 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { Game, PieceColor, Player } from '../../services/ChessService.types';
+import { statusGroupMap } from '../../services/ChessService';
+import { Game, GameStatusGroup, PieceColor, Player } from '../../services/ChessService.types';
 import { selectGameById } from '../../store/games/games';
 import { AppState } from '../../store/store';
 import JoinGameButton from './JoinGameButton/JoinGameButton';
@@ -21,17 +22,18 @@ const PlayerActionButton: React.FC<Props> = ({ gameId, color }) => {
   const loggedInPlayer = useSelector<AppState, Player | undefined>(state => state.auth.player);
   const playerIsColor = loggedInPlayer?.authId === currentPlayer?.authId;
 
-  const fullGame = game && !!game.whitePlayer && !!game.blackPlayer;
+  const gameIsWaiting = game && statusGroupMap[GameStatusGroup.OPEN].includes(game.status);
+  const gameIsActive = game && statusGroupMap[GameStatusGroup.ACTIVE].includes(game.status);
 
   return (
     <>
-      {!(currentPlayer || fullGame) && (
+      {!currentPlayer && gameIsWaiting && (
         <JoinGameButton size="small" color="primary" gameId={gameId} pieceColor={color} />
       )}
-      {!fullGame && playerIsColor && (
+      {playerIsColor && gameIsWaiting && (
         <LeaveGameButton size="small" color="secondary" gameId={gameId} pieceColor={color} />
       )}
-      {fullGame && playerIsColor && <ResignGameButton size="small" gameId={gameId} />}
+      {gameIsActive && playerIsColor && <ResignGameButton size="small" gameId={gameId} />}
     </>
   );
 };
