@@ -8,13 +8,7 @@ import { Provider } from 'react-redux';
 import { AppState } from '@auth0/auth0-react/dist/auth0-provider';
 import { Game } from '../../../services/ChessService.types';
 import config from '../../../config';
-import {
-  emptyGame,
-  fullGame,
-  mockEntityAdapterState,
-  playerOne,
-  testStore
-} from '../../../utils/testData';
+import { fullGame, testStore } from '../../../utils/testData';
 import JoinGameButton from './JoinGameButton';
 import { joinGame } from '../../../store/games/games';
 
@@ -71,46 +65,4 @@ test('joins a game as black', async () => {
       type: joinGame.pending.type
     })
   );
-});
-
-test('will not allow to join a filled white slot', async () => {
-  const mockedWithFullWhite = mockStore({
-    ...testStore,
-    games: mockEntityAdapterState({
-      ...emptyGame,
-      id: 1,
-      whitePlayer: playerOne
-    })
-  });
-
-  const { queryByText } = render(
-    <Provider store={mockedWithFullWhite}>
-      <JoinGameButton gameId={1} pieceColor="WHITE" />
-    </Provider>
-  );
-
-  const button = queryByText('Play');
-
-  expect(button).not.toBeInTheDocument();
-});
-
-test('will not allow to join a filled black slot', async () => {
-  const mockedWithFullWhite = mockStore({
-    ...testStore,
-    games: mockEntityAdapterState({
-      ...emptyGame,
-      id: 1,
-      blackPlayer: playerOne
-    })
-  });
-
-  const { queryByText } = render(
-    <Provider store={mockedWithFullWhite}>
-      <JoinGameButton gameId={1} pieceColor="BLACK" />
-    </Provider>
-  );
-
-  const button = queryByText('Play');
-
-  expect(button).not.toBeInTheDocument();
 });
