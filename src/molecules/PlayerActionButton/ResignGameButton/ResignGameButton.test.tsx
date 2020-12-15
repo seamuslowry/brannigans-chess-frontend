@@ -37,8 +37,8 @@ test('resigns a game', async () => {
   const button = getByTestId('resign-game-button');
   fireEvent.click(button);
 
-  await waitFor(() => expect(getByTestId('leave-game-button')).toBeDisabled());
-  await waitFor(() => expect(getByTestId('leave-game-button')).not.toBeDisabled());
+  await waitFor(() => expect(getByTestId('resign-game-button')).toBeDisabled());
+  await waitFor(() => expect(getByTestId('resign-game-button')).not.toBeDisabled());
 
   expect(mockedStore.getActions()).toContainEqual(
     expect.objectContaining({
