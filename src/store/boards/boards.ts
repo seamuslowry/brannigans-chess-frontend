@@ -11,14 +11,14 @@ interface Board {
   id: number;
 }
 
-interface DropMoveParams {
+interface DragMoveParams {
   piece: Piece;
   to: TilePosition;
 }
 
 export const dragMove = createAsyncThunk(
   'chess/board/dragMove',
-  async ({ piece, to }: DropMoveParams) => {
+  async ({ piece, to }: DragMoveParams) => {
     try {
       const response = await ChessService.move(
         piece.gameId,
