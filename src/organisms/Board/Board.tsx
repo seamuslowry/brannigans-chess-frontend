@@ -41,7 +41,7 @@ const Board: React.FC<Props> = ({ gameId }) => {
 
   React.useEffect(() => {
     dispatch(addBoard({ id: gameId }));
-  }, [gameId, colors, dispatch]);
+  }, [gameId, dispatch]);
 
   const tileTemplate = `repeat(8, ${pieceSize})`;
 
