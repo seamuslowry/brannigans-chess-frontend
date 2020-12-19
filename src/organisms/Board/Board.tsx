@@ -11,6 +11,7 @@ import { displayCol, displayRow } from '../../utils/markerHelper';
 import { DndProvider } from 'react-dnd-multi-backend';
 import HTML5toTouch from 'react-dnd-multi-backend/dist/cjs/HTML5toTouch';
 import BoardDragLayer from '../BoardDragLayer/BoardDragLayer';
+import { addBoard } from '../../store/boards/boards';
 
 const useStyles = makeStyles({
   borderRadius: {
@@ -36,6 +37,10 @@ const Board: React.FC<Props> = ({ gameId }) => {
 
   React.useEffect(() => {
     dispatch(getPieces({ gameId, colors }));
+  }, [gameId, colors, dispatch]);
+
+  React.useEffect(() => {
+    dispatch(addBoard({ id: gameId }));
   }, [gameId, colors, dispatch]);
 
   const tileTemplate = `repeat(8, ${pieceSize})`;

@@ -1,6 +1,8 @@
-import { createAsyncThunk, createEntityAdapter, createSlice } from '@reduxjs/toolkit';
+import { AnyAction, createAsyncThunk, createEntityAdapter, createSlice } from '@reduxjs/toolkit';
 import ChessService from '../../services/ChessService';
-import { Piece } from '../../services/ChessService.types';
+import { Game, Move, Piece } from '../../services/ChessService.types';
+import { GAME_STATUS_PREFIX } from '../games/games';
+import { StompMessage, STOMP_MESSAGE } from '../middleware/stomp/stomp';
 
 export interface TilePosition {
   row: number;
@@ -9,6 +11,7 @@ export interface TilePosition {
 
 interface Board {
   id: number;
+  move?: Move;
 }
 
 interface DragMoveParams {
@@ -42,11 +45,40 @@ export type BoardState = typeof initialState;
 const boardSlice = createSlice({
   name: 'chess/boards',
   initialState,
-  reducers: {},
+  reducers: {
+    addBoard: boardAdapter.upsertOne
+  },
   extraReducers: builder => {
-    // TODO, add ability to select / deselect tile aesthetically
+    builder
+      .addCase(dragMove.fulfilled, (state, action) => {
+        state = boardAdapter.updateOne(state, {
+          id: action.payload.movingPiece.gameId,
+          changes: {
+            move: action.payload
+          }
+        });
+      })
+      .addMatcher(
+        (action: AnyAction): action is StompMessage =>
+          action.type === STOMP_MESSAGE && action.payload.topic.includes(GAME_STATUS_PREFIX),
+        (state, action) => {
+          const game: Game = JSON.parse(action.payload.data);
+          const board = state.entities[game.id];
+          const displayedMove = board?.move;
+
+          if (displayedMove && game.status.includes(displayedMove.movingPiece.color))
+            state = boardAdapter.updateOne(state, {
+              id: game.id,
+              changes: {
+                move: undefined
+              }
+            });
+        }
+      );
   }
 });
+
+export const { addBoard } = boardSlice.actions;
 
 export const { selectById: selectBoardById } = boardAdapter.getSelectors();
 
