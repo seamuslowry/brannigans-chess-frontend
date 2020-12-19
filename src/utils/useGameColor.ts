@@ -12,21 +12,20 @@ const useGameColors = (gameId: number): PieceColor[] => {
   const blackAuth = useSelector<AppState, string | undefined>(state =>
     selectBlackId(state.games, gameId)
   );
-  const gameStatus = useSelector<AppState, string | undefined>(state =>
-    selectGameStatus(state.games, gameId)
+  const gameLoaded = useSelector<AppState, boolean>(
+    state => !!selectGameStatus(state.games, gameId)
   );
 
   const authId = player?.authId;
 
   const isWhite = authId === whiteAuth;
   const isBlack = authId === blackAuth;
-  const gameLoaded = !!gameStatus;
 
-  const colors = React.useMemo<PieceColor[]>(
-    () =>
-      (isWhite && ['WHITE']) || (isBlack && ['BLACK']) || (gameLoaded && ['WHITE', 'BLACK']) || [],
-    [isWhite, isBlack, gameLoaded]
-  );
+  const colors = React.useMemo<PieceColor[]>(() => {
+    return (
+      (isWhite && ['WHITE']) || (isBlack && ['BLACK']) || (gameLoaded && ['WHITE', 'BLACK']) || []
+    );
+  }, [isWhite, isBlack, gameLoaded]);
 
   return colors;
 };
