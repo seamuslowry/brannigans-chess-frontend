@@ -4,7 +4,13 @@ import { ActionCreator, AnyAction, getDefaultMiddleware } from '@reduxjs/toolkit
 import { Provider } from 'react-redux';
 import createMockStore from 'redux-mock-store';
 import Tile from './Tile';
-import { blackRook, makePiece, mockEntityAdapterState, testStore } from '../../utils/testData';
+import {
+  blackRook,
+  makePiece,
+  mockEntityAdapterState,
+  testStore,
+  whiteMove
+} from '../../utils/testData';
 import { AppState } from '../../store/store';
 import { dragMove } from '../../store/boards/boards';
 import { DndProvider } from 'react-dnd';
@@ -82,8 +88,7 @@ test('renders when hovered', async () => {
   const selectedTileStore = mockStore({
     ...testStore,
     boards: mockEntityAdapterState({
-      id: 0,
-      selectedPosition: { row: 0, col: 0 }
+      id: 0
     })
   });
 
@@ -103,6 +108,52 @@ test('renders when hovered', async () => {
 
   // MUI default selected color
   expect(tile).toHaveStyle('background-color: rgba(0, 0, 0, 0.08)');
+});
+
+test('renders when source', async () => {
+  const moveStore = mockStore({
+    ...testStore,
+    boards: mockEntityAdapterState({
+      id: 0,
+      move: whiteMove
+    })
+  });
+
+  const { getByTestId } = render(
+    <DndProvider backend={HTML5Backend}>
+      <Provider store={moveStore}>
+        <Tile gameId={0} row={whiteMove.srcRow} col={whiteMove.srcCol} />
+      </Provider>
+    </DndProvider>
+  );
+
+  const tile = getByTestId(`tile-${whiteMove.srcRow}-${whiteMove.srcCol}`);
+
+  // MUI default focus color darkened
+  expect(tile).toHaveStyle('background-color: rgba(0, 0, 0, 0.12)');
+});
+
+test('renders when destination', async () => {
+  const moveStore = mockStore({
+    ...testStore,
+    boards: mockEntityAdapterState({
+      id: 0,
+      move: whiteMove
+    })
+  });
+
+  const { getByTestId } = render(
+    <DndProvider backend={HTML5Backend}>
+      <Provider store={moveStore}>
+        <Tile gameId={0} row={whiteMove.dstRow} col={whiteMove.dstCol} />
+      </Provider>
+    </DndProvider>
+  );
+
+  const tile = getByTestId(`tile-${whiteMove.dstRow}-${whiteMove.dstCol}`);
+
+  // MUI default focus color darkened
+  expect(tile).toHaveStyle('background-color: rgba(0, 0, 0, 0.12)');
 });
 
 test('renders secondary color', async () => {
