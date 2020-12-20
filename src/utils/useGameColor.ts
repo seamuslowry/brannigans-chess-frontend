@@ -21,11 +21,11 @@ const useGameColors = (gameId: number): PieceColor[] => {
   const isWhite = authId === whiteAuth;
   const isBlack = authId === blackAuth;
 
-  const colors = React.useMemo<PieceColor[]>(() => {
-    return (
-      (isWhite && ['WHITE']) || (isBlack && ['BLACK']) || (gameLoaded && ['WHITE', 'BLACK']) || []
-    );
-  }, [isWhite, isBlack, gameLoaded]);
+  const colors = React.useMemo<PieceColor[]>(
+    () =>
+      (isWhite && ['WHITE']) || (isBlack && ['BLACK']) || (gameLoaded && ['WHITE', 'BLACK']) || [],
+    [isWhite, isBlack, gameLoaded]
+  );
 
   return colors;
 };
