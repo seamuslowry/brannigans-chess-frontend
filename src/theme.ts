@@ -19,8 +19,8 @@ const theme = createMuiTheme({
     action: {
       // kif's green
       focus: '#bbd58c',
-      // bender's darker grey
-      selected: '#7ca0b8'
+      // color of the nimbus
+      selected: '#b0ac90'
     }
   },
   overrides: {
