@@ -30,9 +30,9 @@ const getBgColor = (
   if (hovering) {
     return theme.palette.action.selected;
   } else if (source) {
-    return darken(theme.palette.action.active, 0.3);
+    return darken(theme.palette.action.focus, 0.3);
   } else if (destination) {
-    return darken(theme.palette.action.active, 0.5);
+    return darken(theme.palette.action.focus, 0.5);
   } else if ((row + col) % 2 === 0) {
     return theme.palette.secondary.light;
   } else {

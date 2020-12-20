@@ -13,6 +13,9 @@ const theme = createMuiTheme({
     },
     secondary: {
       main: '#dcb153'
+    },
+    action: {
+      focus: '#bbd58c'
     }
   },
   overrides: {

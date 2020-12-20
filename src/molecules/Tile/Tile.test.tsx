@@ -129,8 +129,8 @@ test('renders when source', async () => {
 
   const tile = getByTestId(`tile-${whiteMove.srcRow}-${whiteMove.srcCol}`);
 
-  // MUI default action color darkened
-  expect(tile).toHaveStyle('background-color: rgba(0, 0, 0, 0.54)');
+  // MUI default focus color darkened
+  expect(tile).toHaveStyle('background-color: rgba(0, 0, 0, 0.12)');
 });
 
 test('renders when destination', async () => {
@@ -152,8 +152,8 @@ test('renders when destination', async () => {
 
   const tile = getByTestId(`tile-${whiteMove.dstRow}-${whiteMove.dstCol}`);
 
-  // MUI default action color darkened
-  expect(tile).toHaveStyle('background-color: rgba(0, 0, 0, 0.54)');
+  // MUI default focus color darkened
+  expect(tile).toHaveStyle('background-color: rgba(0, 0, 0, 0.12)');
 });
 
 test('renders secondary color', async () => {
