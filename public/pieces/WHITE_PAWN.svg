@@ -1,1 +1,7 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 57.43 93.7"><defs><style>.cls-1{fill:#fff;}.cls-1,.cls-3{stroke:#000;stroke-miterlimit:10;}.cls-2{fill:#bfbebe;}.cls-3{fill:none;}</style></defs><title>Asset 6</title><g id="Layer_2" data-name="Layer 2"><g id="white"><g id="pawn"><path class="cls-1" d="M27.71,93.2H56.93c0-14.11-20.16-20.15-22.17-50.38H44.84l2-4L35,31.49l-.65.25a16.13,16.13,0,1,0-11.21,0l-.65-.25-11.88,7.3,2,4H22.67C20.65,73.05.5,79.09.5,93.2H29.72"/><path class="cls-2" d="M27.71,31.74h6.8c11.33-6,13.35-20.16,5.29-26.2C43.83,19.64,36.77,28.71,27.71,31.74Z"/><path class="cls-2" d="M23,42.54H35c0,12,6.81,27.49,18.9,41.59C29.72,72,37.78,51.89,22.28,46.85Z"/><path class="cls-3" d="M27.71,93.2H56.93c0-14.11-20.16-20.15-22.17-50.38H44.84l2-4L35,31.49l-.65.25a16.13,16.13,0,1,0-11.21,0l-.65-.25-11.88,7.3,2,4H22.67C20.65,73.05.5,79.09.5,93.2H29.72"/></g></g></g></svg>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="45" height="45">
+  <path
+    d="M 22,9 C 19.79,9 18,10.79 18,13 C 18,13.89 18.29,14.71 18.78,15.38 C 16.83,16.5 15.5,18.59 15.5,21 C 15.5,23.03 16.44,24.84 17.91,26.03 C 14.91,27.09 10.5,31.58 10.5,39.5 L 33.5,39.5 C 33.5,31.58 29.09,27.09 26.09,26.03 C 27.56,24.84 28.5,23.03 28.5,21 C 28.5,18.59 27.17,16.5 25.22,15.38 C 25.71,14.71 26,13.89 26,13 C 26,10.79 24.21,9 22,9 z "
+    style="opacity:1; fill:#ffffff; fill-opacity:1; fill-rule:nonzero; stroke:#000000; stroke-width:1.5; stroke-linecap:round; stroke-linejoin:miter; stroke-miterlimit:4; stroke-dasharray:none; stroke-opacity:1;" />
+</svg>

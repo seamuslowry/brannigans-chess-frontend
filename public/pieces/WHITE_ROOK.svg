@@ -1,1 +1,25 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 59.6 92.69"><defs><style>.cls-1{fill:#fff;}.cls-1,.cls-3{stroke:#000;stroke-miterlimit:10;}.cls-2{fill:#bfbebe;}.cls-3{fill:none;}</style></defs><title>White Rook</title><g id="Layer_2" data-name="Layer 2"><g id="white"><g id="rook"><path class="cls-1" d="M5.7,82.53l.46-4.28,4.7-43.41C1.4,34.84,2.17,18.54.54,6.22a32.35,32.35,0,0,1,12-3.81L16,15.76h5.16L22.9.5H36.67l1.72,15.26h5.16L47,2.41A32.35,32.35,0,0,1,59,6.22c-1.63,12.32-.86,28.62-10.32,28.62l5.16,47.69"/><path class="cls-1" d="M.59,92.19H59s3-15.11-29.22-15.11S.59,92.19.59,92.19Z"/><path class="cls-2" d="M54.85,4.28l4.15,2s-.49,22.25-6.35,27.28c-2.09,1.75-5.13,1.74-9.22-.23C52.51,31.26,54.25,18.58,54.85,4.28Z"/><path class="cls-2" d="M21.72,32.11C30.91,30.93,40,31.35,49,34.76l4.92,47.77-8.24-3.78C46.44,51.43,40.42,33.27,21.72,32.11Z"/><path class="cls-3" d="M10.81,35.29C23.67,30.11,36.38,30,49,35.35"/><path class="cls-3" d="M5.7,82.53l.46-4.28,4.7-43.41C1.4,34.84,2.17,18.54.54,6.22a32.35,32.35,0,0,1,12-3.81L16,15.76h5.16L22.9.5H36.67l1.72,15.26h5.16L47,2.41A32.35,32.35,0,0,1,59,6.22c-1.63,12.32-.86,28.62-10.32,28.62l5.16,47.69"/><path class="cls-3" d="M.59,92.19H59s3-15.11-29.22-15.11S.59,92.19.59,92.19Z"/></g></g></g></svg>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="45" height="45">
+  <g style="opacity:1; fill:#ffffff; fill-opacity:1; fill-rule:evenodd; stroke:#000000; stroke-width:1.5; stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4; stroke-dasharray:none; stroke-opacity:1;">
+    <path
+      d="M 9,39 L 36,39 L 36,36 L 9,36 L 9,39 z "
+      style="stroke-linecap:butt;" />
+    <path
+      d="M 12,36 L 12,32 L 33,32 L 33,36 L 12,36 z "
+      style="stroke-linecap:butt;" />
+    <path
+      d="M 11,14 L 11,9 L 15,9 L 15,11 L 20,11 L 20,9 L 25,9 L 25,11 L 30,11 L 30,9 L 34,9 L 34,14"
+      style="stroke-linecap:butt;" />
+    <path
+      d="M 34,14 L 31,17 L 14,17 L 11,14" />
+    <path
+      d="M 31,17 L 31,29.5 L 14,29.5 L 14,17"
+      style="stroke-linecap:butt; stroke-linejoin:miter;" />
+    <path
+      d="M 31,29.5 L 32.5,32 L 12.5,32 L 14,29.5" />
+    <path
+      d="M 11,14 L 34,14"
+      style="fill:none; stroke:#000000; stroke-linejoin:miter;" />
+  </g>
+</svg>
