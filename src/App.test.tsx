@@ -25,7 +25,7 @@ beforeAll(() => server.listen());
 afterEach(() => server.resetHandlers());
 afterAll(() => server.close());
 
-test('renders the insirational quote', () => {
+test('renders the inspirational quote', () => {
   const { getByText } = render(
     <Provider store={mockedStore}>
       <App />
