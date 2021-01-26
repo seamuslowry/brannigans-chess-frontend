@@ -22,18 +22,6 @@ beforeEach(() => mockedAuth0.mockImplementation(() => unauthenticatedAuth0));
 const mockStore = createMockStore<AppState, ActionCreator<AnyAction>>(getDefaultMiddleware());
 const mockedStore = mockStore(testStore);
 
-test('renders the insirational quote', () => {
-  const { getByText } = render(
-    <Provider store={mockedStore}>
-      <MemoryRouter>
-        <NavBar />
-      </MemoryRouter>
-    </Provider>
-  );
-  const quote = getByText(/never let your adversary see your pieces/i);
-  expect(quote).toBeInTheDocument();
-});
-
 test('renders the login button when not logged in', () => {
   const { getByText } = render(
     <Provider store={mockedStore}>

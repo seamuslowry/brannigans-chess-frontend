@@ -25,12 +25,12 @@ beforeAll(() => server.listen());
 afterEach(() => server.resetHandlers());
 afterAll(() => server.close());
 
-test('renders the inspirational quote', () => {
+test('renders the home button', () => {
   const { getByText } = render(
     <Provider store={mockedStore}>
       <App />
     </Provider>
   );
-  const quote = getByText(/never let your adversary see your pieces/i);
-  expect(quote).toBeInTheDocument();
+  const home = getByText('HOME');
+  expect(home).toBeInTheDocument();
 });
