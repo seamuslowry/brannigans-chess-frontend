@@ -19,7 +19,7 @@ const NavBar: React.FC = () => {
           HOME
         </Button>
         <Box margin="auto">
-          <Hidden smDown>
+          <Hidden mdDown>
             <Typography>
               In the game of chess, you can never let your adversary see your pieces. -Zapp
               Brannigan
