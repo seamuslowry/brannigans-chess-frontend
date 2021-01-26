@@ -1,5 +1,5 @@
 import React from 'react';
-import { AppBar, Box, Button, IconButton, Toolbar, Typography } from '@material-ui/core';
+import { AppBar, Box, Button, Hidden, IconButton, Toolbar, Typography } from '@material-ui/core';
 import { Link } from 'react-router-dom';
 import { GitHub } from '@material-ui/icons';
 import Logout from '../../molecules/Logout/Logout';
@@ -19,9 +19,12 @@ const NavBar: React.FC = () => {
           HOME
         </Button>
         <Box margin="auto">
-          <Typography>
-            In the game of chess, you can never let your adversary see your pieces. -Zapp Brannigan
-          </Typography>
+          <Hidden xsDown>
+            <Typography>
+              In the game of chess, you can never let your adversary see your pieces. -Zapp
+              Brannigan
+            </Typography>
+          </Hidden>
         </Box>
         <IconButton component={Link} to="/user" color="secondary">
           <UserAvatar />
