@@ -1,8 +1,4 @@
-`main` coverage:
-<img align='center' src="https://codecov.io/gh/seamuslowry/brannigans-chess-frontend/branch/main/graph/badge.svg"/>
-
-`develop-0.0.2` coverage:
-<img align='center' src="https://codecov.io/gh/seamuslowry/brannigans-chess-frontend/branch/develop-0.0.2/graph/badge.svg"/>
+[![codecov](https://codecov.io/gh/seamuslowry/brannigans-chess-frontend/branch/develop-0.0.2/graph/badge.svg?token=WP6EHNCLO1)](https://codecov.io/gh/seamuslowry/brannigans-chess-frontend)
 
 # Brannigan's Chess
 
