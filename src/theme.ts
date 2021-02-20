@@ -19,7 +19,7 @@ const theme = createMuiTheme({
     action: {
       // kif's green
       focus: '#bbd58c'
-    }aueo
+    }
   },
   overrides: {
     MuiDialogTitle: {
