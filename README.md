@@ -1,4 +1,4 @@
-[![codecov](https://codecov.io/gh/seamuslowry/brannigans-chess-frontend/branch/develop-0.0.2/graph/badge.svg?token=WP6EHNCLO1)](https://codecov.io/gh/seamuslowry/brannigans-chess-frontend)
+[![codecov](https://codecov.io/gh/seamuslowry/brannigans-chess-frontend/branch/main/graph/badge.svg?token=WP6EHNCLO1)](https://codecov.io/gh/seamuslowry/brannigans-chess-frontend)
 
 # Brannigan's Chess
 
@@ -14,7 +14,7 @@
 
 ## Goal
 
-The project is still in active development, but the final goal is a chess app in which each player can only see their own pieces. Taken pieces will be visible to both players.
+This is designed as a chess app in which each player can only see their own pieces. Taken pieces are visible to both players.
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 

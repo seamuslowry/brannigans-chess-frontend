@@ -1,6 +1,6 @@
 {
   "name": "brannigans-chess-frontend",
-  "version": "0.0.2",
+  "version": "1.0.0",
   "private": true,
   "dependencies": {
     "@auth0/auth0-react": "^1.1.0",
