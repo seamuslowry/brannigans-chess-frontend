@@ -1,4 +1,4 @@
-[![codecov](https://codecov.io/gh/seamuslowry/brannigans-chess-frontend/branch/develop-0.0.2/graph/badge.svg?token=WP6EHNCLO1)](https://codecov.io/gh/seamuslowry/brannigans-chess-frontend)
+[![codecov](https://codecov.io/gh/seamuslowry/brannigans-chess-frontend/branch/main/graph/badge.svg?token=WP6EHNCLO1)](https://codecov.io/gh/seamuslowry/brannigans-chess-frontend)
 
 # Brannigan's Chess
 
