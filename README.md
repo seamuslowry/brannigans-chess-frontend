@@ -1,8 +1,11 @@
+[![codecov](https://codecov.io/gh/seamuslowry/brannigans-chess-frontend/branch/develop-0.0.2/graph/badge.svg?token=WP6EHNCLO1)](https://codecov.io/gh/seamuslowry/brannigans-chess-frontend)
+
 # Brannigan's Chess
 
 "In the game of chess, you can never let your adversary see your pieces." -Zapp Brannigan
 
 ## Running the Project
+
 - This project is best run from the [core repo](https://github.com/seamuslowry/brannigans-chess)
 - Build the container with `docker-compose build frontend`
 - Run `docker-compose up frontend` to bring up the client
@@ -10,8 +13,8 @@
 - Full behavior may not be available without the corresponding backend
 
 ## Goal
-The project is still in active development, but the final goal is a chess app in which each player can only see their own pieces. Taken pieces will be visible to both players.
 
+The project is still in active development, but the final goal is a chess app in which each player can only see their own pieces. Taken pieces will be visible to both players.
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
