@@ -14,7 +14,7 @@
 
 ## Goal
 
-The project is still in active development, but the final goal is a chess app in which each player can only see their own pieces. Taken pieces will be visible to both players.
+This is designed as a chess app in which each player can only see their own pieces. Taken pieces will be visible to both players.
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
