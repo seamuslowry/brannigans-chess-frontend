@@ -19,7 +19,7 @@ jobs:
         run: REACT_APP_ENV=development yarn build
 
       - name: deploy
-        run: aws s3 sync ./build/ s3://brannigans-chess-dev/
+        run: AWS_EC2_METADATA_DISABLED=true aws s3 sync ./build/ s3://brannigans-chess-dev/
 
       - name: invalidate
         run: aws cloudfront create-invalidation --distribution-id EK4KIXP60KA8L --paths "/*"
