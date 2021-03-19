@@ -9,6 +9,8 @@ jobs:
     env:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_EC2_METADATA_DISABLED: true 
+      REACT_APP_ENV: development
     steps:
       - uses: actions/checkout@v2
 
@@ -16,10 +18,10 @@ jobs:
         run: yarn
 
       - name: Build
-        run: REACT_APP_ENV=development yarn build
+        run: yarn build
 
       - name: deploy
-        run: AWS_EC2_METADATA_DISABLED=true aws s3 sync ./build/ s3://brannigans-chess-dev/
+        run: aws s3 sync ./build/ s3://brannigans-chess-dev/
 
       - name: invalidate
         run: aws cloudfront create-invalidation --distribution-id EK4KIXP60KA8L --paths "/*"
