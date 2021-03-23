@@ -96,12 +96,13 @@ test('does not close the alert when clicking away', async () => {
     }
   });
 
-  const { getAllByRole } = render(
+  const { getAllByRole, container } = render(
     <Provider store={notificationStore}>
       <Notifications />
     </Provider>
   );
 
-  fireEvent.click(document);
+  await waitFor(() => getAllByRole('alert'));
+  fireEvent.click(container);
   await waitFor(() => getAllByRole('alert'));
 });
