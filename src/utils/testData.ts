@@ -200,6 +200,8 @@ export const unauthenticatedAuth0: Auth0ContextInterface = {
   loginWithPopup: jest.fn(),
   loginWithRedirect: jest.fn(),
   logout: jest.fn(),
+  buildAuthorizeUrl: jest.fn(),
+  buildLogoutUrl: jest.fn(),
   isLoading: false,
   user: {
     name: 'test name',
