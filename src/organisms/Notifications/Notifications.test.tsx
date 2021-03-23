@@ -102,6 +102,7 @@ test('does not close the alert when clicking away', async () => {
     </Provider>
   );
 
+  await waitFor(() => getAllByRole('alert'));
   fireEvent.click(container);
   await waitFor(() => getAllByRole('alert'));
 });
