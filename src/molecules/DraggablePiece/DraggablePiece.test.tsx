@@ -19,3 +19,18 @@ test('fades the piece while dragging', async () => {
 
   expect(getByAltText('BLACK-ROOK')).toHaveStyle('opacity: 0.1');
 });
+
+test('does not allow dragging when disabled', async () => {
+  const { getByAltText } = render(
+    <DndProvider backend={HTML5Backend}>
+      <DraggablePiece piece={blackRook} disabled />
+    </DndProvider>
+  );
+
+  expect(getByAltText('BLACK-ROOK')).not.toHaveStyle('opacity: 0.1');
+
+  const piece = getByAltText('BLACK-ROOK');
+  fireEvent.dragStart(piece);
+
+  expect(getByAltText('BLACK-ROOK')).not.toHaveStyle('opacity: 0.1');
+});
