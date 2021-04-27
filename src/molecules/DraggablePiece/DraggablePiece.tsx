@@ -24,7 +24,7 @@ const DraggablePiece: React.FC<Props> = ({ piece, disabled, ...rest }) => {
     collect: monitor => ({
       isDragging: !!monitor.isDragging()
     }),
-    canDrag: !disabled
+    canDrag: () => !disabled
   });
 
   React.useEffect(() => {
@@ -33,10 +33,11 @@ const DraggablePiece: React.FC<Props> = ({ piece, disabled, ...rest }) => {
 
   return (
     <Piece
-      ref={drag}
+      ref={!disabled ? drag : undefined}
       type={piece.type}
       color={piece.color}
       className={clsx(isDragging && classes.dragging)}
+      draggable={!disabled}
       {...rest}
     />
   );
