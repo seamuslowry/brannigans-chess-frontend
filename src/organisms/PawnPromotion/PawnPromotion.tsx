@@ -38,11 +38,11 @@ const PawnPromotion: React.FC<Props> = ({ color, gameId }) => {
     getPromotablePawn(state.pieces, gameId, row)
   );
 
-  // if (!pawn) return null;
+  if (!pawn) return null;
 
   const handleSelection = (type: PieceType) => () => {
     setLoading(true);
-    dispatch(promotePawn({ pieceId: pawn!.id, type })).finally(() => setLoading(false));
+    dispatch(promotePawn({ pieceId: pawn.id, type })).finally(() => setLoading(false));
   };
 
   return (
