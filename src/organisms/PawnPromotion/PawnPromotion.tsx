@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dialog, DialogActions, DialogTitle, IconButton } from '@material-ui/core';
+import { Dialog, DialogContent, DialogTitle, IconButton, makeStyles } from '@material-ui/core';
 import { useSelector } from 'react-redux';
 import Piece from '../../atoms/Piece/Piece';
 import { AppState, useAppDispatch } from '../../store/store';
@@ -20,10 +20,17 @@ interface Props {
   gameId: number;
 }
 
+const useStyles = makeStyles({
+  button: {
+    width: '25%'
+  }
+});
+
 const PawnPromotion: React.FC<Props> = ({ color, gameId }) => {
   const { row } = variants[color];
   const [loading, setLoading] = React.useState(false);
   const dispatch = useAppDispatch();
+  const classes = useStyles();
 
   const getPromotablePawn = React.useMemo(makeGetPromatablePawn, []);
 
@@ -31,31 +38,47 @@ const PawnPromotion: React.FC<Props> = ({ color, gameId }) => {
     getPromotablePawn(state.pieces, gameId, row)
   );
 
-  if (!pawn) return null;
+  // if (!pawn) return null;
 
   const handleSelection = (type: PieceType) => () => {
     setLoading(true);
-    dispatch(promotePawn({ pieceId: pawn.id, type })).finally(() => setLoading(false));
+    dispatch(promotePawn({ pieceId: pawn!.id, type })).finally(() => setLoading(false));
   };
 
   return (
     <>
       <Dialog open>
         <DialogTitle>Pawn Promotion</DialogTitle>
-        <DialogActions>
-          <IconButton disabled={loading} onClick={handleSelection('QUEEN')}>
+        <DialogContent>
+          <IconButton
+            className={classes.button}
+            disabled={loading}
+            onClick={handleSelection('QUEEN')}
+          >
             <Piece type="QUEEN" color={color} />
           </IconButton>
-          <IconButton disabled={loading} onClick={handleSelection('ROOK')}>
+          <IconButton
+            className={classes.button}
+            disabled={loading}
+            onClick={handleSelection('ROOK')}
+          >
             <Piece type="ROOK" color={color} />
           </IconButton>
-          <IconButton disabled={loading} onClick={handleSelection('BISHOP')}>
+          <IconButton
+            className={classes.button}
+            disabled={loading}
+            onClick={handleSelection('BISHOP')}
+          >
             <Piece type="BISHOP" color={color} />
           </IconButton>
-          <IconButton disabled={loading} onClick={handleSelection('KNIGHT')}>
+          <IconButton
+            className={classes.button}
+            disabled={loading}
+            onClick={handleSelection('KNIGHT')}
+          >
             <Piece type="KNIGHT" color={color} />
           </IconButton>
-        </DialogActions>
+        </DialogContent>
       </Dialog>
     </>
   );
