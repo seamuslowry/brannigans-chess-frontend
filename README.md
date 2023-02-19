@@ -16,6 +16,10 @@
 
 This is designed as a chess app in which each player can only see their own pieces. Taken pieces are visible to both players.
 
+## End of Development
+
+The project is no longer in active development, and the backend is no longer deployed to save on costs. It can still be run locally from the [core repo](https://github.com/seamuslowry/brannigans-chess).
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
