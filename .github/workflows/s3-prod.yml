@@ -1,7 +1,6 @@
 name: Production Environment S3 Deploy
 on:
-  push:
-    branches: main
+  - push
 
 jobs:
   main-deploy:
